@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="cn.com.sure.keypair.dao.KeyPairStandbyDAO">  
+		
+	<resultMap type="cn.com.sure.keypair.entry.KeypairStandby" id="KpgStandbyResultMap">
+		<id column="id" javaType="String" property="id"/>
+		<result column="pubKey" javaType="String" property="pubKey"/>
+		<result column="priKey" javaType="String" property="priKey"/>
+		<result column="genTime" javaType="Date" property="genTime"/>
+		<association property="keyPairAlgorithm" javaType="cn.com.sure.algorthm.entry.KeyPairAlgorithm" >
+			<id column="kpgAlgId" javaType="long" property="id"/>
+			<result column="algName" javaType="String" property="name"/>
+			<result column="algorithmOid" javaType="String" property="algorithmOid"/>
+			<result column="algorithmName" javaType="String" property="algorithmName"/>
+			<result column="keysize" javaType="Integer" property="keysize"/>
+			<result column="notes" javaType="String" property="notes"/>
+			<result column="isValid" javaType="Integer" property="isValid"/>
+		</association>
+		<association property="kpgTask" javaType="cn.com.sure.kpgtask.entry.KpgTask">
+			<id column="kpgTaskId" javaType="Long" property="id"/>
+			<result column="name" javaType="String" property="name"/>
+			<association property="keyPairAlgorithm" javaType="cn.com.sure.algorthm.entry.KeyPairAlgorithm">
+				<id column="kpgAlgIds" javaType="long" property="id"/>
+				<result column="algNames" javaType="String" property="name"/>
+				<result column="algorithmOids" javaType="String" property="algorithmOid"/>
+				<result column="algorithmNames" javaType="String" property="algorithmName"/>
+			</association>
+		</association>
+	</resultMap>
+	
+
+	<select id="selectAll" parameterType="cn.com.sure.keypair.entry.KeypairStandby" resultMap="KpgStandbyResultMap">
+		select
+			t1.id as id,
+			t1.pub_key as pubKey,
+			t1.pri_key as priKey,
+			t1.kpg_algorithm as keyPairAlgorithm,
+			t1.km_kpg_task as kpgTask,
+			t1.gen_time as genTime,
+			t2.name as name,
+			t2.kpg_algorithm as keyPairAlgorithm,
+			t3.alg_name as algorithmName
+		from
+			keypair_standby t1 ,kpg_task t2,keypair_algorithm t3
+   		WHERE
+			t1.km_kpg_task = t2.name
+		AND 
+			t1.kpg_algorithm = t3.alg_name
+		AND
+			t2.kpg_algorithm=t3.id
+	</select> 
+
+	
+	<insert id="insert" parameterType="cn.com.sure.keypair.entry.KeypairStandby">
+		insert into keypair_standby(
+			pub_key,
+			pri_key,
+			kpg_algorithm,
+			km_kpg_task,
+			gen_time
+		)values(
+			#{pubKey},
+			#{priKey},
+			#{keyPairAlgorithm.algorithmName},
+			#{kpgTask.name},
+			#{genTime}
+		)
+	</insert>
+
+		
+	<select id="countNum" resultType="int" parameterType="String">
+		select 
+			count(0)
+		from 
+			keypair_standby
+		where
+			kpg_algorithm=#{algorithmName}
+	</select>
+	
+	<select id="obtKpStandby" parameterType="cn.com.sure.keypair.entry.KeypairStandby" resultType="cn.com.sure.keypair.entry.KeypairStandby">
+		select
+			id,
+			pub_key as pubKey,
+			pri_key as priKey,
+			kpg_algorithm as keyPairAlgorithm,
+			km_kpg_task as kpgTask,
+			gen_time as genTime
+		from
+			keypair_standby
+		where
+			kpg_algorithm=#{algorithmName}
+		limit 
+			0,1
+	</select>
+    
+    <delete id="delete" parameterType="String">
+		delete from keypair_standby where id=#{id}
+	</delete>
+	
+	
+	<select id="searchByCondition" parameterType="cn.com.sure.keypair.entry.KeypairStandby" resultMap="KpgStandbyResultMap">
+		select
+			t1.id as id,
+			t1.pub_key as pubKey,
+			t1.pri_key as priKey,
+			t1.kpg_algorithm as keyPairAlgorithm,
+			t1.km_kpg_task as kpgTask,
+			t1.gen_time as genTime,
+			t2.name as name,
+			t2.kpg_algorithm as keyPairAlgorithm,
+			t3.alg_name as algorithmName
+		from
+			keypair_standby t1 ,kpg_task t2,keypair_algorithm t3
+   		WHERE
+			t1.km_kpg_task = t2.name
+		AND 
+			t1.kpg_algorithm = t3.alg_name
+		AND
+			t2.kpg_algorithm=t3.id
+		
+		 <if test="kpgTask.name!=null and kpgTask.name!='' ">
+		 	and km_kpg_task LIKE  '%${kpgTask.name}%'
+		 </if>
+		 <if test="keyPairAlgorithm.algorithmName!=null and keyPairAlgorithm.algorithmName!='' ">
+		 	and t1.kpg_algorithm LIKE '%${keyPairAlgorithm.algorithmName}%'
+		 </if>
+		 <if test="endTime!=null and endTime!='' ">
+		 	<![CDATA[ and gen_time <=#{endTime}]]>
+		 </if>
+		 <if test="startTime!=null and startTime!='' ">
+		 	<![CDATA[ and gen_time >=#{startTime}]]>
+		</if>
+	</select>
+	
+</mapper>
