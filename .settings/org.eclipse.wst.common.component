@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="km">
+    <wb-module deploy-name="root">
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/webapp/jsBak"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/kmc"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/root"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/root"/>
         <wb-resource deploy-path="/" source-path="/src/main/webapp"/>
-        <property name="context-root" value="/km"/>
-        <property name="java-output-path" value="/km/src/main/webapp/src/main/resources"/>
+        <property name="context-root" value="/root"/>
+        <property name="java-output-path" value="/root/src/main/webapp/src/main/resources"/>
     </wb-module>
 </project-modules>

@@ -23,9 +23,9 @@
   <modelVersion>4.0.0</modelVersion>
   <packaging>war</packaging>
 
-  <name>km</name>
-  <groupId>km</groupId>
-  <artifactId>km</artifactId>
+  <name>root</name>
+  <groupId>root</groupId>
+  <artifactId>root</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 
   <build>
