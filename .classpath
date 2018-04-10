@@ -3,6 +3,8 @@
 	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources"/>
 	<classpathentry kind="src" path="src/main/kmc"/>
 	<classpathentry kind="src" path="src/main/src"/>
+	<classpathentry kind="src" path="src/main/ca"/>
+	<classpathentry kind="src" path="src/main/ra"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
