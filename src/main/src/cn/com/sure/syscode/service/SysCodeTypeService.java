@@ -5,26 +5,26 @@ package cn.com.sure.syscode.service;
 
 import java.util.List;
 
-import cn.com.sure.common.KmApplicationexception;
-import cn.com.sure.syscode.entry.KmSysCodeType;
+import cn.com.sure.common.Applicationexception;
+import cn.com.sure.syscode.entry.SysCodeType;
 
 /**
  * @author Limin
  *
  */
-public interface KmSysCodeTypeService {
+public interface SysCodeTypeService {
 
 	/**
 	 * @param sysCodeType
 	 * @return 
 	 */
-	int insert(KmSysCodeType sysCodeType)throws KmApplicationexception;
+	int insert(SysCodeType sysCodeType)throws Applicationexception;
 
 	/**
 	 * @param sysCodeType
 	 * @return 
 	 */
-	int update(KmSysCodeType sysCodeType);
+	int update(SysCodeType sysCodeType);
 
 	/**
 	 * @param id
@@ -36,18 +36,18 @@ public interface KmSysCodeTypeService {
 	 * @param sysCodeType
 	 * @return
 	 */
-	List<KmSysCodeType> selectAll(KmSysCodeType sysCodeType);
+	List<SysCodeType> selectAll(SysCodeType sysCodeType);
 
 	/**
 	 * @param sysCodeType
 	 * @return
 	 */
-	List<KmSysCodeType> searchByCondition(KmSysCodeType sysCodeType);
+	List<SysCodeType> searchByCondition(SysCodeType sysCodeType);
 
 	/**
 	 * @param id
 	 * @return
 	 */
-	KmSysCodeType selectById(Long id);
+	SysCodeType selectById(Long id);
 	
 }

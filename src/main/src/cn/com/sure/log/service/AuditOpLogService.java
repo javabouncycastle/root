@@ -5,9 +5,9 @@ import java.util.List;
 
 import javax.servlet.ServletOutputStream;
 
-import cn.com.sure.log.entry.KmAuditOpLog;
+import cn.com.sure.log.entry.AuditOpLog;
 
-public interface KmAuditOpLogService {
+public interface AuditOpLogService {
 	
 	
 	/**
@@ -21,14 +21,14 @@ public interface KmAuditOpLogService {
 	/**
 	 * @return
 	 */
-	List<KmAuditOpLog> selectAll();
+	List<AuditOpLog> selectAll();
 
 
 	/**
 	 * @param auditOpLog
 	 * @return
 	 */
-	List<KmAuditOpLog> searchByCondition(KmAuditOpLog auditOpLog);
+	List<AuditOpLog> searchByCondition(AuditOpLog auditOpLog);
 
 
 	/**
@@ -36,6 +36,6 @@ public interface KmAuditOpLogService {
 	 * @param titles 
 	 * 
 	 */
-	void exportExcel(String[] titles, ServletOutputStream out,KmAuditOpLog auditOpLog)throws Exception;
+	void exportExcel(String[] titles, ServletOutputStream out,AuditOpLog auditOpLog)throws Exception;
 	
 }

@@ -5,7 +5,7 @@ package cn.com.sure.kpgtask.service;
 
 import java.util.List;
 
-import cn.com.sure.common.KmApplicationexception;
+import cn.com.sure.common.Applicationexception;
 import cn.com.sure.kpgtask.entry.KpgTask;
 
 /**
@@ -24,7 +24,7 @@ public interface KpgTaskService {
 	 * @param kpgTask
 	 * @return 
 	 */
-	int insert(KpgTask kpgTask)throws KmApplicationexception;
+	int insert(KpgTask kpgTask)throws Applicationexception;
 
 	/**
 	 * @param kpgTask

@@ -1,7 +1,7 @@
 package cn.com.sure.common;
 
 
-public class KmConstants {
+public class Constants {
 	
 	public static final int YES_OR_NO_OPTION_YES = 1;//停用启用-启用
 	public static final int YES_OR_NO_OPTION_NO = 0;//停用启用-停用

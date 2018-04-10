@@ -5,36 +5,36 @@ package cn.com.sure.syscode.dao;
 
 import java.util.List;
 
-import cn.com.sure.syscode.entry.KmSysCodeType;
+import cn.com.sure.syscode.entry.SysCodeType;
 
 /**
  * @author Limin
  *
  */
-public interface KmSysCodeTypeDAO {
+public interface SysCodeTypeDAO {
 
 	/**
 	 * @param paraType
 	 * @return 
 	 */
-	public KmSysCodeType findByType(String paraType);
+	public SysCodeType findByType(String paraType);
 
 	/**
 	 * @param sysCodeType
 	 * @return 
 	 */
-	public int insert(KmSysCodeType sysCodeType);
+	public int insert(SysCodeType sysCodeType);
 
 	/**
 	 * @param sysCodeType
 	 * @return 
 	 */
-	public int update(KmSysCodeType sysCodeType);
+	public int update(SysCodeType sysCodeType);
 
 	/**
 	 * @param sysCodeType
 	 */
-	public List<KmSysCodeType> selectAll(KmSysCodeType sysCodeType);
+	public List<SysCodeType> selectAll(SysCodeType sysCodeType);
 
 	/**
 	 * @param id
@@ -46,11 +46,11 @@ public interface KmSysCodeTypeDAO {
 	 * @param sysCodeType
 	 * @return
 	 */
-	public List<KmSysCodeType> searchByCondition(KmSysCodeType sysCodeType);
+	public List<SysCodeType> searchByCondition(SysCodeType sysCodeType);
 
 	/**
 	 * @param id
 	 * @return
 	 */
-	public KmSysCodeType selectById(Long id);
+	public SysCodeType selectById(Long id);
 }

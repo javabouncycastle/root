@@ -24,14 +24,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import cn.com.sure.algorthm.entry.KeyPairAlgorithm;
 import cn.com.sure.algorthm.service.KeypairAlgorithmService;
 import cn.com.sure.common.BaseController;
-import cn.com.sure.common.KmApplicationexception;
-import cn.com.sure.common.KmConstants;
+import cn.com.sure.common.Applicationexception;
+import cn.com.sure.common.Constants;
 import cn.com.sure.kpgtask.entry.KpgTask;
 import cn.com.sure.kpgtask.service.KpgTaskExecuteService;
 import cn.com.sure.kpgtask.service.KpgTaskService;
-import cn.com.sure.log.service.KmAuditOpLogService;
-import cn.com.sure.syscode.entry.KmSysCode;
-import cn.com.sure.syscode.service.KmSysCodeService;
+import cn.com.sure.log.service.AuditOpLogService;
+import cn.com.sure.syscode.entry.SysCode;
+import cn.com.sure.syscode.entry.SysCodeType;
+import cn.com.sure.syscode.service.SysCodeService;
 
 /**
  * @author Limin
@@ -50,10 +51,10 @@ public class KpgTaskController extends BaseController{
 	private KeypairAlgorithmService keyPairAlgorithmService;
 	
 	@Autowired
-	private KmSysCodeService sysCodeService;
+	private SysCodeService sysCodeService;
 	
 	@Autowired
-	private KmAuditOpLogService auditOpLogService;
+	private AuditOpLogService auditOpLogService;
 	
 	@Autowired KpgTaskExecuteService kpgTaskExecuteService;
 	
@@ -71,11 +72,17 @@ public class KpgTaskController extends BaseController{
 			RedirectAttributes attr,HttpServletRequest request){
 		LOG.debug("selectAll - start");
 		KeyPairAlgorithm keyPairAlgorithm = new KeyPairAlgorithm();
-		KmSysCode sysCode = new KmSysCode();
+		SysCode sysCode = new SysCode();
+		SysCodeType sysCodeType = new SysCodeType();
+		
+		sysCodeType.setParaType(Constants.DB_COMMIT_BUFFER);
+		sysCode.setIsValid(Constants.YES_OR_NO_OPTION_YES);
+		sysCode.setParaType(sysCodeType);
+		
 		List<KpgTask> kpgTasks = this.kpgTaskService.selectAll();
 		List<KeyPairAlgorithm> keyPairAlgorithms = this.keyPairAlgorithmService.selectOpYes(keyPairAlgorithm);
-		List<KmSysCode> codeBuf = this.sysCodeService.selectBufSize(sysCode);
-		List<KmSysCode> sysCodes = this.sysCodeService.selectByType(sysCode);
+		List<SysCode> codeBuf = this.sysCodeService.searchByCondition(sysCode);
+		List<SysCode> sysCodes = this.sysCodeService.selectByType(sysCode);
 		LOG.debug("selectAll - end");
 		return new ModelAndView("algorithm/keyPairTaskList").addObject("kpgTasks", kpgTasks).addObject("keyPairAlgorithms",keyPairAlgorithms).addObject("sysCodes",sysCodes).addObject("codeBuf",codeBuf);
 		
@@ -98,15 +105,15 @@ public class KpgTaskController extends BaseController{
 			//添加是否成功
 			int result;
 			if(i==-1){
-				result = KmConstants.SUCCESS_OR_FAILD_OPTION_FAILD;
+				result = Constants.SUCCESS_OR_FAILD_OPTION_FAILD;
 			}else{
-				result = KmConstants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
+				result = Constants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
 			}
 			// 添加审计日志
-			auditOpLogService.insert(KmConstants.OPERATION_TYPE_INSERT, "增加", "数据字典类别", null,
-					kpgTask.getName(), null, null, new Date(), getIp(request), (String)request.getSession().getAttribute(KmConstants.SESSION_ADMIN_NAME), 
+			auditOpLogService.insert(Constants.OPERATION_TYPE_INSERT, "增加", "数据字典类别", null,
+					kpgTask.getName(), null, null, new Date(), getIp(request), (String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME), 
 					result);
-		} catch (KmApplicationexception e) {
+		} catch (Applicationexception e) {
 			attr.addFlashAttribute("messageInsert",e.getMessage());
 			attr.addFlashAttribute("kpgTask",kpgTask);
 			return "redirect:/kpgTask/selectAll.do";
@@ -134,13 +141,13 @@ public class KpgTaskController extends BaseController{
 		int i = kpgTaskService.update(kpgTask);
 		int result;
 		if(i==-1){
-			result = KmConstants.SUCCESS_OR_FAILD_OPTION_FAILD;
+			result = Constants.SUCCESS_OR_FAILD_OPTION_FAILD;
 		}else{
-			result = KmConstants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
+			result = Constants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
 		}
 		//添加审计日志
-		auditOpLogService.insert(KmConstants.OPERATION_TYPE_UPDATE, "更新", "数据字典类别", kpgTask.getId().toString(), null, null, 
-				str, new Date(), getIp(request), (String)request.getSession().getAttribute(KmConstants.SESSION_ADMIN_NAME), 
+		auditOpLogService.insert(Constants.OPERATION_TYPE_UPDATE, "更新", "数据字典类别", kpgTask.getId().toString(), null, null, 
+				str, new Date(), getIp(request), (String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME), 
 				result);
 		LOG.debug("update - end");
 		attr.addFlashAttribute("updateSuccess","true");
@@ -176,7 +183,7 @@ public class KpgTaskController extends BaseController{
 	 * @param request
 	 * @return
 	 * @throws NoSuchAlgorithmException
-	 * @throws KmApplicationexception
+	 * @throws Applicationexception
 	 * @throws NoSuchProviderException
 	 * @throws ClassNotFoundException
 	 * @throws InstantiationException
@@ -184,7 +191,7 @@ public class KpgTaskController extends BaseController{
 	 */
 	@RequestMapping(value="start")
 	public String genKeypair(Long id,Model model, 
-			RedirectAttributes attr,HttpServletRequest request) throws NoSuchAlgorithmException, KmApplicationexception, NoSuchProviderException, ClassNotFoundException, InstantiationException, IllegalAccessException{
+			RedirectAttributes attr,HttpServletRequest request) throws NoSuchAlgorithmException, Applicationexception, NoSuchProviderException, ClassNotFoundException, InstantiationException, IllegalAccessException{
 		LOG.debug("genKeypair - start");
 		kpgTaskService.start(id);
 		LOG.debug("genKeypair - end");

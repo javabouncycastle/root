@@ -3,19 +3,19 @@
  */
 package cn.com.sure.admin.service;
 
-import cn.com.sure.admin.entry.KmAdmin;
+import cn.com.sure.admin.entry.Admin;
 
 /**
  * @author Limin
  *
  */
-public interface KmAdminService {
+public interface AdminService {
 
 	/**
 	 * @param adminAuthNum
 	 * @return
 	 */
-	KmAdmin fingByAdmId(int adminAuthNum);
+	Admin fingByAdmId(int adminAuthNum);
 	
 	
 

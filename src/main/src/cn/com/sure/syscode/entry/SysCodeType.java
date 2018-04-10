@@ -10,7 +10,7 @@ import javax.persistence.Id;
  *  系统代码类别描述 - 标识类别 比如性别，职称等
  *  
  */
-public class KmSysCodeType {
+public class SysCodeType {
 	
 	@Id
     private Long id;

@@ -1,10 +1,8 @@
 package cn.com.sure.syscode.entry;
 
-import javax.persistence.Id;
+public class SysCode {
 
-public class KmSysCode {
-
-	@Id
+	
     private Long id;
 	
 	/**
@@ -20,7 +18,7 @@ public class KmSysCode {
 	/**
 	 * 参数类别 - 引用km_sys_code_type表
 	 */
-    private KmSysCodeType paraType;
+    private SysCodeType paraType;
     
 	/**
 	 * 是否有效
@@ -33,11 +31,11 @@ public class KmSysCode {
     private String notes;
     
 
-	public KmSysCodeType getParaType() {
+	public SysCodeType getParaType() {
 		return paraType;
 	}
 
-	public void setParaType(KmSysCodeType paraType) {
+	public void setParaType(SysCodeType paraType) {
 		this.paraType = paraType;
 	}
 

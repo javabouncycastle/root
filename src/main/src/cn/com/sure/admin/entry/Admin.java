@@ -9,7 +9,7 @@ import java.util.Date;
  * @author Limin
  *
  */
-public class KmAdmin {
+public class Admin {
 	
 	private String id;
 	

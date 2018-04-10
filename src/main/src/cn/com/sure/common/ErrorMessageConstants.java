@@ -1,6 +1,6 @@
 package cn.com.sure.common;
 
-public interface KmErrorMessageConstants {
+public interface ErrorMessageConstants {
 	
 	public static final int unknownError = -1;  // 位置错误
 	

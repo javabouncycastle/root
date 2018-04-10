@@ -18,26 +18,26 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import cn.com.sure.log.dao.KmAuditOpLogDAO;
-import cn.com.sure.log.entry.KmAuditOpLog;
+import cn.com.sure.log.dao.AuditOpLogDAO;
+import cn.com.sure.log.entry.AuditOpLog;
 
 @Transactional(propagation = Propagation.REQUIRED)
 @Service(value="auditOpLogService")
-public class KmAuditOpLogServiceImpl implements KmAuditOpLogService{
+public class AuditOpLogServiceImpl implements AuditOpLogService{
 	
-	private static final Log LOG = LogFactory.getLog(KmAuditOpLogServiceImpl.class);
+	private static final Log LOG = LogFactory.getLog(AuditOpLogServiceImpl.class);
 	
 	@Autowired
-	private KmAuditOpLogDAO auditOpLogDAO;
+	private AuditOpLogDAO auditOpLogDAO;
 
 
 	/* (non-Javadoc)
 	 * @see cn.com.sure.log.service.AuditOpLogService#selectAll()
 	 */
 	@Override
-	public List<KmAuditOpLog> selectAll() {
+	public List<AuditOpLog> selectAll() {
 		LOG.debug("selectAll - start");
-		List<KmAuditOpLog> auditOpLogs = auditOpLogDAO.selectAll();
+		List<AuditOpLog> auditOpLogs = auditOpLogDAO.selectAll();
 		LOG.debug("selectAll - end");
 		return auditOpLogs;
 	}
@@ -46,9 +46,9 @@ public class KmAuditOpLogServiceImpl implements KmAuditOpLogService{
 	 * @see cn.com.sure.log.service.AuditOpLogService#searchByCondition(cn.com.sure.log.entry.AuditOpLog)
 	 */
 	@Override
-	public List<KmAuditOpLog> searchByCondition(KmAuditOpLog auditOpLog) {
+	public List<AuditOpLog> searchByCondition(AuditOpLog auditOpLog) {
 		LOG.debug("searchByCondition - start");
-		List<KmAuditOpLog> auditOpLogs = auditOpLogDAO.searchByCondition(auditOpLog);
+		List<AuditOpLog> auditOpLogs = auditOpLogDAO.searchByCondition(auditOpLog);
 		LOG.debug("searchByCondition - start");
 		return auditOpLogs;
 	}
@@ -64,7 +64,7 @@ public class KmAuditOpLogServiceImpl implements KmAuditOpLogService{
 			String message, Date timestamp, String ip, String operator,
 			Integer isOpSucc) {
 		LOG.debug("insert - start");
-		KmAuditOpLog auditOpLog = new KmAuditOpLog();
+		AuditOpLog auditOpLog = new AuditOpLog();
 		auditOpLog.setType(type);
 		auditOpLog.setAction(action);
 		auditOpLog.setActionExt1(actionExt1);
@@ -88,7 +88,7 @@ public class KmAuditOpLogServiceImpl implements KmAuditOpLogService{
 	 * @see cn.com.sure.log.service.AuditOpLogService#exportExcel(java.lang.String[], javax.servlet.ServletOutputStream)
 	 */
 	@Override
-	public void exportExcel(String[] titles, ServletOutputStream out,KmAuditOpLog auditOpLog) throws Exception {
+	public void exportExcel(String[] titles, ServletOutputStream out,AuditOpLog auditOpLog) throws Exception {
 		LOG.debug("exportExcel - start");
 		// 第一步，创建一个workbook，对应一个Excel文件
 		HSSFWorkbook workbook = new HSSFWorkbook();
@@ -109,13 +109,13 @@ public class KmAuditOpLogServiceImpl implements KmAuditOpLogService{
 			}
 		
 		  // 第五步，写入实体数据 
-		 List <KmAuditOpLog> auditOpLogs = auditOpLogDAO.searchByCondition(auditOpLog);
+		 List <AuditOpLog> auditOpLogs = auditOpLogDAO.searchByCondition(auditOpLog);
 		
 		 SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		 if(auditOpLogs != null && !auditOpLogs.isEmpty()){
 		     for (int i = 0; i < auditOpLogs.size(); i++) {
 		         hssfRow = hssfSheet.createRow(i+1);                
-		         KmAuditOpLog opLog = auditOpLogs.get(i);
+		         AuditOpLog opLog = auditOpLogs.get(i);
 		      // 第六步，创建单元格，并设置值
 		      String id = opLog.getId();
 		      hssfRow.createCell(0).setCellValue(id);

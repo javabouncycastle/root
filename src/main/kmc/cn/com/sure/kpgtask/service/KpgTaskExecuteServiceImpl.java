@@ -19,8 +19,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import sun.misc.BASE64Encoder;
-import cn.com.sure.common.KmApplicationexception;
-import cn.com.sure.common.KmConstants;
+import cn.com.sure.common.Applicationexception;
+import cn.com.sure.common.Constants;
 import cn.com.sure.keypair.entry.KeypairStandby;
 import cn.com.sure.keypair.service.KeypairStandbyService;
 import cn.com.sure.kpgtask.entry.KpgTask;
@@ -44,7 +44,7 @@ import cn.com.sure.kpgtask.entry.KpgTask;
 		/* (non-Javadoc)
 		 * @see cn.com.sure.keypair.service.KpgTaskExecuteService#executeTaskSlice()
 		 */
-		public void executeTaskSlice(Long taskId) throws NoSuchAlgorithmException, NoSuchProviderException, KmApplicationexception, ClassNotFoundException, InstantiationException, IllegalAccessException {
+		public void executeTaskSlice(Long taskId) throws NoSuchAlgorithmException, NoSuchProviderException, Applicationexception, ClassNotFoundException, InstantiationException, IllegalAccessException {
 			
 			LOG.debug("executeTaskSlice - start");
 
@@ -55,11 +55,10 @@ import cn.com.sure.kpgtask.entry.KpgTask;
 			
 			
 			//2.判断状态
-			if(!kpgTask.getTaskStatus().getParaValue().equals(String.valueOf(KmConstants.CODE_ID_TASK_STATUS_EXECUTING))){
+			if(!kpgTask.getTaskStatus().getParaValue().equals(String.valueOf(Constants.CODE_ID_TASK_STATUS_EXECUTING))){
 				LOG.info("无法继续执行任务块-["+taskId+"]任务状态："+kpgTask.getTaskStatus().getParaValue());
 				return;
 			}
-			
 			
 			//3.判断本次任务片段总共生成多少密钥
 			//3.1缓冲数量

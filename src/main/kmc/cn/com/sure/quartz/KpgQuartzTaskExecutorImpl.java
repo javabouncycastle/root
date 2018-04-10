@@ -15,12 +15,12 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.com.sure.common.KeyPairGenThread;
-import cn.com.sure.common.KmApplicationexception;
-import cn.com.sure.common.KmConstants;
+import cn.com.sure.common.Applicationexception;
+import cn.com.sure.common.Constants;
 import cn.com.sure.kpgtask.entry.KpgTask;
 import cn.com.sure.kpgtask.service.KpgTaskExecuteService;
 import cn.com.sure.kpgtask.service.KpgTaskService;
-import cn.com.sure.syscode.entry.KmSysCode;
+import cn.com.sure.syscode.entry.SysCode;
 
 /**
  * @author Limin
@@ -41,7 +41,7 @@ public class KpgQuartzTaskExecutorImpl implements KpgQuartzTaskExecutor{
 	
 	@Override
 	public void executeTask() throws NoSuchAlgorithmException,
-			KmApplicationexception {
+			Applicationexception {
 		LOG.info("Quartz:executeTask NotStartedTask - start at " + new Date());
 		//1.启动新任务
 		List<KpgTask> list = kpgTaskService.findAllUnExecutedTask();
@@ -52,8 +52,8 @@ public class KpgQuartzTaskExecutorImpl implements KpgQuartzTaskExecutor{
 			task.setExeTaskStartTime(new Date());
 			
 			//更新任务状态
-			KmSysCode sysCode = new KmSysCode();
-			sysCode.setParaValue(String.valueOf(KmConstants.CODE_ID_TASK_STATUS_EXECUTING));
+			SysCode sysCode = new SysCode();
+			sysCode.setParaValue(String.valueOf(Constants.CODE_ID_TASK_STATUS_EXECUTING));
 			task.setTaskStatus(sysCode);
 			
 			kpgTaskService.update(task);
@@ -68,13 +68,13 @@ public class KpgQuartzTaskExecutorImpl implements KpgQuartzTaskExecutor{
 		//2.继续暂停任务
 		LOG.info("Quartz:executeTask ResumeTask - start at " + new Date());
 
-		list=kpgTaskService.findByTaskStatus(KmConstants.CODE_ID_TASK_STATUS_WAITING_FOR_EXECUTING);
+		list=kpgTaskService.findByTaskStatus(Constants.CODE_ID_TASK_STATUS_WAITING_FOR_EXECUTING);
 		
 		for(KpgTask task:list){
 			
-			KmSysCode sysCode = new KmSysCode();
+			SysCode sysCode = new SysCode();
 			
-			sysCode.setParaValue(String.valueOf(KmConstants.CODE_ID_TASK_STATUS_EXECUTING));
+			sysCode.setParaValue(String.valueOf(Constants.CODE_ID_TASK_STATUS_EXECUTING));
 			
 			task.setTaskStatus(sysCode);
 

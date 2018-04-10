@@ -16,28 +16,28 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import cn.com.sure.common.KmApplicationexception;
-import cn.com.sure.common.KmConstants;
-import cn.com.sure.log.service.KmAuditOpLogService;
-import cn.com.sure.syscode.entry.KmSysCode;
-import cn.com.sure.syscode.entry.KmSysCodeType;
-import cn.com.sure.syscode.service.KmSysCodeService;
-import cn.com.sure.syscode.service.KmSysCodeTypeService;
+import cn.com.sure.common.Applicationexception;
+import cn.com.sure.common.Constants;
+import cn.com.sure.log.service.AuditOpLogService;
+import cn.com.sure.syscode.entry.SysCode;
+import cn.com.sure.syscode.entry.SysCodeType;
+import cn.com.sure.syscode.service.SysCodeService;
+import cn.com.sure.syscode.service.SysCodeTypeService;
 
 @Controller
 @RequestMapping(value="syscode")
-public class KmSysCodeController {
+public class SysCodeController {
 	
-	private static final Log LOG = LogFactory.getLog(KmSysCodeController.class);
-	
-	@Autowired
-	private KmSysCodeService sysCodeService;
+	private static final Log LOG = LogFactory.getLog(SysCodeController.class);
 	
 	@Autowired
-	private KmSysCodeTypeService sysCodeTypeService;
+	private SysCodeService sysCodeService;
 	
 	@Autowired
-	private KmAuditOpLogService auditOpLogService;
+	private SysCodeTypeService sysCodeTypeService;
+	
+	@Autowired
+	private AuditOpLogService auditOpLogService;
 	
 	Date date = new Date();
 	
@@ -46,7 +46,7 @@ public class KmSysCodeController {
 	* @return "redirect:/list"
 	*/
 	@RequestMapping(value = "insert")
-	public String insert(KmSysCode sysCode,
+	public String insert(SysCode sysCode,
 			Model model, RedirectAttributes attr,HttpServletRequest request
 			){
 		LOG.debug("insert - start!");
@@ -56,14 +56,14 @@ public class KmSysCodeController {
 			//添加审计日志
 			int result;
 			if(i==-1){
-				result = KmConstants.SUCCESS_OR_FAILD_OPTION_FAILD;
+				result = Constants.SUCCESS_OR_FAILD_OPTION_FAILD;
 			}else{
-				result = KmConstants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
+				result = Constants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
 			}
-			auditOpLogService.insert(KmConstants.OPERATION_TYPE_INSERT, "增加", "数据字典", null,
-					sysCode.getParaCode(), null, null, date, getIp(request), (String)request.getSession().getAttribute(KmConstants.SESSION_ADMIN_NAME), 
+			auditOpLogService.insert(Constants.OPERATION_TYPE_INSERT, "增加", "数据字典", null,
+					sysCode.getParaCode(), null, null, date, getIp(request), (String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME), 
 					result);
-		}catch(KmApplicationexception e){
+		}catch(Applicationexception e){
 			attr.addFlashAttribute("message",e.getMessage());
 			attr.addFlashAttribute("frSysCode",sysCode);
 			return "redirect:/syscode/selectAll.do";
@@ -84,11 +84,11 @@ public class KmSysCodeController {
 	 * @return
 	 */
 	@RequestMapping(value="selectAll")
-	public ModelAndView selectAll(KmSysCode sysCode,
+	public ModelAndView selectAll(SysCode sysCode,
 			Model model, RedirectAttributes attr,HttpServletRequest request){
 		LOG.debug("selectAll - start");
-		List<KmSysCode> sysCodes = this.sysCodeService.selectAll();
-		List<KmSysCodeType> sysCodeTypes = this.sysCodeTypeService.selectAll(null);
+		List<SysCode> sysCodes = this.sysCodeService.selectAll();
+		List<SysCodeType> sysCodeTypes = this.sysCodeTypeService.selectAll(null);
 		LOG.debug("selectAll - end");
 		return new ModelAndView("syscode/syscodeList").addObject("sysCodes", sysCodes).addObject("sysCodeTypes",sysCodeTypes);
 	}
@@ -100,7 +100,7 @@ public class KmSysCodeController {
 	*/
 	@RequestMapping(value = "update")
 	public String update(
-	KmSysCode sysCode, Model model,RedirectAttributes attr,HttpServletRequest request){
+	SysCode sysCode, Model model,RedirectAttributes attr,HttpServletRequest request){
 		LOG.debug("update - start!");
 		
 		//添加审计日志
@@ -110,12 +110,12 @@ public class KmSysCodeController {
 		//添加审计日志
 		int result;
 		if(i==-1){
-			result=KmConstants.SUCCESS_OR_FAILD_OPTION_FAILD;
+			result=Constants.SUCCESS_OR_FAILD_OPTION_FAILD;
 		}else{
-			result=KmConstants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
+			result=Constants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
 		}
-		auditOpLogService.insert(KmConstants.OPERATION_TYPE_UPDATE, "更新", "数据字典", sysCode.getId().toString(), null, null, 
-				str, date, getIp(request), (String)request.getSession().getAttribute(KmConstants.SESSION_ADMIN_NAME), 
+		auditOpLogService.insert(Constants.OPERATION_TYPE_UPDATE, "更新", "数据字典", sysCode.getId().toString(), null, null, 
+				str, date, getIp(request), (String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME), 
 				result);
 		LOG.debug("update - end!");
 		attr.addFlashAttribute("success","true");
@@ -138,12 +138,12 @@ public class KmSysCodeController {
 		//添加审计日志
 		int result;
 		if(i==-1){
-			 result = KmConstants.SUCCESS_OR_FAILD_OPTION_FAILD;
+			 result = Constants.SUCCESS_OR_FAILD_OPTION_FAILD;
 		}else{
-			 result = KmConstants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
+			 result = Constants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
 		}
-		auditOpLogService.insert(KmConstants.OPERATION_TYPE_DELETE, "删除", "数据字典", id.toString(), null, null, null, 
-				date,getIp(request),  (String)request.getSession().getAttribute(KmConstants.SESSION_ADMIN_NAME), result);
+		auditOpLogService.insert(Constants.OPERATION_TYPE_DELETE, "删除", "数据字典", id.toString(), null, null, null, 
+				date,getIp(request),  (String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME), result);
 		LOG.debug("remove - end!");
 		attr.addFlashAttribute("success","true");
 		attr.addFlashAttribute("msg","删除主键为【"+id+"】信息成功");	
@@ -193,9 +193,9 @@ public class KmSysCodeController {
 	 * UC-SYS01-11按条件查询字典内容
 	 */
 	@RequestMapping(value = "searchByCondition")
-	public ModelAndView searchByCondition(KmSysCode sysCode, Model model,RedirectAttributes attr,HttpServletRequest request){
+	public ModelAndView searchByCondition(SysCode sysCode, Model model,RedirectAttributes attr,HttpServletRequest request){
 		LOG.debug("searchByCondition - start");
-		List<KmSysCode> sysCodes  = sysCodeService.searchByCondition(sysCode);
+		List<SysCode> sysCodes  = sysCodeService.searchByCondition(sysCode);
 		LOG.debug("searchByCondition - end");
 		return new ModelAndView("syscode/syscodeList").addObject("sysCodes", sysCodes);
 		
@@ -227,10 +227,10 @@ public class KmSysCodeController {
     
     
     //比较更新了那些字段
-    public String compare(KmSysCode sysCodeNew){
+    public String compare(SysCode sysCodeNew){
     	String resultString="";
     	if(sysCodeNew!=null&&!"".equals(sysCodeNew)){
-    		KmSysCode sysCodeDB = sysCodeService.selectById(sysCodeNew.getId());
+    		SysCode sysCodeDB = sysCodeService.selectById(sysCodeNew.getId());
     		if(StringUtils.isNotBlank(sysCodeDB.getParaCode())&&StringUtils.isNotBlank(sysCodeNew.getParaCode())){
     			if(!sysCodeDB.getParaCode().equals(sysCodeNew.getParaCode())){
     				resultString+="记录参数名称由"+sysCodeDB.getParaCode()+"变更为"+sysCodeNew.getParaCode();

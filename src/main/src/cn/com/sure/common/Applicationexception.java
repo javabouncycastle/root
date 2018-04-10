@@ -1,6 +1,6 @@
 package cn.com.sure.common;
 
-public class KmApplicationexception extends Exception{
+public class Applicationexception extends Exception{
 
 	/**
 	 * application�쳣
@@ -11,27 +11,27 @@ public class KmApplicationexception extends Exception{
     
 
     
-    public KmApplicationexception(String message){
+    public Applicationexception(String message){
     	super(message);
     }
     
-    public KmApplicationexception(String message, Exception e){
+    public Applicationexception(String message, Exception e){
     	
     	super(message);
         underlyingException = e;
     }
     
-    public KmApplicationexception(int errorCode){
+    public Applicationexception(int errorCode){
         super("Error - "+errorCode);
 		this.errorCode = errorCode;
 	}
     
-    public KmApplicationexception(int errorCode,String message){
+    public Applicationexception(int errorCode,String message){
         super(message);
 		this.errorCode = errorCode;
 	}
     
-    public KmApplicationexception(int errorCode,String message, Exception e)
+    public Applicationexception(int errorCode,String message, Exception e)
     {
         super(message);
 		this.errorCode = errorCode;
@@ -52,9 +52,9 @@ public class KmApplicationexception extends Exception{
 		return errorCode;
 	}
 	
-	  public static void throwException(int errCode,Object[] args) throws KmApplicationexception{
+	  public static void throwException(int errCode,Object[] args) throws Applicationexception{
 	    	String message = ResourceBundleErrorMessage.getInstance().getMessage(errCode, args);
-	    	throw new KmApplicationexception(errCode,message);
+	    	throw new Applicationexception(errCode,message);
 	    }
 
 	 

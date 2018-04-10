@@ -22,10 +22,10 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cn.com.sure.common.BaseController;
-import cn.com.sure.common.KmErrorMessageConstants;
-import cn.com.sure.log.entry.KmAuditOpLog;
-import cn.com.sure.log.service.KmAuditOpLogService;
-import cn.com.sure.syscode.web.KmSysCodeController;
+import cn.com.sure.common.ErrorMessageConstants;
+import cn.com.sure.log.entry.AuditOpLog;
+import cn.com.sure.log.service.AuditOpLogService;
+import cn.com.sure.syscode.web.SysCodeController;
 
 /**
  * @author Limin
@@ -33,12 +33,12 @@ import cn.com.sure.syscode.web.KmSysCodeController;
  */
 @Controller
 @RequestMapping(value="auditOpLog")
-public class KmAuditOpLogController extends BaseController {
+public class AuditOpLogController extends BaseController {
 	
-	private static final Log LOG = LogFactory.getLog(KmSysCodeController.class);
+	private static final Log LOG = LogFactory.getLog(SysCodeController.class);
 	
 	@Autowired
-	private KmAuditOpLogService auditOpLogService;
+	private AuditOpLogService auditOpLogService;
 	
 	/**
 	 * 查询所有日志
@@ -47,7 +47,7 @@ public class KmAuditOpLogController extends BaseController {
 	@RequestMapping(value="selectAll")
 	public ModelAndView selectAll(){
 		LOG.debug("selectAll - start");
-		List<KmAuditOpLog> auditOpLogs = auditOpLogService.selectAll();
+		List<AuditOpLog> auditOpLogs = auditOpLogService.selectAll();
 		LOG.debug("selectAll - end");
 		return new ModelAndView("auditOpLog/auditOpLogList").addObject("auditOpLogs", auditOpLogs);
 		
@@ -62,16 +62,16 @@ public class KmAuditOpLogController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value="searchByCondition")
-	public ModelAndView searchByCondition(KmAuditOpLog auditOpLog,
+	public ModelAndView searchByCondition(AuditOpLog auditOpLog,
 			Model model, RedirectAttributes attr,HttpServletRequest request){
 		LOG.debug("searchByCondition - start");
-		List<KmAuditOpLog> auditOpLogs = auditOpLogService.searchByCondition(auditOpLog);
+		List<AuditOpLog> auditOpLogs = auditOpLogService.searchByCondition(auditOpLog);
 		LOG.debug("searchByCondition - end");
 		return new ModelAndView("auditOpLog/auditOpLogList").addObject("auditOpLogs", auditOpLogs).addObject("auditOpLog",auditOpLog);
 	}
 	
 	@RequestMapping(value="exportExcel")
-	public String exportExcel(HttpServletResponse response,KmAuditOpLog auditOpLog) throws Exception{
+	public String exportExcel(HttpServletResponse response,AuditOpLog auditOpLog) throws Exception{
 		LOG.debug("exportExcel - start");
 		 response.setContentType("application/binary;charset=UTF-8");
 		 try {
@@ -83,7 +83,7 @@ public class KmAuditOpLogController extends BaseController {
 		 return "redirect:/auditOpLog/selectAll.do.do";
 		} catch (IOException e) {
 			e.printStackTrace();
-			return String.valueOf(KmErrorMessageConstants.exportError);
+			return String.valueOf(ErrorMessageConstants.exportError);
 		}
 		
 	}

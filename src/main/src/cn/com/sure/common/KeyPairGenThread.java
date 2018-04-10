@@ -11,7 +11,7 @@ import org.apache.commons.logging.LogFactory;
 import cn.com.sure.kpgtask.entry.KpgTask;
 import cn.com.sure.kpgtask.service.KpgTaskExecuteService;
 import cn.com.sure.kpgtask.service.KpgTaskService;
-import cn.com.sure.syscode.entry.KmSysCode;
+import cn.com.sure.syscode.entry.SysCode;
 
 /**
  * @author Limin
@@ -53,8 +53,8 @@ public class KeyPairGenThread extends Thread{
 				
 				kpgTask = kpgTaskService.selectById(kpgTask.getId());
 				kpgTask.setExeTaskEndTime(new Date());
-				KmSysCode sysCode = new KmSysCode();
-				sysCode.setParaValue(String.valueOf(KmConstants.CODE_ID_TASK_STATUS_EXCEPTION));
+				SysCode sysCode = new SysCode();
+				sysCode.setParaValue(String.valueOf(Constants.CODE_ID_TASK_STATUS_EXCEPTION));
 				kpgTask.setTaskStatus(sysCode);
 				kpgTask.setTaskExeResult(e.getMessage());
 				kpgTaskService.update(kpgTask);
@@ -67,8 +67,8 @@ public class KeyPairGenThread extends Thread{
 			kpgTask = kpgTaskService.selectById(kpgTask.getId());
 			
 			if(kpgTask.getGeneratedKeyAmount().intValue() == kpgTask.getKpgKeyAmount().intValue()){
-				KmSysCode sysCode = new KmSysCode();
-				sysCode.setParaValue(String.valueOf(KmConstants.CODE_ID_TASK_STATUS_FINISHED));
+				SysCode sysCode = new SysCode();
+				sysCode.setParaValue(String.valueOf(Constants.CODE_ID_TASK_STATUS_FINISHED));
 				kpgTask.setTaskStatus(sysCode);
 				kpgTask.setExeTaskEndTime(new Date());
 				kpgTask.setTaskExeResult("成功");
@@ -76,7 +76,7 @@ public class KeyPairGenThread extends Thread{
 				return;
 			}
 			
-		}while(kpgTask.getTaskStatus().getParaValue().equals(String.valueOf(KmConstants.CODE_ID_TASK_STATUS_EXECUTING)) );
+		}while(kpgTask.getTaskStatus().getParaValue().equals(String.valueOf(Constants.CODE_ID_TASK_STATUS_EXECUTING)) );
 		
 		
 		LOG.info("run - end at "+ new Date());

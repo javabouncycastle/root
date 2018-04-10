@@ -10,9 +10,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.com.sure.algorthm.entry.KeyPairAlgorithm;
-import cn.com.sure.common.KmApplicationexception;
-import cn.com.sure.common.KmConstants;
-import cn.com.sure.common.KmErrorMessageConstants;
+import cn.com.sure.common.Applicationexception;
+import cn.com.sure.common.Constants;
+import cn.com.sure.common.ErrorMessageConstants;
 import cn.com.sure.keypair.dao.KeypairAlgorithmDAO;
 
 @Transactional(propagation = Propagation.REQUIRED)
@@ -26,7 +26,7 @@ public class KeypairAlgorithmServiceImpl implements KeypairAlgorithmService{
 
 	@Override
 	@Transactional(value="txManager" )//配置事务，基本形式
-	public int insert(KeyPairAlgorithm keyPairAlgorithm) throws KmApplicationexception {
+	public int insert(KeyPairAlgorithm keyPairAlgorithm) throws Applicationexception {
 		LOG.debug("insert - start");
 		int i = keyPairAlgorithmDAO.insert(keyPairAlgorithm);
 		/*KeyPairAlgorithm dbkeyPairAlgorithm = this.keyPairAlgorithmDAO.selectByName(keyPairAlgorithm);
@@ -49,12 +49,12 @@ public class KeypairAlgorithmServiceImpl implements KeypairAlgorithmService{
 	}
 
 	@Override
-	public int update(KeyPairAlgorithm keyPairAlgorithm) throws KmApplicationexception {
+	public int update(KeyPairAlgorithm keyPairAlgorithm) throws Applicationexception {
 		LOG.debug("update - start");
 		KeyPairAlgorithm keyPairAlgorithmDB = keyPairAlgorithmDAO.selectById(keyPairAlgorithm.getId());
 		int i = 0 ;
 		if(keyPairAlgorithmDB.equals(keyPairAlgorithm)){
-			KmApplicationexception.throwException(KmErrorMessageConstants.nameExist, new String[]{keyPairAlgorithm.getName()});
+			Applicationexception.throwException(ErrorMessageConstants.nameExist, new String[]{keyPairAlgorithm.getName()});
 		}if(!keyPairAlgorithmDB.equals(keyPairAlgorithm)){
 			i = keyPairAlgorithmDAO.update(keyPairAlgorithm);
 		}
@@ -75,7 +75,7 @@ public class KeypairAlgorithmServiceImpl implements KeypairAlgorithmService{
 	public void suspend(Long id) {
 		LOG.debug("suspend - start");
 		KeyPairAlgorithm keyPairAlgorithm = keyPairAlgorithmDAO.selectById(id);
-		keyPairAlgorithm.setIsValid(KmConstants.YES_OR_NO_OPTION_NO);
+		keyPairAlgorithm.setIsValid(Constants.YES_OR_NO_OPTION_NO);
 		keyPairAlgorithmDAO.update(keyPairAlgorithm);
 		LOG.debug("suspend - end");
 		
@@ -85,7 +85,7 @@ public class KeypairAlgorithmServiceImpl implements KeypairAlgorithmService{
 	public void activate(Long id) {
 		LOG.debug("activate - start");
 		KeyPairAlgorithm keyPairAlgorithm = keyPairAlgorithmDAO.selectById(id);
-		keyPairAlgorithm.setIsValid(KmConstants.YES_OR_NO_OPTION_YES);
+		keyPairAlgorithm.setIsValid(Constants.YES_OR_NO_OPTION_YES);
 		keyPairAlgorithmDAO.update(keyPairAlgorithm);
 		LOG.debug("activate - end");
 	}
@@ -96,7 +96,7 @@ public class KeypairAlgorithmServiceImpl implements KeypairAlgorithmService{
 	@Override
 	public List<KeyPairAlgorithm> selectOpYes(KeyPairAlgorithm keyPairAlgorithm) {
 		LOG.debug("selectOpYes - start");
-		keyPairAlgorithm.setIsValid(KmConstants.YES_OR_NO_OPTION_YES);
+		keyPairAlgorithm.setIsValid(Constants.YES_OR_NO_OPTION_YES);
 		List<KeyPairAlgorithm> keyPairAlgorithms = keyPairAlgorithmDAO.selectOpYes(keyPairAlgorithm);
 		LOG.debug("selectOpYes - start");
 		return keyPairAlgorithms;

@@ -5,7 +5,7 @@ package cn.com.sure.quartz;
 
 import java.security.NoSuchAlgorithmException;
 
-import cn.com.sure.common.KmApplicationexception;
+import cn.com.sure.common.Applicationexception;
 
 /**
  * @author Limin
@@ -15,9 +15,9 @@ public interface KpgQuartzTaskExecutor {
 	
 	/**
 	 * @throws NoSuchAlgorithmException 
-	 * @throws KmApplicationexception 
+	 * @throws Applicationexception 
 	 * 
 	 */
-	void executeTask() throws NoSuchAlgorithmException, KmApplicationexception;
+	void executeTask() throws NoSuchAlgorithmException, Applicationexception;
 
 }

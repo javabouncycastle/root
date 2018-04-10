@@ -5,7 +5,7 @@ import java.util.Date;
 import javax.persistence.Id;
 
 import cn.com.sure.algorthm.entry.KeyPairAlgorithm;
-import cn.com.sure.syscode.entry.KmSysCode;
+import cn.com.sure.syscode.entry.SysCode;
 
 public class KpgTask {
 
@@ -34,7 +34,7 @@ public class KpgTask {
     /**
      * 任务状态  1 standby准备状态，executing正在执行，finished任务完成，exception异常结束 ，interrupted人工中断
      */
-	private KmSysCode taskStatus; 
+	private SysCode taskStatus; 
     
 		
 	/**
@@ -64,7 +64,7 @@ public class KpgTask {
 	/**
 	 * 密钥已经存储缓冲记录数量
 	 */
-	private KmSysCode dbCommitBufsize; 
+	private SysCode dbCommitBufsize; 
 	
 	
 	
@@ -114,11 +114,11 @@ public class KpgTask {
 		this.kpgKeyAmount = kpgKeyAmount;
 	}
 
-	public KmSysCode getTaskStatus() {
+	public SysCode getTaskStatus() {
 		return taskStatus;
 	}
 
-	public void setTaskStatus(KmSysCode taskStatus) {
+	public void setTaskStatus(SysCode taskStatus) {
 		this.taskStatus = taskStatus;
 	}
 
@@ -154,11 +154,11 @@ public class KpgTask {
 		this.exeTaskEndTime = exeTaskEndTime;
 	}
 
-	public KmSysCode getDbCommitBufsize() {
+	public SysCode getDbCommitBufsize() {
 		return dbCommitBufsize;
 	}
 
-	public void setDbCommitBufsize(KmSysCode dbCommitBufsize) {
+	public void setDbCommitBufsize(SysCode dbCommitBufsize) {
 		this.dbCommitBufsize = dbCommitBufsize;
 	}
 

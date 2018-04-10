@@ -18,9 +18,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cn.com.sure.algorthm.entry.KeyPairAlgorithm;
 import cn.com.sure.algorthm.service.KeypairAlgorithmService;
-import cn.com.sure.common.KmApplicationexception;
-import cn.com.sure.common.KmConstants;
-import cn.com.sure.log.service.KmAuditOpLogService;
+import cn.com.sure.common.Applicationexception;
+import cn.com.sure.common.Constants;
+import cn.com.sure.log.service.AuditOpLogService;
 
 @Controller
 @RequestMapping(value="algorithm")
@@ -32,7 +32,7 @@ public class KeypairAlgorithmController {
 	private KeypairAlgorithmService keyPairAlgorithmService;
 	
 	@Autowired
-	private KmAuditOpLogService auditOpLogService;
+	private AuditOpLogService auditOpLogService;
 	
 	
 	/**
@@ -47,15 +47,15 @@ public class KeypairAlgorithmController {
 			int i = keyPairAlgorithmService.insert(keyPairAlgorithm);
 			int result;
 			if(i==-1){
-				result = KmConstants.SUCCESS_OR_FAILD_OPTION_FAILD;
+				result = Constants.SUCCESS_OR_FAILD_OPTION_FAILD;
 			}else{
-				result = KmConstants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
+				result = Constants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
 			}
 			//添加审计日志
-			auditOpLogService.insert(KmConstants.OPERATION_TYPE_INSERT, "增加", "数据字典类别", null,
-					keyPairAlgorithm.getAlgorithmName(), null, null, new Date(), getIp(request), (String)request.getSession().getAttribute(KmConstants.SESSION_ADMIN_NAME), 
+			auditOpLogService.insert(Constants.OPERATION_TYPE_INSERT, "增加", "数据字典类别", null,
+					keyPairAlgorithm.getAlgorithmName(), null, null, new Date(), getIp(request), (String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME), 
 					result);
-		}catch(KmApplicationexception e){
+		}catch(Applicationexception e){
 			attr.addFlashAttribute("messageInsert",e.getMessage());
 			attr.addFlashAttribute("keyPairAlgorithm",keyPairAlgorithm);
 			return "redirect:/algorithm/selectAll.do";
@@ -83,22 +83,22 @@ public class KeypairAlgorithmController {
 	
 	/**
 	 * UC- ALG02-02修改密钥算法
-	 * @throws KmApplicationexception 
+	 * @throws Applicationexception 
 	 */
 	@RequestMapping(value="update")
 	public String update(KeyPairAlgorithm keyPairAlgorithm,Model model, 
-			RedirectAttributes attr,HttpServletRequest request) throws KmApplicationexception{
+			RedirectAttributes attr,HttpServletRequest request) throws Applicationexception{
 		LOG.debug("update - start");
 		String str = compare(keyPairAlgorithm);
 		int i = keyPairAlgorithmService.update(keyPairAlgorithm);
 		int result;
 		if(i==-1){
-			result = KmConstants.SUCCESS_OR_FAILD_OPTION_FAILD;
+			result = Constants.SUCCESS_OR_FAILD_OPTION_FAILD;
 		}else{
-			result = KmConstants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
+			result = Constants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
 		}
-		auditOpLogService.insert(KmConstants.OPERATION_TYPE_UPDATE, "更新", "数据字典类别", keyPairAlgorithm.getId().toString(), null, null, 
-				str, new Date(), getIp(request), (String)request.getSession().getAttribute(KmConstants.SESSION_ADMIN_NAME), 
+		auditOpLogService.insert(Constants.OPERATION_TYPE_UPDATE, "更新", "数据字典类别", keyPairAlgorithm.getId().toString(), null, null, 
+				str, new Date(), getIp(request), (String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME), 
 				result);
 		
 		LOG.debug("update - end");
@@ -119,12 +119,12 @@ public class KeypairAlgorithmController {
 		int i = keyPairAlgorithmService.delete(id);
 		int result;
 		if(i==-1){
-			result = KmConstants.SUCCESS_OR_FAILD_OPTION_FAILD;
+			result = Constants.SUCCESS_OR_FAILD_OPTION_FAILD;
 		}else{
-			result = KmConstants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
+			result = Constants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
 		}
-		auditOpLogService.insert(KmConstants.OPERATION_TYPE_DELETE, "删除", "数据字典类别", id.toString(), null, null, null, 
-				new Date(),getIp(request),  (String)request.getSession().getAttribute(KmConstants.SESSION_ADMIN_NAME), result);
+		auditOpLogService.insert(Constants.OPERATION_TYPE_DELETE, "删除", "数据字典类别", id.toString(), null, null, null, 
+				new Date(),getIp(request),  (String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME), result);
 		LOG.debug("delete - end");
 		attr.addFlashAttribute("success","true");
 		attr.addFlashAttribute("msg","删除主键为【"+id+"】成功！");

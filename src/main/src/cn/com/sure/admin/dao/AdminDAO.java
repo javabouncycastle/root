@@ -3,18 +3,18 @@
  */
 package cn.com.sure.admin.dao;
 
-import cn.com.sure.admin.entry.KmAdmin;
+import cn.com.sure.admin.entry.Admin;
 
 /**
  * @author Limin
  *
  */
-public interface KmAdminDAO {
+public interface AdminDAO {
 
 	/**
 	 * @param adminAuthNum
 	 * @return
 	 */
-	KmAdmin fingByAdmId(int adminAuthNum);
+	Admin fingByAdmId(int adminAuthNum);
 
 }

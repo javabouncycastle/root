@@ -4,12 +4,12 @@ import java.util.Date;
 
 import javax.persistence.Id;
 
-public class KmAuditOpLog {
+public class AuditOpLog {
 	
-	public KmAuditOpLog() {
+	public AuditOpLog() {
 	}
 	
-	public KmAuditOpLog(String id) {
+	public AuditOpLog(String id) {
 		this.id = id;
 	}
 	/**

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>  
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
-<mapper namespace="cn.com.sure.syscode.dao.KmSysCodeTypeDAO">  
+<mapper namespace="cn.com.sure.syscode.dao.SysCodeTypeDAO">  
 
-	<insert id="insert" parameterType="cn.com.sure.syscode.entry.KmSysCodeType">
-		insert into km_sys_param_type(
+	<insert id="insert" parameterType="cn.com.sure.syscode.entry.SysCodeType">
+		insert into sys_param_type(
 			para_type,
 			notes
 		)values(
@@ -12,25 +12,25 @@
 		)
 	</insert>
 	
-	<select id="selectById" parameterType="cn.com.sure.syscode.entry.KmSysCodeType" resultType="cn.com.sure.syscode.entry.KmSysCodeType">
+	<select id="selectById" parameterType="cn.com.sure.syscode.entry.SysCodeType" resultType="cn.com.sure.syscode.entry.SysCodeType">
 		select 
 			id,
 			para_type as paraType,
 			notes
-		 from km_sys_param_type
+		 from sys_param_type
 		 where
 		  id=#{id}
 	</select>
 	
-	<select id="selectAll" parameterType="cn.com.sure.syscode.entry.KmSysCodeType" resultType="cn.com.sure.syscode.entry.KmSysCodeType">
+	<select id="selectAll" parameterType="cn.com.sure.syscode.entry.SysCodeType" resultType="cn.com.sure.syscode.entry.SysCodeType">
 		select 
 			id,
 			para_type as paraType,
 			notes
-		 from km_sys_param_type
+		 from sys_param_type
 	</select>
 	
-	<select id="findByType" parameterType="cn.com.sure.syscode.entry.KmSysCodeType" resultType="cn.com.sure.syscode.entry.KmSysCodeType">
+	<select id="findByType" parameterType="cn.com.sure.syscode.entry.SysCodeType" resultType="cn.com.sure.syscode.entry.SysCodeType">
 		select 
 			id,
 			para_type as paraType,
@@ -39,12 +39,12 @@
 			where para_type=#{paraType}
 	</select>
 	
-	<select id="searchByCondition" parameterType="cn.com.sure.syscode.entry.KmSysCodeType" resultType="cn.com.sure.syscode.entry.KmSysCodeType">
+	<select id="searchByCondition" parameterType="cn.com.sure.syscode.entry.SysCodeType" resultType="cn.com.sure.syscode.entry.SysCodeType">
 		select 
 			id,
 			para_type as paraType,
 			notes
-		 from km_sys_param_type
+		 from sys_param_type
 		 where 1=1
 		 	<if test="id!=null and id!='' ">
 		 		and id=#{id}
@@ -54,7 +54,7 @@
 		 	</if>
 	</select>
 	
-	<update id="update" parameterType="cn.com.sure.syscode.entry.KmSysCodeType">
+	<update id="update" parameterType="cn.com.sure.syscode.entry.SysCodeType">
 	 update km_sys_param_type 
 		set 
 		 	para_type = #{paraType},
@@ -63,7 +63,7 @@
 	</update>
 	
 	<delete id="delete" parameterType="long">
-		delete from km_sys_param_type where id=#{id}
+		delete from sys_param_type where id=#{id}
 	</delete>
 	
 </mapper>

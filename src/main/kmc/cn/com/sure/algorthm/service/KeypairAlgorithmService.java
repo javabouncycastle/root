@@ -3,7 +3,7 @@ package cn.com.sure.algorthm.service;
 import java.util.List;
 
 import cn.com.sure.algorthm.entry.KeyPairAlgorithm;
-import cn.com.sure.common.KmApplicationexception;
+import cn.com.sure.common.Applicationexception;
 
 public interface KeypairAlgorithmService {
 	
@@ -11,9 +11,9 @@ public interface KeypairAlgorithmService {
 	 * 增加密钥算法
 	 * @param keypairAlgorithm
 	 * @return 
-	 * @throws KmApplicationexception
+	 * @throws Applicationexception
 	 */
-	int insert(KeyPairAlgorithm keyPairAlgorithm) throws  KmApplicationexception;
+	int insert(KeyPairAlgorithm keyPairAlgorithm) throws  Applicationexception;
 
 	/**
 	 * 查询全部密钥算法
@@ -26,9 +26,9 @@ public interface KeypairAlgorithmService {
 	 * 更新密钥算法
 	 * @param keypairAlgorithm
 	 * @return 
-	 * @throws KmApplicationexception 
+	 * @throws Applicationexception 
 	 */
-	int update(KeyPairAlgorithm keyPairAlgorithm) throws KmApplicationexception;
+	int update(KeyPairAlgorithm keyPairAlgorithm) throws Applicationexception;
 	
 	/**
 	 * 删除密钥算法

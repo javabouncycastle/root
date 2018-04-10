@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>  
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
-<mapper namespace="cn.com.sure.log.dao.KmAuditOpLogDAO">
-<insert id="insert" parameterType="cn.com.sure.log.entry.KmAuditOpLog">
-insert into km_audit_log(
+<mapper namespace="cn.com.sure.log.dao.AuditOpLogDAO">
+<insert id="insert" parameterType="cn.com.sure.log.entry.AuditOpLog">
+insert into audit_log(
 	op_type,
 	op_action,
 	op_action_ext1,
@@ -30,7 +30,7 @@ insert into km_audit_log(
 
 </insert>
 
-	<select id="selectAll" parameterType="cn.com.sure.log.entry.KmAuditOpLog" resultType="cn.com.sure.log.entry.KmAuditOpLog">
+	<select id="selectAll" parameterType="cn.com.sure.log.entry.AuditOpLog" resultType="cn.com.sure.log.entry.AuditOpLog">
 		select 
 			id,
 			op_type as type,
@@ -44,10 +44,10 @@ insert into km_audit_log(
 			op_ip as ip,
 			op_operator as operator,
 			is_op_succ as isOpSucc
-		 from km_audit_log
+		 from audit_log
 	</select>
 	
-		<select id="searchByCondition" parameterType="cn.com.sure.log.entry.KmAuditOpLog" resultType="cn.com.sure.log.entry.KmAuditOpLog">
+		<select id="searchByCondition" parameterType="cn.com.sure.log.entry.AuditOpLog" resultType="cn.com.sure.log.entry.AuditOpLog">
 		select 
 			id,
 			op_type as type,
@@ -62,7 +62,7 @@ insert into km_audit_log(
 			op_operator as operator,
 			is_op_succ as isOpSucc
 		 from 
-		 	km_audit_log
+		 	audit_log
 		 where 1=1
 		 	 <if test="operator!=null and operator!='' ">
 			 	and operator=#{operator}

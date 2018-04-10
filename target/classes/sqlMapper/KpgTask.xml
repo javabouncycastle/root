@@ -22,25 +22,25 @@
 			<result column="notes" javaType="String" property="notes"/>
 			<result column="isValid" javaType="Integer" property="isValid"/>
 		</association>
-		<association property="dbCommitBufsize" javaType="cn.com.sure.syscode.entry.KmSysCode" >
+		<association property="dbCommitBufsize" javaType="cn.com.sure.syscode.entry.SysCode" >
 			<id column="SysCodeIdDb" javaType="long" property="id"/>
 			<result column="paraCodeDb" javaType="String" property="paraCode"/>
 			<result column="paraValueDb" javaType="String" property="paraValue"/>
 			<result column="SysIsValidDb" javaType="Integer" property="isValid"/>
 			<result column="SysNotesDb" javaType="String" property="notes"/>
-			<association property="paraType" javaType="cn.com.sure.syscode.entry.KmSysCodeType" >
+			<association property="paraType" javaType="cn.com.sure.syscode.entry.SysCodeType" >
 				<id column="TypeIdDb" javaType="long" property="id"/>
 				<result column="typeParaTypeDb" javaType="String" property="paraType"/>
 				<result column="typeNotesDb" javaType="String" property="notes"/>
 			</association>
 		</association>
-		<association property="taskStatus" javaType="cn.com.sure.syscode.entry.KmSysCode" >
+		<association property="taskStatus" javaType="cn.com.sure.syscode.entry.SysCode" >
 			<id column="SysCodeId" javaType="long" property="id"/>
 			<result column="paraCode" javaType="String" property="paraCode"/>
 			<result column="paraValue" javaType="String" property="paraValue"/>
 			<result column="SysIsValid" javaType="Integer" property="isValid"/>
 			<result column="SysNotes" javaType="String" property="notes"/>
-			<association property="paraType" javaType="cn.com.sure.syscode.entry.KmSysCodeType" >
+			<association property="paraType" javaType="cn.com.sure.syscode.entry.SysCodeType" >
 				<id column="TypeId" javaType="long" property="id"/>
 				<result column="typeParaType" javaType="String" property="paraType"/>
 				<result column="typeNotes" javaType="String" property="notes"/>
@@ -103,17 +103,28 @@
 			t3.para_type as paraType,
 			t3.is_valid as SysIsValid,
 			t3.notes as SysNotes,
+			t5.id as SysCodeIdDb,
+			t5.para_code as paraCodeDb,
+			t5.para_value as paraValueDb,
+			t5.para_type as paraTypeDb,
+			t5.is_valid as SysIsValidDb,
+			t5.notes as SysNotesDb,
 			t4.id as TypeId,
 			t4.para_type as typeParaType,
-			t4.notes as typeNotes
-		 from kpg_task t1,keypair_algorithm t2,km_sys_code t3,km_sys_param_type t4
+			t4.notes as typeNotes,
+			t6.id as TypeIdDb,
+			t6.para_type as typeParaTypeDb,
+			t6.notes as typeNotesDb
+		 from kpg_task t1,keypair_algorithm t2,sys_code t3,sys_param_type t4,sys_code t5,sys_param_type t6
 		 where t1.kpg_algorithm=t2.id
-		 and t3.para_type=t4.id
-		 and t1.task_status=t3.para_value
+			 and t3.para_type=t4.id
+			 and t5.para_type=t6.id
+			 and t1.task_status=t3.para_value
+			 and t1.dbcommit_bufsize = t5.para_value
 	</select>
 	
 	<select id="findById" parameterType="long" resultMap="KpgTaskResultMap">
-		select 
+				select 
 			t1.id as id,
 			t1.name as name,
 			t1.kpg_algorithm as keyPairAlgorithm,
@@ -139,7 +150,7 @@
 			t3.para_type as paraType,
 			t3.is_valid as SysIsValid,
 			t3.notes as SysNotes,
-			t5.id as SysCodeIdDb,
+			t5.id as SysCodeIdDb
 			t5.para_code as paraCodeDb,
 			t5.para_value as paraValueDb,
 			t5.para_type as paraTypeDb,
@@ -151,13 +162,13 @@
 			t6.id as TypeIdDb,
 			t6.para_type as typeParaTypeDb,
 			t6.notes as typeNotesDb
-		 from kpg_task t1,keypair_algorithm t2,km_sys_code t3,km_sys_param_type t4,km_sys_code t5,km_sys_param_type t6
+		 from kpg_task t1,keypair_algorithm t2,sys_code t3,sys_param_type t4,sys_code t5,sys_param_type t6
 		 where t1.kpg_algorithm=t2.id
-		 and t3.para_type=t4.id
-		 and t5.para_type=t6.id
-		 and t1.task_status=t3.para_value
-		 and t1.dbcommit_bufsize = t5.para_value
-		 and t1.id=#{id}
+			 and t3.para_type=t4.id
+			 and t5.para_type=t6.id
+			 and t1.task_status=t3.para_value
+			 and t1.dbcommit_bufsize = t5.para_value
+			 and t1.id=#{id}
 	</select>
 	
 	<select id="findByName" parameterType="String" resultType="cn.com.sure.kpgtask.entry.KpgTask">
@@ -208,7 +219,7 @@
 		
 			t4.para_type as typeParaTypeDb,
 			t4.notes as typeNotesDb
-		from kpg_task t1,keypair_algorithm t2,km_sys_code t3,km_sys_param_type t4
+		from kpg_task t1,keypair_algorithm t2,sys_code t3,sys_param_type t4
 		 where 
 		 	t1.task_status=#{taskStatus.paraValue}
 		 and t1.kpg_algorithm=t2.id
@@ -305,7 +316,7 @@
 			t4.id as TypeId,
 			t4.para_type as typeParaType,
 			t4.notes as typeNotes
-		 from kpg_task t1,keypair_algorithm t2,km_sys_code t3,km_sys_param_type t4
+		 from kpg_task t1,keypair_algorithm t2,sys_code t3,sys_param_type t4
 		 where 
 		 	t1.kpg_algorithm=t2.id
 		 	and t3.para_type=t4.id

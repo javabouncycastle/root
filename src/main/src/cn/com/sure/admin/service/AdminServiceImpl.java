@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import cn.com.sure.admin.dao.KmAdminDAO;
-import cn.com.sure.admin.entry.KmAdmin;
+import cn.com.sure.admin.dao.AdminDAO;
+import cn.com.sure.admin.entry.Admin;
 
 /**
  * @author Limin
@@ -19,20 +19,20 @@ import cn.com.sure.admin.entry.KmAdmin;
  */
 @Transactional(propagation = Propagation.REQUIRED)
 @Service("AdminService")
-public class KmAdminServiceImpl implements KmAdminService{
+public class AdminServiceImpl implements AdminService{
 	
-	private static final Log LOG = LogFactory.getLog(KmAdminServiceImpl.class);
+	private static final Log LOG = LogFactory.getLog(AdminServiceImpl.class);
 	
 	@Autowired
-	KmAdminDAO adminDAO;
+	AdminDAO adminDAO;
 
 	/* (non-Javadoc)
 	 * @see cn.com.sure.commom.service.AdminService#fingByAdmId(int)
 	 */
 	@Override
-	public KmAdmin fingByAdmId(int adminAuthNum) {
+	public Admin fingByAdmId(int adminAuthNum) {
 		LOG.debug("fingByAdmId - start");
-		KmAdmin admin = adminDAO.fingByAdmId(adminAuthNum);
+		Admin admin = adminDAO.fingByAdmId(adminAuthNum);
 		LOG.debug("fingByAdmId - end");
 		return admin;
 	}
