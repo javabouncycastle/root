@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <head>
   <meta charset="utf-8">
-  <title>确信身份认证系统-密钥管理模块</title>
+  <title>确信身份认证系统</title>
   <meta name="keywords" content="" />
   <meta name="description" content="" />
   <meta name="viewport" content="width=device-width">        
@@ -18,7 +18,7 @@
   <div class="navbar navbar-inverse" role="navigation">
    <div class="templatemo-copyright">
       <div class="navbar-header">
-        <div class="logo"><h1><font color="white" style='font-family:"微软雅黑"'>确信身份认证系统-密钥管理模块</font></h1></div>
+        <div class="logo"><h1><font color="white" style='font-family:"微软雅黑"'>确信身份认证系统</font></h1></div>
       </div>   
       </div>
     </div>

@@ -79,5 +79,30 @@ public class Constants {
 	
 	//密钥恢复
 	public static final int TYPE_ID_CERT_RECOVER_STATUS = 42; 
-
+	
+	//证书有效天数
+	public static final String VALIDITY="validity";
+	//密钥类型
+	public static final String KPG_ALGORITHM="kpgAlgorithm";
+	//签名证书用法
+	public static final String SIGN_CERT_KEY_USAGE="signCertKeyUsage";
+	//签名证书用法拓展
+	public static final String SIGN_CERT_EXTENDED_KEY_USAGE="signCertExtendedKeyUsage";
+	//加密证书用法
+	public static final String ENC_CERT_KEY_USAGE="encCertKeyUsage";
+	//加密证书用法拓展
+	public static final String ENC_CERT_EXTENDED_KEY_USAGE="encCertExtendedKeyUsage";
+	
+	
+	public static final String CERT_TEMPLATE_VALIDITY = "validity";
+	
+	//socket传递同步密钥算法参数
+	public static final String SYNCHRONOUS_CTML="synchronousCtml";
+	
+	//syscode表中密钥算法
+	public static final String KEY_PAIR_ALGORITHM="kpgAlgorithm";
+	
+	public static final String PARA_CODE="密钥算法";
+	
+	
 }

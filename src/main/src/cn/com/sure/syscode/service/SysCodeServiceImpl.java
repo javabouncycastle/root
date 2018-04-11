@@ -134,5 +134,10 @@ public class SysCodeServiceImpl implements SysCodeService{
 		return sysCodes;
 	}
 
+	@Override
+	public List<SysCode> findByType(SysCode sysCode) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

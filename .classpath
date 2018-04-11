@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources"/>
-	<classpathentry kind="src" path="src/main/kmc"/>
-	<classpathentry kind="src" path="src/main/src"/>
-	<classpathentry kind="src" path="src/main/ca"/>
-	<classpathentry kind="src" path="src/main/ra"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_25"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_25"/>
+	<classpathentry kind="src" path="src/main/src"/>
+	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources"/>
+	<classpathentry kind="src" path="src/main/kmc"/>
+	<classpathentry kind="src" path="src/main/ca"/>
+	<classpathentry kind="src" path="src/main/ra"/>
+	<classpathentry kind="src" path="src/main/cm"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

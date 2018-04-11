@@ -21,5 +21,7 @@ public interface ErrorMessageConstants {
 	public static final int revokeKpSuce = 10002;//注销密钥成功
 	
 	public static final int exportError = 117;//excel导出失败
+	
+	public static final int outValidity = 200;//超出证书模板的最大有效期
 
 }

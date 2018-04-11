@@ -12,7 +12,7 @@ import javax.persistence.Id;
  */
 public class SysCodeType {
 	
-	@Id
+
     private Long id;
    
 	/**

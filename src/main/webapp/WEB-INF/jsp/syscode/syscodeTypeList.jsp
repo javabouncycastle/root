@@ -79,7 +79,7 @@
            <div class="modal-content">
             	<div class="modal-header">
              	  <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-              	  <h4 class="modal-title" >新增密钥算法类型</h4>
+              	  <h4 class="modal-title" >新增数据字典类别类型</h4>
                 </div>
           		<form action="insert.do" method="post">
             		<div class="modal-header">
@@ -95,7 +95,7 @@
 
 				                <div class="row"> 
 				                  <div class="col-md-6 margin-bottom-15">
-				                    <label for="paraValue" class="control-label">算法类别 </label>
+				                    <label for="paraValue" class="control-label">数据字典类别类型 </label>
 				                    <input type="text" class="form-control" id="paraType" name="paraType" required="required"/>                 
 				                  </div>
 				                </div>

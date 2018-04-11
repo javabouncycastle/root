@@ -21,27 +21,6 @@ public interface SysCodeService {
 	 */
 	SysCode selectById(Long id);
 
-/*	*//**
-	 * @return
-	 *//*
-	List<SysCode> selectMin();
-
-	*//**
-	 * @return
-	 *//*
-	List<SysCode> selectBuffer();
-
-	*//**
-	 * @return
-	 *//*
-	List<SysCode> selectGenKeyNum();
-
-	*//**
-	 * @param sysCode
-	 * @return
-	 *//*
-	List<SysCode> selectBufSize(SysCode sysCode);*/
-
 	/**
 	 * @return 
 	 * 
@@ -86,5 +65,8 @@ public interface SysCodeService {
 	 * @return
 	 */
 	List<SysCode> selectByType(SysCode sysCode);
+
+	List<SysCode> findByType(SysCode sysCode);
+	
 
 }

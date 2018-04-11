@@ -5,6 +5,8 @@ package cn.com.sure.keypair.service;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +29,7 @@ public class KeypairArchiveServiceImpl implements KeypairArchiveService{
 	
 	private static final Log LOG = LogFactory.getLog(KeypairArchiveServiceImpl.class);
 	
-	@Autowired
+	@Resource
 	private KeypairArchiveDAO keyPairArchiveDAO;
 
 	/* (non-Javadoc)

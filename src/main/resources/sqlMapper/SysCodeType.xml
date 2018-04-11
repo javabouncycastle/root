@@ -35,7 +35,7 @@
 			id,
 			para_type as paraType,
 			notes
-		from km_sys_param_type
+		from sys_param_type
 			where para_type=#{paraType}
 	</select>
 	
@@ -55,7 +55,7 @@
 	</select>
 	
 	<update id="update" parameterType="cn.com.sure.syscode.entry.SysCodeType">
-	 update km_sys_param_type 
+	 update sys_param_type 
 		set 
 		 	para_type = #{paraType},
 			notes=#{notes}
