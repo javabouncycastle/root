@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cn.com.sure.common.Applicationexception;
 import cn.com.sure.common.Constants;
+import cn.com.sure.log.entry.AuditOpLog;
 import cn.com.sure.log.service.AuditOpLogService;
 import cn.com.sure.syscode.entry.SysCodeType;
 import cn.com.sure.syscode.service.SysCodeTypeService;
@@ -42,6 +43,8 @@ public class SysCodeTypeController {
 	private AuditOpLogService auditOpLogService;
 	
 	Date date = new Date();
+	
+	AuditOpLog auditOpLog = new AuditOpLog();
 	
 	/**
 	 * UC-SYS01-01 新增数据字典类别
@@ -65,6 +68,22 @@ public class SysCodeTypeController {
 			}else{
 				result = Constants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
 			}
+			
+			// 添加审计日志
+			auditOpLog.setType(Constants.OPERATION_TYPE_INSERT);
+			auditOpLog.setAction(Constants.OPERATION_TYPE_INS);
+			auditOpLog.setActionExt1(Constants.OPERATION_TYPE_NAME);
+			auditOpLog.setActionExt2(id.toString());
+			auditOpLog.setActionExt3("");
+			auditOpLog.setActionExt4("");
+			auditOpLog.setMessage("");
+			auditOpLog.setTimestamp(date);
+			auditOpLog.setIp(getIp(request));
+			auditOpLog.setOperator((String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME));
+			auditOpLog.setIsOpSucc(result);
+			
+			auditOpLogService.insert(auditOpLog);
+			
 			auditOpLogService.insert(Constants.OPERATION_TYPE_INSERT, "增加", "数据字典类别", null,
 					sysCodeType.getParaType(), null, null, date, getIp(request), (String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME), 
 					result);

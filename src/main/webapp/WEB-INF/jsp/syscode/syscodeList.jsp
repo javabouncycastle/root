@@ -266,7 +266,6 @@ function activate(id){
 
 //修改的初始化页面            
 function edit(id,paraCode,paraValue,paraType,isValid,notes){
-			debugger;
 			$("#modal_update input[name='id']").val(id);
 			$("#modal_update input[name='paraCode']").val(paraCode);
 			$("#modal_update input[name='paraValue']").val(paraValue);

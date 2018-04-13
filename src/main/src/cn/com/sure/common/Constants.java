@@ -6,10 +6,28 @@ public class Constants {
 	public static final int YES_OR_NO_OPTION_YES = 1;//停用启用-启用
 	public static final int YES_OR_NO_OPTION_NO = 0;//停用启用-停用
 	
+	public static final String CERT_START_TIME_CHECKIN = "3";//证书开始时间是审核通过时
+	
 	public static final long OPERATION_TYPE_INSERT=11;//增加
+	public static final String OPERATION_TYPE_INS="增加";
+	
 	public static final long OPERATION_TYPE_DELETE=12;//删除
+	public static final String OPERATION_TYPE_DEL="删除";//删除
+	
 	public static final long OPERATION_TYPE_UPDATE=13;//更新
+	public static final String OPERATION_TYPE_UPD="更新";//更新
+	
 	public static final long OPERATION_TYPE_SELECT=14;//查询
+	public static final String OPERATION_TYPE_SEL="查询";//查询
+	
+	public static final long OPERATION_TYPE_SUSPEND=15;//停用
+	public static final String OPERATION_TYPE_SUS="停用";//停用
+
+	public static final long OPERATION_TYPE_ACTIVE=16;//启用
+	public static final String OPERATION_TYPE_ACT="启用";//启用
+	
+	
+	public static final String OPERATION_TYPE_NAME="数据字典";//查询
 	
 	public static final int SUCCESS_OR_FAILD_OPTION_SUCCESS=1;//操作成功
 	public static final int SUCCESS_OR_FAILD_OPTION_FAILD=0;//操作失败	
@@ -86,12 +104,10 @@ public class Constants {
 	public static final String KPG_ALGORITHM="kpgAlgorithm";
 	//签名证书用法
 	public static final String SIGN_CERT_KEY_USAGE="signCertKeyUsage";
-	//签名证书用法拓展
-	public static final String SIGN_CERT_EXTENDED_KEY_USAGE="signCertExtendedKeyUsage";
 	//加密证书用法
 	public static final String ENC_CERT_KEY_USAGE="encCertKeyUsage";
 	//加密证书用法拓展
-	public static final String ENC_CERT_EXTENDED_KEY_USAGE="encCertExtendedKeyUsage";
+	public static final String EXTEND_KEY_USAGE="extendedKeyUsage";
 	
 	
 	public static final String CERT_TEMPLATE_VALIDITY = "validity";

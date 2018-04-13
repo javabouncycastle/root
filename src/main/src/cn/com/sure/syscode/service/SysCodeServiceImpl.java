@@ -43,9 +43,15 @@ public class SysCodeServiceImpl implements SysCodeService{
 	}
 
 	@Override
-	public int update(SysCode sysCode) {
+	public int update(SysCode sysCode) throws  Applicationexception{
 		LOG.debug("update - start");
-		int i = sysCodeDAO.update(sysCode);
+		SysCode dbSysCode = sysCodeDAO.findByName(sysCode);
+		int i = 0 ;
+		if(dbSysCode==null){
+			i =sysCodeDAO.update(sysCode);
+		}if(dbSysCode!=null){
+			Applicationexception.throwException(ErrorMessageConstants.paraValueExist, new String[]{sysCode.getParaValue()});
+		}
 		LOG.debug("update - end");
 		return i;
 	}
@@ -59,21 +65,23 @@ public class SysCodeServiceImpl implements SysCodeService{
 	}
 
 	@Override
-	public void suspend(Long id) {
+	public int suspend(Long id) {
 		LOG.debug("suspend - start");
 		SysCode sysCode = sysCodeDAO.findById(id);
 		sysCode.setIsValid(Constants.YES_OR_NO_OPTION_NO);
-		sysCodeDAO.updateValid(sysCode);
+		int i = sysCodeDAO.updateValid(sysCode);
 		LOG.debug("suspend - end");
+		return i;
 	}
 
 	@Override
-	public void activate(Long id) {
+	public int activate(Long id) {
 		LOG.debug("activate - start");
 		SysCode sysCode = sysCodeDAO.findById(id);
 		sysCode.setIsValid(Constants.YES_OR_NO_OPTION_YES);
-		sysCodeDAO.updateValid(sysCode);
+		int i = sysCodeDAO.updateValid(sysCode);
 		LOG.debug("activate - start");
+		return i;
 	}
 
 	@Override
@@ -87,10 +95,10 @@ public class SysCodeServiceImpl implements SysCodeService{
 	@Override
 	public List<SysCode> selectByType(SysCode sysCode) {
 		LOG.debug("selectByType - start");
-		SysCodeType sysCodeType = new SysCodeType();
+		/*SysCodeType sysCodeType = new SysCodeType();
 		sysCodeType.setParaType(Constants.TYPE_ID_TASK_STATUS);
 		sysCode.setParaType(sysCodeType);
-		sysCode.setIsValid(Constants.YES_OR_NO_OPTION_YES);
+		sysCode.setIsValid(Constants.YES_OR_NO_OPTION_YES);*/
 		List<SysCode> sysCodes = this.sysCodeDAO.findByType(sysCode);
 		LOG.debug("selectByType - end");
 		return sysCodes;
@@ -132,12 +140,6 @@ public class SysCodeServiceImpl implements SysCodeService{
 		List<SysCode> sysCodes = this.sysCodeDAO.findByType(sysCode);
 		LOG.debug("getServicePort - start");
 		return sysCodes;
-	}
-
-	@Override
-	public List<SysCode> findByType(SysCode sysCode) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

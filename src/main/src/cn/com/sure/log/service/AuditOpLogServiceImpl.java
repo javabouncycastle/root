@@ -59,23 +59,8 @@ public class AuditOpLogServiceImpl implements AuditOpLogService{
 	 * 插入日志信息
 	 */
 	@Override
-	public void insert(long type, String action, String actionExt1,
-			String actionExt2, String actionExt3, String actionExt4,
-			String message, Date timestamp, String ip, String operator,
-			Integer isOpSucc) {
+	public void insert(AuditOpLog auditOpLog) {
 		LOG.debug("insert - start");
-		AuditOpLog auditOpLog = new AuditOpLog();
-		auditOpLog.setType(type);
-		auditOpLog.setAction(action);
-		auditOpLog.setActionExt1(actionExt1);
-		auditOpLog.setActionExt2(actionExt2);
-		auditOpLog.setActionExt3(actionExt3);
-		auditOpLog.setActionExt4(actionExt4);
-		auditOpLog.setMessage(message);
-		auditOpLog.setTimestamp(timestamp);
-		auditOpLog.setIp(ip);
-		auditOpLog.setOperator(operator);
-		auditOpLog.setIsOpSucc(isOpSucc);
 		
 		auditOpLogDAO.insert(auditOpLog);
 		

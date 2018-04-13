@@ -42,7 +42,7 @@ public interface SysCodeService {
 	 * @param sysCode
 	 * @return
 	 */
-	int update(SysCode sysCode);
+	int update(SysCode sysCode)throws  Applicationexception;
 
 	/**
 	 * @param id
@@ -52,13 +52,15 @@ public interface SysCodeService {
 
 	/**
 	 * @param id
+	 * @return 
 	 */
-	void suspend(Long id);
+	int suspend(Long id);
 
 	/**
 	 * @param id
+	 * @return 
 	 */
-	void activate(Long id);
+	int activate(Long id);
 
 	/**
 	 * @param sysCode
@@ -66,7 +68,6 @@ public interface SysCodeService {
 	 */
 	List<SysCode> selectByType(SysCode sysCode);
 
-	List<SysCode> findByType(SysCode sysCode);
 	
 
 }

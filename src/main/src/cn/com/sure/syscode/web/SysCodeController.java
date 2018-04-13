@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cn.com.sure.common.Applicationexception;
 import cn.com.sure.common.Constants;
+import cn.com.sure.log.entry.AuditOpLog;
 import cn.com.sure.log.service.AuditOpLogService;
 import cn.com.sure.syscode.entry.SysCode;
 import cn.com.sure.syscode.entry.SysCodeType;
@@ -41,6 +42,8 @@ public class SysCodeController {
 	
 	Date date = new Date();
 	
+	AuditOpLog auditOpLog = new AuditOpLog();
+	
 	/**
 	* UC-SYS01-05新增数据字典内容
 	* @return "redirect:/list"
@@ -60,9 +63,21 @@ public class SysCodeController {
 			}else{
 				result = Constants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
 			}
-			auditOpLogService.insert(Constants.OPERATION_TYPE_INSERT, "增加", "数据字典", null,
-					sysCode.getParaCode(), null, null, date, getIp(request), (String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME), 
-					result);
+			//添加审计日志
+			auditOpLog.setType(Constants.OPERATION_TYPE_INSERT);
+			auditOpLog.setAction(Constants.OPERATION_TYPE_INS);
+			auditOpLog.setActionExt1(Constants.OPERATION_TYPE_NAME);
+			auditOpLog.setActionExt2("");
+			auditOpLog.setActionExt3(sysCode.getParaCode());
+			auditOpLog.setActionExt4("");
+			auditOpLog.setMessage("");
+			auditOpLog.setTimestamp(date);
+			auditOpLog.setIp(getIp(request));
+			auditOpLog.setOperator((String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME));
+			auditOpLog.setIsOpSucc(result);
+			
+			
+			auditOpLogService.insert(auditOpLog);
 		}catch(Applicationexception e){
 			attr.addFlashAttribute("message",e.getMessage());
 			attr.addFlashAttribute("frSysCode",sysCode);
@@ -97,10 +112,11 @@ public class SysCodeController {
 	/**
 	* UC-SYS01-02修改数据字典
 	* @return "redirect:/syscode/selectAll.do"
+	 * @throws Applicationexception 
 	*/
 	@RequestMapping(value = "update")
 	public String update(
-	SysCode sysCode, Model model,RedirectAttributes attr,HttpServletRequest request){
+	SysCode sysCode, Model model,RedirectAttributes attr,HttpServletRequest request) throws Applicationexception{
 		LOG.debug("update - start!");
 		
 		//添加审计日志
@@ -114,9 +130,22 @@ public class SysCodeController {
 		}else{
 			result=Constants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
 		}
-		auditOpLogService.insert(Constants.OPERATION_TYPE_UPDATE, "更新", "数据字典", sysCode.getId().toString(), null, null, 
-				str, date, getIp(request), (String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME), 
-				result);
+		
+		// 添加审计日志
+		auditOpLog.setType(Constants.OPERATION_TYPE_UPDATE);
+		auditOpLog.setAction(Constants.OPERATION_TYPE_UPD);
+		auditOpLog.setActionExt1(Constants.OPERATION_TYPE_NAME);
+		auditOpLog.setActionExt2(sysCode.getId().toString());
+		auditOpLog.setActionExt3(sysCode.getParaCode());
+		auditOpLog.setActionExt4("");
+		auditOpLog.setMessage(str);
+		auditOpLog.setTimestamp(date);
+		auditOpLog.setIp(getIp(request));
+		auditOpLog.setOperator((String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME));
+		auditOpLog.setIsOpSucc(result);
+		
+		auditOpLogService.insert(auditOpLog);
+		
 		LOG.debug("update - end!");
 		attr.addFlashAttribute("success","true");
 		attr.addFlashAttribute("msg","修改【"+sysCode.getParaCode()+"】信息成功");
@@ -142,9 +171,22 @@ public class SysCodeController {
 		}else{
 			 result = Constants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
 		}
-		auditOpLogService.insert(Constants.OPERATION_TYPE_DELETE, "删除", "数据字典", id.toString(), null, null, null, 
-				date,getIp(request),  (String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME), result);
-		LOG.debug("remove - end!");
+		
+		// 添加审计日志
+		auditOpLog.setType(Constants.OPERATION_TYPE_DELETE);
+		auditOpLog.setAction(Constants.OPERATION_TYPE_DEL);
+		auditOpLog.setActionExt1(Constants.OPERATION_TYPE_NAME);
+		auditOpLog.setActionExt2(id.toString());
+		auditOpLog.setActionExt3("");
+		auditOpLog.setActionExt4("");
+		auditOpLog.setMessage("");
+		auditOpLog.setTimestamp(date);
+		auditOpLog.setIp(getIp(request));
+		auditOpLog.setOperator((String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME));
+		auditOpLog.setIsOpSucc(result);
+		
+		auditOpLogService.insert(auditOpLog);
+		
 		attr.addFlashAttribute("success","true");
 		attr.addFlashAttribute("msg","删除主键为【"+id+"】信息成功");	
 		return  "redirect:/syscode/selectAll.do";
@@ -160,10 +202,33 @@ public class SysCodeController {
 	@RequestMapping(value = "suspend")
 	public String suspend(
 	@RequestParam(value = "id", required = false)Long id,
-	Model model,RedirectAttributes attr){
+	Model model,RedirectAttributes attr,HttpServletRequest request){
 		LOG.debug("suspend - start!");
-		this.sysCodeService.suspend(id);
+		int i =  sysCodeService.suspend(id);
+		//添加审计日志
+		int result;
+		if(i==-1){
+			 result = Constants.SUCCESS_OR_FAILD_OPTION_FAILD;
+		}else{
+			 result = Constants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
+		}
     	LOG.debug("suspend - end!");
+    	
+    	// 添加审计日志
+		auditOpLog.setType(Constants.OPERATION_TYPE_SUSPEND);
+		auditOpLog.setAction(Constants.OPERATION_TYPE_SUS);
+		auditOpLog.setActionExt1(Constants.OPERATION_TYPE_NAME);
+		auditOpLog.setActionExt2(id.toString());
+		auditOpLog.setActionExt3("");
+		auditOpLog.setActionExt4("");
+		auditOpLog.setMessage("");
+		auditOpLog.setTimestamp(date);
+		auditOpLog.setIp(getIp(request));
+		auditOpLog.setOperator((String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME));
+		auditOpLog.setIsOpSucc(result);
+		
+		auditOpLogService.insert(auditOpLog);
+    	
     	attr.addFlashAttribute("success","true");
 		attr.addFlashAttribute("msg","停用主键为【"+id+"】成功");
         return "redirect:/syscode/selectAll.do";
@@ -178,11 +243,31 @@ public class SysCodeController {
 	@RequestMapping(value = "activate")
 	public String activate(
 	@RequestParam(value = "id", required = false)Long id,
-	Model model,RedirectAttributes attr){
+	Model model,RedirectAttributes attr,HttpServletRequest request){
 		LOG.debug("activate - start!");
-		this.sysCodeService.activate(id);
+		int i =  sysCodeService.activate(id);
+		int result;
+		if(i==-1){
+			 result = Constants.SUCCESS_OR_FAILD_OPTION_FAILD;
+		}else{
+			 result = Constants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
+		}
         attr.addFlashAttribute("success", id);
     	LOG.debug("activate - end!");	
+    	// 添加审计日志
+		auditOpLog.setType(Constants.OPERATION_TYPE_ACTIVE);
+		auditOpLog.setAction(Constants.OPERATION_TYPE_ACT);
+		auditOpLog.setActionExt1(Constants.OPERATION_TYPE_NAME);
+		auditOpLog.setActionExt2(id.toString());
+		auditOpLog.setActionExt3("");
+		auditOpLog.setActionExt4("");
+		auditOpLog.setMessage("");
+		auditOpLog.setTimestamp(date);
+		auditOpLog.setIp(getIp(request));
+		auditOpLog.setOperator((String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME));
+		auditOpLog.setIsOpSucc(result);
+		
+		auditOpLogService.insert(auditOpLog);
     	attr.addFlashAttribute("success","true");
 		attr.addFlashAttribute("msg","启用主键为【"+id+"】成功");
         return "redirect:/syscode/selectAll.do";

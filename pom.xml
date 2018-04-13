@@ -21,9 +21,9 @@
   <modelVersion>4.0.0</modelVersion>
   <packaging>war</packaging>
 
-  <name>km</name>
-  <groupId>cn.com.sure.km</groupId>
-  <artifactId>km</artifactId>
+  <name>root</name>
+  <groupId>cn.com.sure.root</groupId>
+  <artifactId>root</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 
   <build>
@@ -62,7 +62,7 @@
             <artifactId>junit</artifactId>  
             <version>4.11</version>  
             <!-- 表示开发的时候引入，发布的时候不会加载此包 -->  
-            <scope>test</scope>  
+            <scope>test</scope>
         </dependency>  
         <!-- spring核心包 -->  
         <dependency>  

@@ -53,6 +53,19 @@
 	              		</li>
             		</ul>
           		</li>
+          		<li class="sub">
+            		<a href="javascript:;">
+              			<i class="fa fa-database"></i>
+              			<font style='font-family:"微软雅黑"'>证书管理</font>
+              			<div class="pull-right"><span class="caret"></span>
+              		</div>
+            		</a>
+            		<ul class="templatemo-submenu">
+	              		<li>
+	              			<a href="<%=request.getContextPath()%>/certificateRequest/forwardInsert.do"><font style='font-family:"微软雅黑"'>证书申请</font></a>
+	              		</li>
+            		</ul>
+          		</li>
          		<li class="sub">
 		            <a href="javascript:;">
 		              <i class="fa fa-database"></i><font style='font-family:"微软雅黑"'>日志管理</font><div class="pull-right"><span class="caret"></span></div>

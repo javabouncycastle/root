@@ -70,8 +70,9 @@ public interface SysCodeDAO {
 
 	/**
 	 * @param sysCode
+	 * @return 
 	 */
-	public void updateValid(SysCode sysCode);
+	public int updateValid(SysCode sysCode);
 
 	/**
 	 * @return
