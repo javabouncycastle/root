@@ -28,5 +28,8 @@ public interface ErrorMessageConstants {
 	public static final int outValidity = 300;//超出证书模板的最大有效期
 	
 	public static final int ctmlNameExist = 303;//证书模板已存在
+	
+	//RA模块
+	public static final int dnIsExist = 401;//DN已存在
 
 }

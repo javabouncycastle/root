@@ -24,7 +24,7 @@ public interface SysCodeTypeService {
 	 * @param sysCodeType
 	 * @return 
 	 */
-	int update(SysCodeType sysCodeType);
+	int update(SysCodeType sysCodeType)throws Applicationexception ;
 
 	/**
 	 * @param id

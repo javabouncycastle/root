@@ -72,7 +72,7 @@ public class Constants {
 	public static final long TYPE_ID_CERT_STATUS = 38L;
 
 	public static final long CODE_ID_CERT_STATUS_GET_AUTHCODE         = 3801L; //证书状态  - 获取两码成功（23）证书未下载
-	public static final long CODE_ID_CERT_STATUS_IN_USE               = 3802L; //证书状态  - 证书使用中
+	public static final String CODE_ID_CERT_STATUS_IN_USE             = "3802"; //证书状态  - 证书使用中
 	
 	
 	// 证书新申请状态
@@ -106,11 +106,9 @@ public class Constants {
 	public static final String SIGN_CERT_KEY_USAGE="signCertKeyUsage";
 	//加密证书用法
 	public static final String ENC_CERT_KEY_USAGE="encCertKeyUsage";
-	//加密证书用法拓展
-	public static final String EXTEND_KEY_USAGE="extendedKeyUsage";
+
+	public static final String EXTEND_KEY_USAGE="extendKeyUsage";//密钥用法拓展
 	
-	
-	public static final String CERT_TEMPLATE_VALIDITY = "validity";
 	
 	//socket传递同步密钥算法参数
 	public static final String SYNCHRONOUS_CTML="synchronousCtml";

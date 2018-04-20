@@ -67,7 +67,7 @@
 		</property>
 	</bean>
 	  	<!-- 加入Aspectj配置  2017.5.24bylimin--> 
-    <aop:aspectj-autoproxy proxy-target-class="true" />  
+    <aop:aspectj-autoproxy proxy-target-class="true"/>  
     
 	<!-- 第一种加事务的方式：注解方式，需要在要添加事务的方法类上添加注解 @Transaction(value="txManager") -->
 	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">

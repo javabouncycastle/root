@@ -51,9 +51,21 @@ public class SysCodeTypeServiceImpl implements SysCodeTypeService {
 	 * @see cn.com.sure.syscode.service.SysCodeTypeService#update(cn.com.sure.syscode.entry.SysCodeType)
 	 */
 	@Override
-	public int update(SysCodeType sysCodeType) {
+	public int update(SysCodeType sysCodeType) throws Applicationexception {
 		LOG.debug("update - start");
-		int i = sysCodeTypeDAO.update(sysCodeType);
+		SysCodeType codeType = new SysCodeType();
+		codeType.setId(sysCodeType.getId());
+		codeType.setParaType(sysCodeType.getParaType());
+		
+		List<SysCodeType> sysCodeTypes = sysCodeTypeDAO.searchByCondition(codeType);
+		int i = 0;
+		if(!(sysCodeTypes.size()==0)) {
+			i = sysCodeTypeDAO.update(sysCodeType);
+		}else {
+			Applicationexception.throwException(ErrorMessageConstants.paraTypeValueExist, new String[]{sysCodeType.getParaType()});
+		}
+		
+		
 		LOG.debug("update - start");
 		return i;
 	}

@@ -15,7 +15,7 @@
 		</association>
 	</resultMap>
 
-	<insert id="insert" parameterType="cn.com.sure.syscode.entry.SysCode">
+	<insert id="insert" parameterType="cn.com.sure.syscode.entry.SysCode" useGeneratedKeys="true" keyProperty="id">
 		insert into sys_code(
 			para_code,
 			para_value,
@@ -128,9 +128,11 @@
 		 	<if test="isValid!=null and isValid!='' ">
 		 		and ks.is_valid=#{isValid}
 		 	</if>
+		 	<if test="paraCode!=null and paraCode!='' ">
+		 		and ks.para_code=#{paraCode}
+		 	</if>
 		 	<if test="paraType!=null and paraType!='' ">
 		 		<if test="paraType.paraType!=null and paraType.paraType!='' ">
-		 			<!-- and ks.para_type=#{paraType.id} -->
 		 			and ksty.para_type=#{paraType.paraType}
 		 		</if>
 		 	</if>

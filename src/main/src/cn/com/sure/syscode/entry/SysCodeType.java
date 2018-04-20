@@ -3,8 +3,6 @@
  */
 package cn.com.sure.syscode.entry;
 
-import javax.persistence.Id;
-
 /**
  * @author Limin
  *  系统代码类别描述 - 标识类别 比如性别，职称等

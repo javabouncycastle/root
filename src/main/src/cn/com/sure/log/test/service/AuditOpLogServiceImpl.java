@@ -1,4 +1,4 @@
-package cn.com.sure.log.service;
+package cn.com.sure.log.test.service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

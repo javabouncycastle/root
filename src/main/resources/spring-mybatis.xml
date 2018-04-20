@@ -44,7 +44,7 @@
   
     <!-- DAO接口所在包名，Spring会自动查找其下的类 -->  
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">  
-        <property name="basePackage" value="cn.com.sure.ctml.dao;cn.com.sure.keypair.dao;cn.com.sure.syscode.dao;cn.com.sure.log.dao;
+        <property name="basePackage" value="cn.com.sure.ctml.dao;cn.com.sure.keypair.dao;cn.com.sure.syscode.dao;cn.com.sure.log.dao;cn.com.sure.cert.dao;
         cn.com.sure.admin.dao;cn.com.sure.cert.dao" />  
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>  
     </bean>  

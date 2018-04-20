@@ -29,7 +29,7 @@ import cn.com.sure.common.Constants;
 import cn.com.sure.kpgtask.entry.KpgTask;
 import cn.com.sure.kpgtask.service.KpgTaskExecuteService;
 import cn.com.sure.kpgtask.service.KpgTaskService;
-import cn.com.sure.log.service.AuditOpLogService;
+import cn.com.sure.log.test.service.AuditOpLogService;
 import cn.com.sure.syscode.entry.SysCode;
 import cn.com.sure.syscode.entry.SysCodeType;
 import cn.com.sure.syscode.service.SysCodeService;
@@ -110,9 +110,9 @@ public class KpgTaskController extends BaseController{
 				result = Constants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
 			}
 			// 添加审计日志
-			auditOpLogService.insert(Constants.OPERATION_TYPE_INSERT, "增加", "数据字典类别", null,
+			/*auditOpLogService.insert(Constants.OPERATION_TYPE_INSERT, "增加", "数据字典类别", null,
 					kpgTask.getName(), null, null, new Date(), getIp(request), (String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME), 
-					result);
+					result);*/
 		} catch (Applicationexception e) {
 			attr.addFlashAttribute("messageInsert",e.getMessage());
 			attr.addFlashAttribute("kpgTask",kpgTask);
@@ -146,9 +146,9 @@ public class KpgTaskController extends BaseController{
 			result = Constants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
 		}
 		//添加审计日志
-		auditOpLogService.insert(Constants.OPERATION_TYPE_UPDATE, "更新", "数据字典类别", kpgTask.getId().toString(), null, null, 
+		/*auditOpLogService.insert(Constants.OPERATION_TYPE_UPDATE, "更新", "数据字典类别", kpgTask.getId().toString(), null, null, 
 				str, new Date(), getIp(request), (String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME), 
-				result);
+				result);*/
 		LOG.debug("update - end");
 		attr.addFlashAttribute("updateSuccess","true");
 		attr.addFlashAttribute("message","修改主键为【"+kpgTask.getId()+"】的信息成功！");

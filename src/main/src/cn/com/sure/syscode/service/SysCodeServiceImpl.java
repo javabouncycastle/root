@@ -45,13 +45,20 @@ public class SysCodeServiceImpl implements SysCodeService{
 	@Override
 	public int update(SysCode sysCode) throws  Applicationexception{
 		LOG.debug("update - start");
-		SysCode dbSysCode = sysCodeDAO.findByName(sysCode);
-		int i = 0 ;
-		if(dbSysCode==null){
+		//判断表里边原来是否有一个这样名字的数据
+		SysCode sysCodes = new SysCode();
+		sysCodes.setParaCode(sysCode.getParaCode());
+		sysCodes.setId(sysCode.getId());
+		
+		List<SysCode> dbSysCode= sysCodeDAO.serachByContion(sysCodes);
+		
+		int i = 0;
+		if(!(dbSysCode.size()==0)) {
 			i =sysCodeDAO.update(sysCode);
-		}if(dbSysCode!=null){
+		}else {
 			Applicationexception.throwException(ErrorMessageConstants.paraValueExist, new String[]{sysCode.getParaValue()});
 		}
+			
 		LOG.debug("update - end");
 		return i;
 	}

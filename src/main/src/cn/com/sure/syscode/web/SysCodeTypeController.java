@@ -22,7 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import cn.com.sure.common.Applicationexception;
 import cn.com.sure.common.Constants;
 import cn.com.sure.log.entry.AuditOpLog;
-import cn.com.sure.log.service.AuditOpLogService;
+import cn.com.sure.log.test.service.AuditOpLogService;
 import cn.com.sure.syscode.entry.SysCodeType;
 import cn.com.sure.syscode.service.SysCodeTypeService;
 
@@ -62,31 +62,6 @@ public class SysCodeTypeController {
 		try {
 			int i = sysCodeTypeService.insert(sysCodeType);
 			// 添加审计日志
-			int result;
-			if(i==-1){
-				result = Constants.SUCCESS_OR_FAILD_OPTION_FAILD;
-			}else{
-				result = Constants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
-			}
-			
-			// 添加审计日志
-			auditOpLog.setType(Constants.OPERATION_TYPE_INSERT);
-			auditOpLog.setAction(Constants.OPERATION_TYPE_INS);
-			auditOpLog.setActionExt1(Constants.OPERATION_TYPE_NAME);
-			auditOpLog.setActionExt2(id.toString());
-			auditOpLog.setActionExt3("");
-			auditOpLog.setActionExt4("");
-			auditOpLog.setMessage("");
-			auditOpLog.setTimestamp(date);
-			auditOpLog.setIp(getIp(request));
-			auditOpLog.setOperator((String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME));
-			auditOpLog.setIsOpSucc(result);
-			
-			auditOpLogService.insert(auditOpLog);
-			
-			auditOpLogService.insert(Constants.OPERATION_TYPE_INSERT, "增加", "数据字典类别", null,
-					sysCodeType.getParaType(), null, null, date, getIp(request), (String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME), 
-					result);
 		} catch (Applicationexception e) {
 			attr.addFlashAttribute("message",e.getMessage());
 			attr.addFlashAttribute("sysCodeType",sysCodeType);
@@ -106,25 +81,23 @@ public class SysCodeTypeController {
 	 * @param attr
 	 * @param request
 	 * @return
+	 * @throws Applicationexception 
 	 */
 	@RequestMapping(value = "update")
 	public String update(SysCodeType sysCodeType,
-			Model model, RedirectAttributes attr,HttpServletRequest request){
+			Model model, RedirectAttributes attr,HttpServletRequest request) throws Applicationexception{
 		LOG.debug("update - start");
-		//比较更新的数据
-		String str = compare(sysCodeType);
-		int i = sysCodeTypeService.update(sysCodeType);
-		//添加审计日志
-		//1判断更新是否成功
-		int result;
-		if(i==-1){
-			result = Constants.SUCCESS_OR_FAILD_OPTION_FAILD;
-		}else{
-			result = Constants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
+		
+		try {
+			int i = sysCodeTypeService.update(sysCodeType);
+			// 添加审计日志
+		} catch (Applicationexception e) {
+			attr.addFlashAttribute("message",e.getMessage());
+			attr.addFlashAttribute("sysCodeType",sysCodeType);
+			return "redirect:/syscodetype/selectAll.do";
 		}
-		auditOpLogService.insert(Constants.OPERATION_TYPE_UPDATE, "更新", "数据字典类别", sysCodeType.getId().toString(), null, null, 
-				str, date, getIp(request), (String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME), 
-				result);
+		
+		//添加审计日志
 		LOG.debug("update - start");
 		attr.addFlashAttribute("success","true");
 		attr.addFlashAttribute("msg","修改数据字典类别=【"+sysCodeType.getParaType()+"】信息成功");
@@ -150,8 +123,8 @@ public class SysCodeTypeController {
 		}else{
 			result = Constants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
 		}
-		auditOpLogService.insert(Constants.OPERATION_TYPE_DELETE, "删除", "数据字典类别", id.toString(), null, null, null, 
-				date,getIp(request),  (String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME), result);
+		/*auditOpLogService.insert(Constants.OPERATION_TYPE_DELETE, "删除", "数据字典类别", id.toString(), null, null, null, 
+				date,getIp(request),  (String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME), result);*/
 		LOG.debug("remove - end");
 		attr.addFlashAttribute("success","true");
 		attr.addFlashAttribute("msg","删除主键为【"+id+"】信息成功");
@@ -195,49 +168,6 @@ public class SysCodeTypeController {
 		return new ModelAndView("syscode/syscodeTypeList").addObject("sysCodeTypes", sysCodeTypes);
 		
 	}
-
-	
-	
-	/**
-	 * 获取ip地址
-	 * @param request
-	 * @return
-	 */
-    public  String getIp(HttpServletRequest request) {
-           String ip = request.getHeader("X-Forwarded-For");
-           if(StringUtils.isNotEmpty(ip) && !"unKnown".equalsIgnoreCase(ip)){
-               //多次反向代理后会有多个ip值，第一个ip才是真实ip
-               int index = ip.indexOf(",");
-               if(index != -1){
-                   return ip.substring(0,index);
-               }else{
-                   return ip;
-                }
-            }
-            ip = request.getHeader("X-Real-IP");
-            if(StringUtils.isNotEmpty(ip) && !"unKnown".equalsIgnoreCase(ip)){
-                return ip;
-            }
-            return request.getRemoteAddr();
-       }
-    
-    
-    //比较更新了那些字段
-    public String compare(SysCodeType sysCodeTypeNew){
-    	String resultString="";
-		//查询数据库中未更新前的数据
-		SysCodeType sysCodeTypeDB = sysCodeTypeService.selectById(sysCodeTypeNew.getId());
-    	if(sysCodeTypeNew!=null&&!"".equals(sysCodeTypeNew)){
-    		sysCodeTypeDB = sysCodeTypeService.selectById(sysCodeTypeNew.getId());
-    		if(StringUtils.isNoneBlank(sysCodeTypeDB.getParaType())&&StringUtils.isNotBlank(sysCodeTypeNew.getParaType())){
-    			if(!sysCodeTypeDB.equals(sysCodeTypeNew.getParaType())){
-    				resultString+="参数值由"+sysCodeTypeDB.getParaType()+"变更为"+sysCodeTypeNew.getParaType();
-    			}
-    		}
-    	}
-		return resultString;
-    	
-    }
 
 
 }

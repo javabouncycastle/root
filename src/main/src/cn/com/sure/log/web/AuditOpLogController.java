@@ -24,7 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import cn.com.sure.common.BaseController;
 import cn.com.sure.common.ErrorMessageConstants;
 import cn.com.sure.log.entry.AuditOpLog;
-import cn.com.sure.log.service.AuditOpLogService;
+import cn.com.sure.log.test.service.AuditOpLogService;
 import cn.com.sure.syscode.web.SysCodeController;
 
 /**

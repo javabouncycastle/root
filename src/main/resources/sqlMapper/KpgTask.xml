@@ -124,7 +124,7 @@
 	</select>
 	
 	<select id="findById" parameterType="long" resultMap="KpgTaskResultMap">
-				select 
+		select 
 			t1.id as id,
 			t1.name as name,
 			t1.kpg_algorithm as keyPairAlgorithm,
@@ -150,7 +150,7 @@
 			t3.para_type as paraType,
 			t3.is_valid as SysIsValid,
 			t3.notes as SysNotes,
-			t5.id as SysCodeIdDb
+			t5.id as SysCodeIdDb,
 			t5.para_code as paraCodeDb,
 			t5.para_value as paraValueDb,
 			t5.para_type as paraTypeDb,

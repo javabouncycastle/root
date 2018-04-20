@@ -25,17 +25,18 @@ public class KeypairAlgorithmServiceImpl implements KeypairAlgorithmService{
 	private KeypairAlgorithmDAO keyPairAlgorithmDAO;
 
 	@Override
-	@Transactional(value="txManager" )//配置事务，基本形式
-	public int insert(KeyPairAlgorithm keyPairAlgorithm) throws Applicationexception {
+	/*@Transactional(value="txManager" )//配置事务，基本形式
+*/	public int insert(KeyPairAlgorithm keyPairAlgorithm) throws Applicationexception {
 		LOG.debug("insert - start");
-		int i = keyPairAlgorithmDAO.insert(keyPairAlgorithm);
-		/*KeyPairAlgorithm dbkeyPairAlgorithm = this.keyPairAlgorithmDAO.selectByName(keyPairAlgorithm);
-		int i=0;
-		if (dbkeyPairAlgorithm.equals(keyPairAlgorithm)){
-			KmApplicationexception.throwException(KmErrorMessageConstants.nameExist, new String[]{keyPairAlgorithm.getName()});
-		}if(!dbkeyPairAlgorithm.equals(keyPairAlgorithm)){
-			i = keyPairAlgorithmDAO.insert(keyPairAlgorithm);
+		
+	/*	KeyPairAlgorithm dbkeyPairAlgorithm = this.keyPairAlgorithmDAO.selectByName(keyPairAlgorithm);
+		int i = 0;
+		if(dbkeyPairAlgorithm==null) {*/
+			int i = keyPairAlgorithmDAO.insert(keyPairAlgorithm);
+		/*}else {
+			Applicationexception.throwException(ErrorMessageConstants.nameExist, new String[]{keyPairAlgorithm.getName()});
 		}*/
+		
 		LOG.debug("insert - end");
 		return i;
 	}
@@ -51,14 +52,20 @@ public class KeypairAlgorithmServiceImpl implements KeypairAlgorithmService{
 	@Override
 	public int update(KeyPairAlgorithm keyPairAlgorithm) throws Applicationexception {
 		LOG.debug("update - start");
-		KeyPairAlgorithm keyPairAlgorithmDB = keyPairAlgorithmDAO.selectById(keyPairAlgorithm.getId());
-		int i = 0 ;
-		if(keyPairAlgorithmDB.equals(keyPairAlgorithm)){
-			Applicationexception.throwException(ErrorMessageConstants.nameExist, new String[]{keyPairAlgorithm.getName()});
-		}if(!keyPairAlgorithmDB.equals(keyPairAlgorithm)){
-			i = keyPairAlgorithmDAO.update(keyPairAlgorithm);
-		}
+		int i = keyPairAlgorithmDAO.update(keyPairAlgorithm);
+		/*KeyPairAlgorithm algorithm = new KeyPairAlgorithm();
+		algorithm.setId(keyPairAlgorithm.getId());
+		algorithm.setName(keyPairAlgorithm.getName());
 		
+		List<KeyPairAlgorithm> keyPairAlgorithms =  keyPairAlgorithmDAO.searchByCondition(algorithm);
+		
+		int i = 0 ;
+		if(keyPairAlgorithms==null) {
+			i = keyPairAlgorithmDAO.update(keyPairAlgorithm);
+		}else {
+			Applicationexception.throwException(ErrorMessageConstants.nameExist, new String[]{keyPairAlgorithm.getName()});
+		}
+		*/
 		LOG.debug("update - end");
 		return i;
 	}
