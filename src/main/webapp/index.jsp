@@ -1,72 +1,61 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/public/taglib.jsp" %>
 <!DOCTYPE html>
-<%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
-<%
-String path = request.getContextPath();
-String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-%>
-<html lang="en">
-	<head>
-		<title>确信信息身份认证系统</title>
-		<meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<%@include file="common/common.jsp" %>
-	</head>
-	<script type="text/javascript">
-		function forward(pageName){
-			var url="forward.do?page="+pageName;//跳转页面的路径
-			$("#contentIframe").attr("src",url);//给iframe动态配置跳转的url
-		}
-	</script>
-	<body>
-		
-		<div id="header">
-			<h1></h1>		
-		</div>
-		
-		<div id="sidebar">
-			<ul>
-				<li class="submenu">
-					<a href="#"><i class="icon icon-th-list"></i> <span>密钥管理</span><span class="label"></span> </a>
-					<ul>
-						<li><a href="javascript:forward('keypair/keypairInsert')">密钥生成</a></li>
-						<li><a href="javascript:forward('keypair/keypairList')">密钥查询</a></li>
-					</ul>
-				</li>
-				<li class="submenu">
-					<a href="#"><i class="icon icon-th-list"></i> <span>算法管理</span><span class="label"></span> </a>
-					<ul>
-						<!-- javascript:forward()跳转时，不去找对应的controller的路径，是根据javascript:forward()括号里边的路径跳转 -->
-						<li><a href="<%=request.getContextPath()%>/algorithm/selectAll.do">密钥算法列表</a></li>
-					</ul>
-				</li>
-				<li class="submenu">
-					<a href="#"><i class="icon icon-th-list"></i> <span>日志管理</span> <span class="label"></span></a>
-					<ul>
-						<li><a href="form-common.html">Common elements</a></li>
-						<li><a href="form-validation.html">Validation</a></li>
-						<li><a href="form-wizard.html">Wizard</a></li>
-					</ul>
-				</li>
-				<li class="submenu">
-					<a href="#"><i class="icon icon-th-list"></i> <span>管理员管理</span> <span class="label"></span></a>
-					<ul>
-						<li><a href="form-common.html">Common elements</a></li>
-						<li><a href="form-validation.html">Validation</a></li>
-						<li><a href="form-wizard.html">Wizard</a></li>
-					</ul>
-				</li>
-			</ul>
-		</div>
-		
-		<div id="content">
-			<div id="contentIframeDiv">
-				<iframe id="contentIframe" src=""></iframe>
-			</div>
-			<div id="footer" class="span12">
-				Copyright © 2016 suresec.net/ All Rights Reserved　山东确信信息产业股份有限公司　版权所有　鲁ICP备13015085号-4 </br>
-				电话：400-006-8211 　 地址：济南市高新区舜华路2000号舜泰广场11号楼北区203室
-			</div>
-				
-	  </div>
-	</body>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- 引入css -->
+<%@ include file="/public/taglib_css.jsp" %>
+<!-- 引入js -->
+<%@ include file="/public/taglib_js.jsp" %>
+<title>${title}</title>
+<!-- Tell the browser to be responsive to screen width -->
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+</head>
+<body class="hold-transition skin-blue-light sidebar-mini">
+<div class="wrapper">
+<div id="test_div" style="display:none;z-index:99999;height:auto;width:100px;margin-left: 45%;position:absolute;top:5%;border: 1px red solid;text-align:center;">成功</div>
+<!-- 顶部导航 -->
+<%@ include file="WEB-INF/jsp/index/index_top.jsp" %>
+<!-- 左侧菜单 -->
+<%@ include file="WEB-INF/jsp/index/index_left_menu.jsp" %>
+<!--选项卡插件-->
+<script src="${pageContext.request.contextPath}/js/b.tabs.js"></script>
+<script src="${pageContext.request.contextPath}/js/bTabs-style.js"></script>
+<!-- Content -->
+<div class="content-wrapper">
+<!--需要选项卡-->
+	<div class="col-md-12" id="mainFrameTabs" style="padding:0px;margin:0px;">  
+    	<ul class="nav nav-tabs" role="tablist">
+     	 	<li role="presentation" class="active noclose index"><a href="#bTabs_navTabsMainPage" data-toggle="tab" style="padding:6px 15px !important;">首页</a></li>
+    	</ul>
+    		<div class="tab-content" style="position:relative;">
+     			<div class="tab-pane active"  id="bTabs_navTabsMainPage" style="background-color:#FFFFFF;overflow:auto">
+     				<%@ include file="WEB-INF/jsp/index/index_content.jsp" %>
+       			</div>
+     		</div>
+    	</div>
+	</div>
+</div>
+<script type="text/javascript" charset="utf-8">
+function show_div(content){
+	$("#test_div").html(content);
+	setTimeout(function(){
+		$("#test_div").fadeIn(1000);
+		$("#test_div").fadeOut(2000);
+	},100);
+}
+//关闭Zeromodal弹出框iframe，刷新bTabs页iframe
+function refreshframe(){
+	closeZeromodal();
+	window.frames[$(".tab-content > .active").index()-1].location.reload();
+}
+//关闭弹窗
+function closeZeromodal(){
+	$(".zeromodal-close").trigger("click");
+}
+
+</script>
+</body>
 </html>

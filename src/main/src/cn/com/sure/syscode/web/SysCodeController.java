@@ -12,12 +12,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.alibaba.fastjson.JSON;
+
 import cn.com.sure.common.Applicationexception;
-import cn.com.sure.common.Constants;
-import cn.com.sure.log.entry.AuditOpLog;
+import cn.com.sure.common.ReCode;
+import cn.com.sure.syscode.entry.PageVo;
 import cn.com.sure.syscode.entry.SysCode;
 import cn.com.sure.syscode.entry.SysCodeType;
 import cn.com.sure.syscode.service.SysCodeService;
@@ -35,32 +38,34 @@ public class SysCodeController {
 	@Autowired
 	private SysCodeTypeService sysCodeTypeService;
 
+	ReCode reCode = new ReCode();
 	
 	Date date = new Date();
-	
-	AuditOpLog auditOpLog = new AuditOpLog();
 	
 	/**
 	* UC-SYS01-05新增数据字典内容
 	* @return "redirect:/list"
 	*/
+	@ResponseBody
 	@RequestMapping(value = "insert")
-	public String insert(SysCode sysCode,
+	public ReCode insert(SysCode sysCode,
 			Model model, RedirectAttributes attr,HttpServletRequest request
 			){
 		LOG.debug("insert - start!");
+		int i =0;
 		try{
 			//执行insert操作
-			 sysCodeService.insert(sysCode);
+			 i = sysCodeService.insert(sysCode);
 		}catch(Applicationexception e){
-			attr.addFlashAttribute("message",e.getMessage());
-			attr.addFlashAttribute("frSysCode",sysCode);
-			return "redirect:/syscode/selectAll.do";
+			reCode.setDes(e.getMessage());
+			reCode.setRetrunCode(Integer.toString(i));
+			
+			return reCode;
 		}
 		LOG.debug("insert - end!");
-		attr.addFlashAttribute("success","true");
-		attr.addFlashAttribute("msg","保存【"+sysCode.getParaCode()+"】成功");
-		return "redirect:/syscode/selectAll.do";
+		reCode.setDes("保存【"+sysCode.getParaCode()+"】成功");
+		reCode.setRetrunCode(Integer.toString(i));
+		return reCode;
 		
 	}
 	
@@ -73,13 +78,37 @@ public class SysCodeController {
 	 * @return
 	 */
 	@RequestMapping(value="selectAll")
-	public ModelAndView selectAll(SysCode sysCode,
+	@ResponseBody
+	public String selectAll(SysCode sysCode,
 			Model model, RedirectAttributes attr,HttpServletRequest request){
 		LOG.debug("selectAll - start");
-		List<SysCode> sysCodes = this.sysCodeService.selectAll();
-		List<SysCodeType> sysCodeTypes = this.sysCodeTypeService.selectAll(null);
+		PageVo pageVo=new PageVo();
+
+	    pageVo.setStart(request.getParameter("start")==null?0:Integer.parseInt(request.getParameter("start").toString()));
+	    pageVo.setLength(request.getParameter("length")==null?10:Integer.parseInt(request.getParameter("length").toString()));
+		int count =this.sysCodeService.getSysCodeCount();
+		List<SysCode> sysCodes = this.sysCodeService.selectAll(pageVo);
+		pageVo.setRecordsTotal(String.valueOf(count));
+		pageVo.setRecordsFiltered(pageVo.getRecordsTotal());
+		pageVo.setData(sysCodes);
 		LOG.debug("selectAll - end");
-		return new ModelAndView("syscode/syscodeList").addObject("sysCodes", sysCodes).addObject("sysCodeTypes",sysCodeTypes);
+		return JSON.toJSONString(pageVo);
+	}
+	
+	/**
+	 * 跳转到前台页面之后再去执行selectAll的查询 目的是为了实现分页查询
+	 * @param sysCode
+	 * @param model
+	 * @param attr
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value="toSelectAll")
+	public ModelAndView toSelectAll(SysCode sysCode,
+			Model model, RedirectAttributes attr,HttpServletRequest request){
+		LOG.debug("toSelectAll - start");
+		LOG.debug("toSelectAll - end");
+		return new ModelAndView("syscode/syscodeList");
 	}
 	
 	
@@ -88,24 +117,26 @@ public class SysCodeController {
 	* @return "redirect:/syscode/selectAll.do"
 	 * @throws Applicationexception 
 	*/
+	@ResponseBody
 	@RequestMapping(value = "update")
-	public String update(
+	public ReCode update(
 	SysCode sysCode, Model model,RedirectAttributes attr,HttpServletRequest request) throws Applicationexception{
 		LOG.debug("update - start!");
+		int i = 0 ;
 		try{
 			//执行update操作
-			int i = sysCodeService.update(sysCode);
+			i = sysCodeService.update(sysCode);
 			//添加审计日志
 		}catch(Applicationexception e){
-			attr.addFlashAttribute("message",e.getMessage());
-			attr.addFlashAttribute("frSysCode",sysCode);
-			return "redirect:/syscode/selectAll.do";
+			reCode.setDes(e.getMessage());
+			reCode.setRetrunCode(Integer.toString(i));
+			return reCode;
 		}
 		
 		LOG.debug("update - end!");
-		attr.addFlashAttribute("success","true");
-		attr.addFlashAttribute("msg","修改【"+sysCode.getParaCode()+"】信息成功");
-		return  "redirect:/syscode/selectAll.do";
+		reCode.setDes("修改【"+sysCode.getParaCode()+"】信息成功");
+		reCode.setRetrunCode(Integer.toString(i));
+		return  reCode;
 		
 	}
 	
@@ -114,16 +145,25 @@ public class SysCodeController {
 	* UC-SYS01-03删除数据字典
 	* @return "redirect:/syscode/selectAll.dot"
 	*/
+	@ResponseBody
 	@RequestMapping(value = "remove")
-	public String remove(
+	public ReCode remove(
 	@RequestParam(value = "id", required = false)Long id,
 	Model model,RedirectAttributes attr,HttpServletRequest request){
 		LOG.debug("remove - start!");
-		int i =  sysCodeService.remove(id);
+		int i = 0;
+		try {
+			i = sysCodeService.remove(id);
+		} catch (Applicationexception e) {
+			reCode.setDes(e.getMessage());
+			reCode.setRetrunCode(Integer.toString(i));
+			
+			return reCode;
+		}
 		
-		attr.addFlashAttribute("success","true");
-		attr.addFlashAttribute("msg","删除主键为【"+id+"】信息成功");	
-		return  "redirect:/syscode/selectAll.do";
+		reCode.setDes("删除主键为【"+id+"】信息成功");
+		reCode.setRetrunCode(Integer.toString(i));
+		return  reCode;
 		
 	}
 	
@@ -133,16 +173,22 @@ public class SysCodeController {
 	*  UC-SYS01-09停用数据字典内容
 	* @return "redirect:/syscode/selectAll.do"
 	*/
+	@ResponseBody
 	@RequestMapping(value = "suspend")
-	public String suspend(
+	public ReCode suspend(
 	@RequestParam(value = "id", required = false)Long id,
 	Model model,RedirectAttributes attr,HttpServletRequest request){
 		LOG.debug("suspend - start!");
-		int i =  sysCodeService.suspend(id);
-    	
-    	attr.addFlashAttribute("success","true");
-		attr.addFlashAttribute("msg","停用主键为【"+id+"】成功");
-        return "redirect:/syscode/selectAll.do";
+		int i = sysCodeService.suspend(id);
+		if(i==1) {
+			reCode.setDes("停用主键为【"+id+"】成功");
+			reCode.setRetrunCode(Integer.toString(i));
+		}else {
+			reCode.setDes("停用主键为【"+id+"】失败");
+			reCode.setRetrunCode(Integer.toString(i));
+		}
+		
+        return reCode;
 		
 	}
 	
@@ -151,37 +197,24 @@ public class SysCodeController {
 	/**
 	 *   UC-SYS01-10启用数据字典内容
 	 */
+	@ResponseBody
 	@RequestMapping(value = "activate")
-	public String activate(
+	public ReCode activate(
 	@RequestParam(value = "id", required = false)Long id,
 	Model model,RedirectAttributes attr,HttpServletRequest request){
 		LOG.debug("activate - start!");
-		int i =  sysCodeService.activate(id);
-		int result;
-		if(i==-1){
-			 result = Constants.SUCCESS_OR_FAILD_OPTION_FAILD;
-		}else{
-			 result = Constants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
-		}
+		int i = sysCodeService.activate(id);
         attr.addFlashAttribute("success", id);
     	LOG.debug("activate - end!");	
-    	/*// 添加审计日志
-		auditOpLog.setType(Constants.OPERATION_TYPE_ACTIVE);
-		auditOpLog.setAction(Constants.OPERATION_TYPE_ACT);
-		auditOpLog.setActionExt1(Constants.OPERATION_TYPE_NAME);
-		auditOpLog.setActionExt2(id.toString());
-		auditOpLog.setActionExt3("");
-		auditOpLog.setActionExt4("");
-		auditOpLog.setMessage("");
-		auditOpLog.setTimestamp(date);
-		auditOpLog.setIp(getIp(request));
-		auditOpLog.setOperator((String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME));
-		auditOpLog.setIsOpSucc(result);
-		
-		auditOpLogService.insert(auditOpLog);*/
-    	attr.addFlashAttribute("success","true");
-		attr.addFlashAttribute("msg","启用主键为【"+id+"】成功");
-        return "redirect:/syscode/selectAll.do";
+    	
+    	if(i==1) {
+    		reCode.setDes("启用主键为【"+id+"】成功");
+    		reCode.setRetrunCode(Integer.toString(i));
+    	}else {
+    		reCode.setDes("启用主键为【"+id+"】失败");
+    		reCode.setRetrunCode(Integer.toString(i));
+    	}
+        return reCode;
 		
 	}
 	
@@ -195,6 +228,18 @@ public class SysCodeController {
 		LOG.debug("searchByCondition - end");
 		return new ModelAndView("syscode/syscodeList").addObject("sysCodes", sysCodes);
 		
+	}
+	
+	/**
+	 * 转向新增
+	 * @return
+	 */
+	@RequestMapping(value="forWardInsert")
+	public ModelAndView forWardInsert() {
+		LOG.debug("forWardInsert - start");
+		List<SysCodeType> sysCodeTypes = sysCodeTypeService.selectAll();
+		LOG.debug("forWardInsert - end");
+		return new ModelAndView("syscode/syscodeInsert").addObject("sysCodeTypes",sysCodeTypes);
 	}
 	
 

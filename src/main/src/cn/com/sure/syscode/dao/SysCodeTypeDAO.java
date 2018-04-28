@@ -34,7 +34,7 @@ public interface SysCodeTypeDAO {
 	/**
 	 * @param sysCodeType
 	 */
-	public List<SysCodeType> selectAll(SysCodeType sysCodeType);
+	public List<SysCodeType> selectAll();
 
 	/**
 	 * @param id

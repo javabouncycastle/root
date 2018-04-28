@@ -3,6 +3,7 @@ package cn.com.sure.syscode.service;
 import java.util.List;
 
 import cn.com.sure.common.Applicationexception;
+import cn.com.sure.syscode.entry.PageVo;
 import cn.com.sure.syscode.entry.SysCode;
 
 public interface SysCodeService {
@@ -36,7 +37,7 @@ public interface SysCodeService {
 	/**
 	 * @return
 	 */
-	List<SysCode> selectAll();
+	List<SysCode> selectAll(PageVo pagevo);
 
 	/**
 	 * @param sysCode
@@ -48,7 +49,7 @@ public interface SysCodeService {
 	 * @param id
 	 * @return
 	 */
-	int remove(Long id);
+	int remove(Long id) throws Applicationexception;
 
 	/**
 	 * @param id
@@ -67,6 +68,8 @@ public interface SysCodeService {
 	 * @return
 	 */
 	List<SysCode> selectByType(SysCode sysCode);
+
+	int getSysCodeCount();
 
 	
 

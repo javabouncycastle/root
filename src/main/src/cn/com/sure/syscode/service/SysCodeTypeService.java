@@ -30,13 +30,13 @@ public interface SysCodeTypeService {
 	 * @param id
 	 * @return 
 	 */
-	int delete(Long id);
+	int delete(Long id)throws Applicationexception;
 
 	/**
 	 * @param sysCodeType
 	 * @return
 	 */
-	List<SysCodeType> selectAll(SysCodeType sysCodeType);
+	List<SysCodeType> selectAll();
 
 	/**
 	 * @param sysCodeType

@@ -14,7 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cn.com.sure.common.Applicationexception;
 import cn.com.sure.common.ErrorMessageConstants;
+import cn.com.sure.syscode.dao.SysCodeDAO;
 import cn.com.sure.syscode.dao.SysCodeTypeDAO;
+import cn.com.sure.syscode.entry.SysCode;
 import cn.com.sure.syscode.entry.SysCodeType;
 
 /**
@@ -29,6 +31,9 @@ public class SysCodeTypeServiceImpl implements SysCodeTypeService {
 	
 	@Autowired
 	private SysCodeTypeDAO sysCodeTypeDAO;
+	
+	@Autowired
+	private SysCodeDAO sysCodeDAO;
 
 	/* (non-Javadoc)
 	 * @see cn.com.sure.syscode.service.SysCodeTypeService#insert(cn.com.sure.syscode.entry.SysCodeType)
@@ -59,7 +64,7 @@ public class SysCodeTypeServiceImpl implements SysCodeTypeService {
 		
 		List<SysCodeType> sysCodeTypes = sysCodeTypeDAO.searchByCondition(codeType);
 		int i = 0;
-		if(!(sysCodeTypes.size()==0)) {
+		if((sysCodeTypes.size()==0)) {
 			i = sysCodeTypeDAO.update(sysCodeType);
 		}else {
 			Applicationexception.throwException(ErrorMessageConstants.paraTypeValueExist, new String[]{sysCodeType.getParaType()});
@@ -74,9 +79,20 @@ public class SysCodeTypeServiceImpl implements SysCodeTypeService {
 	 * @see cn.com.sure.syscode.service.SysCodeTypeService#delete(java.lang.Long)
 	 */
 	@Override
-	public int delete(Long id) {
+	public int delete(Long id) throws Applicationexception{
 		LOG.debug("delete - start");
-		int i = sysCodeTypeDAO.delete(id);
+		//删除之前先查询一下这个数据字典类型是否在用，如果在用，则不允许删除
+		SysCodeType codeType = new SysCodeType();
+		codeType.setId(id);
+		SysCode sysCode = new SysCode();
+		sysCode.setParaType(codeType);
+		List<SysCode> syscodes = sysCodeDAO.searchByCondition(sysCode);
+		int i =0;
+		if(syscodes.size() != 0) {
+			Applicationexception.throwException(ErrorMessageConstants.sysCodeTypeInuse, new String[]{id.toString()});
+		}else {
+			i = sysCodeTypeDAO.delete(id);
+		}
 		LOG.debug("delete - start");
 		return i;
 	}
@@ -85,9 +101,9 @@ public class SysCodeTypeServiceImpl implements SysCodeTypeService {
 	 * @see cn.com.sure.syscode.service.SysCodeTypeService#selectAll(cn.com.sure.syscode.entry.SysCodeType)
 	 */
 	@Override
-	public List<SysCodeType> selectAll(SysCodeType sysCodeType) {
+	public List<SysCodeType> selectAll() {
 		LOG.debug("selectAll - start");
-		List<SysCodeType> sysCodeTypes = sysCodeTypeDAO.selectAll(sysCodeType);
+		List<SysCodeType> sysCodeTypes = sysCodeTypeDAO.selectAll();
 		LOG.debug("selectAll - end");
 		return sysCodeTypes;
 	}

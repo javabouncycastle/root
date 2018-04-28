@@ -49,89 +49,67 @@ public class KeypairStandby {
 	 */
     private Date genTime;
     
+    /**
+     * 密钥长度
+     */
+    private Integer keysize;
+    
     
     private Date startTime;
     private Date endTime;
-
-    
-    
 	public String getId() {
 		return id;
 	}
-
-
 	public void setId(String id) {
 		this.id = id;
 	}
-
-
 	public String getPubKey() {
 		return pubKey;
 	}
-
-
 	public void setPubKey(String pubKey) {
 		this.pubKey = pubKey;
 	}
-
-
 	public String getPriKey() {
 		return priKey;
 	}
-
-
 	public void setPriKey(String priKey) {
 		this.priKey = priKey;
 	}
-
 	public KeyPairAlgorithm getKeyPairAlgorithm() {
 		return keyPairAlgorithm;
 	}
-
-
 	public void setKeyPairAlgorithm(KeyPairAlgorithm keyPairAlgorithm) {
 		this.keyPairAlgorithm = keyPairAlgorithm;
 	}
-
-
 	public KpgTask getKpgTask() {
 		return kpgTask;
 	}
-
-
 	public void setKpgTask(KpgTask kpgTask) {
 		this.kpgTask = kpgTask;
 	}
-
-
 	public Date getGenTime() {
 		return genTime;
 	}
-
-
 	public void setGenTime(Date genTime) {
 		this.genTime = genTime;
 	}
-
-
+	public Integer getKeysize() {
+		return keysize;
+	}
+	public void setKeysize(Integer keysize) {
+		this.keysize = keysize;
+	}
 	public Date getStartTime() {
 		return startTime;
 	}
-
-
 	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
 	}
-
-
 	public Date getEndTime() {
 		return endTime;
 	}
-
-
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
-
 
 }

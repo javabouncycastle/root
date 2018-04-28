@@ -64,7 +64,8 @@ import cn.com.sure.kpgtask.entry.KpgTask;
 			//3.1缓冲数量
 			int sliceSize = Integer.parseInt(kpgTask.getDbCommitBufsize().getParaValue());
 			
-			if((kpgTask.getKpgKeyAmount().intValue()- kpgTask.getGeneratedKeyAmount().intValue())< Integer.parseInt(kpgTask.getDbCommitBufsize().getParaValue())){//(总共生成数量-已经生成数量)<缓冲数量|| 最后一片了
+			//(总共生成数量-已经生成数量)<缓冲数量|| 最后一片了
+			if((kpgTask.getKpgKeyAmount().intValue()- kpgTask.getGeneratedKeyAmount().intValue())< Integer.parseInt(kpgTask.getDbCommitBufsize().getParaValue())){
 				sliceSize = kpgTask.getKpgKeyAmount().intValue()- kpgTask.getGeneratedKeyAmount().intValue();
 			}
 			
@@ -74,7 +75,7 @@ import cn.com.sure.kpgtask.entry.KpgTask;
 			LOG.info("执行任务块-["+taskId+"]任务数量："+sliceSize);
 
 			//4.获取provider 产生KeyPairGenerator 
-			KeyPairGenerator kpg =	KeyPairGenerator.getInstance(kpgTask.getKeyPairAlgorithm().getName());
+			KeyPairGenerator kpg =	KeyPairGenerator.getInstance(kpgTask.getKeyPairAlgorithm().getAlgorithmName());
 			kpg.initialize(kpgTask.getKeyPairAlgorithm().getKeysize());
 			
 			//5.循环执行************************************************
@@ -101,6 +102,7 @@ import cn.com.sure.kpgtask.entry.KpgTask;
 				keyPairStandby.setKpgTask(kpgTask);
 				keyPairStandby.setPriKey(prikey);
 				keyPairStandby.setPubKey(pubkey);
+				keyPairStandby.setKeysize(kpgTask.getKeyPairAlgorithm().getKeysize());
 				
 				
 				keyPairStandbyService.insert(keyPairStandby);

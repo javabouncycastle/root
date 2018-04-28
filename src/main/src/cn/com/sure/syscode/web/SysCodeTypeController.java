@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +15,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.alibaba.fastjson.JSON;
+
 import cn.com.sure.common.Applicationexception;
-import cn.com.sure.common.Constants;
-import cn.com.sure.log.entry.AuditOpLog;
-import cn.com.sure.log.test.service.AuditOpLogService;
+import cn.com.sure.common.ReCode;
 import cn.com.sure.syscode.entry.SysCodeType;
 import cn.com.sure.syscode.service.SysCodeTypeService;
 
@@ -39,12 +39,9 @@ public class SysCodeTypeController {
 	@Autowired
 	private SysCodeTypeService sysCodeTypeService;
 	
-	@Autowired
-	private AuditOpLogService auditOpLogService;
-	
 	Date date = new Date();
 	
-	AuditOpLog auditOpLog = new AuditOpLog();
+	ReCode reCode = new ReCode();
 	
 	/**
 	 * UC-SYS01-01 新增数据字典类别
@@ -55,22 +52,24 @@ public class SysCodeTypeController {
 	 * @return
 	 * @throws Applicationexception 
 	 */
+	@ResponseBody
 	@RequestMapping(value = "insert")
-	public String insert(SysCodeType sysCodeType,
+	public ReCode insert(SysCodeType sysCodeType,
 			Model model, RedirectAttributes attr,HttpServletRequest request) {
 		LOG.debug("insert - start");
+		int i = 0 ;
 		try {
-			int i = sysCodeTypeService.insert(sysCodeType);
+			i = sysCodeTypeService.insert(sysCodeType);
 			// 添加审计日志
 		} catch (Applicationexception e) {
-			attr.addFlashAttribute("message",e.getMessage());
-			attr.addFlashAttribute("sysCodeType",sysCodeType);
-			return "redirect:/syscodetype/selectAll.do";
+			reCode.setDes(e.getMessage());
+			reCode.setRetrunCode(Integer.toString(i));
+			return reCode;
 		}
 		LOG.debug("insert - end");
-		attr.addFlashAttribute("success","true");
-		attr.addFlashAttribute("msg","保存【"+sysCodeType.getParaType()+"】成功");
-		return "redirect:/syscodetype/selectAll.do";
+		reCode.setDes("保存【"+sysCodeType.getParaType()+"】成功");
+		reCode.setRetrunCode(Integer.toString(i));
+		return reCode;
 		
 	}
 	
@@ -84,24 +83,23 @@ public class SysCodeTypeController {
 	 * @throws Applicationexception 
 	 */
 	@RequestMapping(value = "update")
-	public String update(SysCodeType sysCodeType,
+	public ReCode update(SysCodeType sysCodeType,
 			Model model, RedirectAttributes attr,HttpServletRequest request) throws Applicationexception{
 		LOG.debug("update - start");
-		
+		int i = 0;
 		try {
-			int i = sysCodeTypeService.update(sysCodeType);
+			i = sysCodeTypeService.update(sysCodeType);
 			// 添加审计日志
 		} catch (Applicationexception e) {
-			attr.addFlashAttribute("message",e.getMessage());
-			attr.addFlashAttribute("sysCodeType",sysCodeType);
-			return "redirect:/syscodetype/selectAll.do";
+			reCode.setDes(e.getMessage());
+			reCode.setRetrunCode(Integer.toString(i));
+			return reCode;
 		}
 		
-		//添加审计日志
 		LOG.debug("update - start");
-		attr.addFlashAttribute("success","true");
-		attr.addFlashAttribute("msg","修改数据字典类别=【"+sysCodeType.getParaType()+"】信息成功");
-				return "redirect:/syscodetype/selectAll.do";
+		reCode.setDes("修改数据字典类别=【"+sysCodeType.getParaType()+"】信息成功");
+		reCode.setRetrunCode(Integer.toString(i));
+		return reCode;
 	}
 	
 	/**
@@ -112,23 +110,25 @@ public class SysCodeTypeController {
 	 * @param request
 	 * @return
 	 */
+	@ResponseBody
 	@RequestMapping(value = "remove")
-	public String remove(@RequestParam(value = "id", required = false)Long id,
-			Model model, RedirectAttributes attr,HttpServletRequest request){
+	public ReCode remove(@RequestParam(value = "id", required = false)Long id,
+			Model model, RedirectAttributes attr,HttpServletRequest request) throws Applicationexception{
 		LOG.debug("remove - start");
-		int i = sysCodeTypeService.delete(id);
-		int result ;
-		if(i==-1){
-			result = Constants.SUCCESS_OR_FAILD_OPTION_FAILD;
-		}else{
-			result = Constants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
+		int i = 0;
+		try {
+			i = sysCodeTypeService.delete(id);
+			// 添加审计日志
+		} catch (Applicationexception e) {
+			reCode.setDes(e.getMessage());
+			reCode.setRetrunCode(Integer.toString(i));
+			return reCode;
 		}
-		/*auditOpLogService.insert(Constants.OPERATION_TYPE_DELETE, "删除", "数据字典类别", id.toString(), null, null, null, 
-				date,getIp(request),  (String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME), result);*/
+		
 		LOG.debug("remove - end");
-		attr.addFlashAttribute("success","true");
-		attr.addFlashAttribute("msg","删除主键为【"+id+"】信息成功");
-				return "redirect:/syscodetype/selectAll.do";
+		reCode.setDes("删除主键为【"+id+"】信息成功");
+		reCode.setRetrunCode(Integer.toString(i));
+		return reCode;
 		
 	}
 	
@@ -144,9 +144,9 @@ public class SysCodeTypeController {
 	public ModelAndView selectAll(SysCodeType sysCodeType,
 			Model model, RedirectAttributes attr,HttpServletRequest request){
 		LOG.debug("selectAll - start");
-		List<SysCodeType> sysCodeTypes=this.sysCodeTypeService.selectAll(sysCodeType);
+		List<SysCodeType> sysCodeTypes=this.sysCodeTypeService.selectAll();
 		LOG.debug("selectAll - end");
-		return new ModelAndView("syscode/syscodeTypeList").addObject("sysCodeTypes", sysCodeTypes);
+		return new ModelAndView("syscode/syscodeTypeList").addObject("sysCodeTypes", JSON.toJSON(sysCodeTypes));
 		
 	}
 	
@@ -167,6 +167,31 @@ public class SysCodeTypeController {
 		LOG.debug("searchByCondition - end");
 		return new ModelAndView("syscode/syscodeTypeList").addObject("sysCodeTypes", sysCodeTypes);
 		
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "forWardInsert")
+	public String forWardInsert() {
+		LOG.debug("forWardInsert - start");
+		LOG.debug("forWardInsert - end");
+		return "syscode/syscodeTypeInsert";
+	}
+	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "forWardUpdate")
+	public ModelAndView forWardUpdate(@RequestParam(value = "id", required = false)Long id) {
+		LOG.debug("forWardInsert - start");
+		SysCodeType syscodeType = sysCodeTypeService.selectById(id);
+		LOG.debug("forWardInsert - end");
+		return new ModelAndView("syscode/syscodeTypeEdit").addObject("syscodeType", syscodeType);
 	}
 
 

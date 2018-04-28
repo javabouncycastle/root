@@ -11,6 +11,5 @@
 	<classpathentry kind="src" path="src/main/kmc"/>
 	<classpathentry kind="src" path="src/main/ca"/>
 	<classpathentry kind="src" path="src/main/ra"/>
-	<classpathentry kind="src" path="src/main/cm"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

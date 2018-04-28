@@ -31,8 +31,7 @@ public class Applicationexception extends Exception{
 		this.errorCode = errorCode;
 	}
     
-    public Applicationexception(int errorCode,String message, Exception e)
-    {
+    public Applicationexception(int errorCode,String message, Exception e){
         super(message);
 		this.errorCode = errorCode;
         underlyingException = e;

@@ -27,6 +27,7 @@ import cn.com.sure.kpgtask.service.KpgTaskService;
 import cn.com.sure.syscode.entry.SysCode;
 import cn.com.sure.syscode.entry.SysCodeType;
 import cn.com.sure.syscode.service.SysCodeService;
+import cn.com.sure.syscode.service.SysCodeTypeService;
 
 /**
  * @author Limin
@@ -50,6 +51,9 @@ public class AutoKpg implements ApplicationListener<ContextRefreshedEvent>{
 	@Autowired
 	private KpgTaskExecuteService kpgTaskExecuteService;
 	
+	@Autowired
+	private SysCodeTypeService sysCodeTypeService;
+	
 	
 	private static final Log LOG = LogFactory.getLog(AutoKpg.class);
 
@@ -68,7 +72,10 @@ public class AutoKpg implements ApplicationListener<ContextRefreshedEvent>{
 	 	//1查询
     	//1.1查询密钥算法
 		 LOG.debug("autoKpg - start");
-    		List <KeyPairAlgorithm> list = keypairAlgorithmService.selectAll();
+		 KeyPairAlgorithm keypaieAlgorithm = new KeyPairAlgorithm();
+		 keypaieAlgorithm.setIsValid(Constants.YES_OR_NO_OPTION_YES);
+		 
+    		List <KeyPairAlgorithm> list = keypairAlgorithmService.selectOpYes(keypaieAlgorithm);
     		
     		//1.2查询每种算法的密钥数量
     		for(KeyPairAlgorithm kpa:list){
@@ -78,8 +85,13 @@ public class AutoKpg implements ApplicationListener<ContextRefreshedEvent>{
     			SysCode sysCode = new SysCode();
     			SysCodeType sysCodeType = new SysCodeType();
     			sysCodeType.setParaType(Constants.KEY_NUM_MIN);
+    			
+    			List<SysCodeType>codetypes = sysCodeTypeService.searchByCondition(sysCodeType);
+    			SysCodeType sysCodeTypes = new SysCodeType();
+    			sysCodeTypes.setId(codetypes.get(0).getId());
+    			
     			sysCode.setIsValid(Constants.YES_OR_NO_OPTION_YES);
-    			sysCode.setParaType(sysCodeType);
+    			sysCode.setParaType(sysCodeTypes);
     			
     			if(sysCodeService.searchByCondition(sysCode).size()==0) {
     				LOG.error("数据字典中缺少密钥最少数量的记录，请添加！");
@@ -94,10 +106,18 @@ public class AutoKpg implements ApplicationListener<ContextRefreshedEvent>{
     				
     				//1.4.1缓存数量，默认获取第一条
     				SysCode code = new SysCode();
-        			SysCodeType codeType = new SysCodeType();
-        			codeType.setParaType(Constants.DB_COMMIT_BUFFER);
-    				code.setIsValid(Constants.YES_OR_NO_OPTION_YES);
-    				code.setParaType(codeType);
+        			SysCodeType sysCodeTypebuf = new SysCodeType();
+        			sysCodeTypebuf.setParaType(Constants.DB_COMMIT_BUFFER);
+        			
+        			List<SysCodeType>codetypesbuf = sysCodeTypeService.searchByCondition(sysCodeTypebuf);
+        			SysCodeType sysCodeTypesbuf = new SysCodeType();
+        			sysCodeTypesbuf.setId(codetypesbuf.get(0).getId());
+        			
+        			code.setIsValid(Constants.YES_OR_NO_OPTION_YES);
+        			code.setParaType(sysCodeTypesbuf);
+    				
+    				
+    				
     				//1.4.1.1先查询一下数据字典中是否有这条记录，如果记录被删除，则报错到控制台，提示缺少这条记录
         			if(sysCodeService.searchByCondition(code).size()==0) {
         				LOG.error("数据字典中缺少缓存数量记录，请添加！");
@@ -105,14 +125,19 @@ public class AutoKpg implements ApplicationListener<ContextRefreshedEvent>{
         			}
         			code.setParaValue(sysCodeService.searchByCondition(code).get(0).getParaValue());
     				task.setDbCommitBufsize(code);
-    				
     				//1.4.2生成最小数量，默认取第一条.
     				//如果备用表中密钥的数量小于数据字典中密钥的最少数量，则启动生成，但是不能少于最少数量多少就生成多少，应该生成大于那个数量的密钥，因此要设立一个如果小于密钥最小数量了，那么一次应该生成多少条密钥
+    				//这里有bug
     				SysCode codes = new SysCode();
-        			SysCodeType codeTypes = new SysCodeType();
-        			codeTypes.setParaType(Constants.GEN_KEY_NUM);
-    				codes.setIsValid(Constants.YES_OR_NO_OPTION_YES);
-    				codes.setParaType(codeTypes);
+        			SysCodeType sysCodeTypeMin = new SysCodeType();
+        			sysCodeTypeMin.setParaType(Constants.GEN_KEY_NUM);
+        			
+        			List<SysCodeType>codetypesMin = sysCodeTypeService.searchByCondition(sysCodeTypeMin);
+        			SysCodeType sysCodeTypesMin = new SysCodeType();
+        			sysCodeTypesMin.setId(codetypesMin.get(0).getId());
+        			
+        			codes.setIsValid(Constants.YES_OR_NO_OPTION_YES);
+        			codes.setParaType(sysCodeTypesMin);
     				
     				//1.4.2.1先查询一下数据字典中是否有这条记录，如果记录被删除，则报错到控制台，提示缺少这条记录
         			if(sysCodeService.searchByCondition(codes).size()==0) {

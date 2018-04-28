@@ -12,6 +12,14 @@ public interface ErrorMessageConstants {
 	
 	public static final int exportError = 117;//excel导出失败
 	
+	public static final int sysCodeTypeInuse = 118;//数据字典类型正在使用，请勿删除！
+	
+	public static final int sysCodeInuseInCtml = 121;//数据字典正在证书模板中使用，请勿删除！
+	
+	public static final int sysCodeInuseIntaskBuff = 122;//数据字典正在密钥任务缓存数量中使用，请勿删除！
+	
+	public static final int sysCodeInuseIntaskStatus = 123;//123=数据字典正在密钥任务任务状态使用，请勿删除！
+	
 	//KM模块
 	public static final int kpgTaskNameExist = 205;//任务已存在
 	

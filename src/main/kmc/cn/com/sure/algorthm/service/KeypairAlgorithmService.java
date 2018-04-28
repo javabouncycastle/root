@@ -40,14 +40,15 @@ public interface KeypairAlgorithmService {
 	/**
 	 * 停用密钥算法
 	 * @param id
+	 * @return 
 	 */
-	void suspend(Long id);
+	int suspend(Long id);
 
 	/**
 	 * 启用密钥算法
 	 * @param id
 	 */
-	void activate(Long id);
+	int activate(Long id);
 
 	/**
 	 * @param kpgTask 

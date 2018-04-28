@@ -1,106 +1,153 @@
-<%@ page contentType="text/html;charset=utf8" pageEncoding="utf8" %>
-<%@ taglib prefix="c" uri="/WEB-INF/c-1_0-rt.tld"%>
-
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@include file="/public/taglib.jsp" %>
+<%@include file="/public/taglib_js.jsp" %>
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<%@include file="/public/taglib_css.jsp" %>
+<style type="text/css">
+body{background-color: #fff;}
+body>div{margin: 0 auto;}
+</style>
 </head>
-	<meta http-equiv="pragma" content="no-cache">
-	<meta http-equiv="cache-control" content="no-cache">
-	<meta http-equiv="expires" content="0">    
-	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
-	<meta http-equiv="description" content="This is my page">
-	<link rel="stylesheet" type="text/css" href="styles.css">
-	
-	<link rel="stylesheet" href="../css/rightTop.css" type="text/css"></link>
-	<link rel="stylesheet" href="../css/rightBody.css" type="text/css"></link>
-	
-</head>
-
 <body>
-<!-- right上面部分 start -->
-<table class="right-table1">
-  <tr>
-    <td class="right-td1">
-    <table class="right-table2">
-      <tr>
-        <td width="1%" height="26" style="width:5px;">&nbsp;</td>
-        <td width="99%" valign="bottom">
-        <table class="right-table2">
-          <tr>
-            <td width="102" height="26" valign="bottom">
-            <table class="right-table3">
-              <tr>
-                <td class="right-td3" align="center"><img src="../images/top/1.gif" width="9" height="9" /><span class="STYLE1">显示所有</span></td>
-              </tr>
-            </table></td>
-            <td width="102"><table class="right-table3">
-              <tr>
-                <td class="right-td2" align="center"><a href=""><img src="../images/top/2_1.gif" width="9" height="9" /></a> <span class="STYLE3">增加</span></td>
-              </tr>
-            </table></td>
-            <td width="102"><table class="right-table3">
-              <tr>
-                <td class="right-td2" align="center"><img src="../images/top/3.gif" width="9" height="9" /> <span class="STYLE1">删除</span></td>
-              </tr>
-            </table></td>
-             <td width="102"><table class="right-table3">
-              <tr>
-                <td class="right-td2" align="center"><img src="../images/top/4.gif" width="9" height="9" /> <span class="STYLE1">修改</span></td>
-              </tr>
-            </table></td>
-            <td>&nbsp;</td>
-          </tr>
-        </table></td>
-      </tr>
-    </table></td>
-  </tr>
-  <tr>
-    <td background="../images/top/right_09.gif" style="line-height:5px;">&nbsp;</td>
-  </tr>
-</table>
-<!-- right上面部分 end -->
+
+<div id="content" class="container">
+
+<div class="row">
+<div class="col-xs-12">
+	<input type="hidden" value="${id}" id="id"/>
+    <form class="form-horizontal" id="f">
+        
+        <div class="form-group">
+            <label for="paraCode" class="col-xs-3 control-label">参数名称</label>
+            <div class="col-xs-6">
+                <input type="text" class="form-control"  id="paraCode" name="paraCode" placeholder="参数名称">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="paraValue" class="col-xs-3 control-label">参数值</label>
+            <div class="col-xs-6">
+                <input type="text" class="form-control"  id="paraValue" name="paraValue" placeholder="参数值">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="paraType" class="col-xs-3 control-label">所属类型</label>
+            <div class="col-xs-6">
+            	<select id="paraType" name="paraType.id" class="form-control" onchange="org_show(value)">
+	    			<option value="">--请选择--</option>
+	                	<c:forEach var="frs" items="${sysCodeTypes}">
+	                		<option value="${frs.id}">${frs.paraType}</option>
+	                	</c:forEach>
+            	</select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="isValid" class="col-xs-3 control-label">是否有效</label>
+            <div class="col-xs-6">
+            	<select id="isValid" name="isValid" class="form-control" onchange="org_show(value)">
+					<option value="1"  >是</option>
+			      	<option value="0"  >否</option>
+            	</select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="notes" class="col-xs-3 control-label">备注</label>
+            <div class="col-xs-6">
+                 <textarea class="form-control"  id="notes" name="notes"></textarea>
+            </div>
+        </div>
 
 
-<!-- rightBody start -->
-<table class="right-body-table1">
-  <tr>
-    <td class="right-body-td1" class="STYLE3"><div align="center">数据字典列表</div></td>
-  </tr>
-</table>
 
-<table class="right-body-table2  my_table">
- <tr height="30px">
-	 <th width="8%">主键</th>
-	 <th width="10%">参数名</th>
-	 <th width="10%">参数值</th>
-	 <th width="10%">所属类型</th>
-	 <th width="10%">是否有效</th>
-	 <th width="10%">备注</th>
-	 <th width="16%">操作</th>
- </tr>
- <c:forEach var="row" items="${sysCodes}">
-     <tr  class="right-body-tableLine right-body-table2 ">
-      <td class="right-body-tdTableLine tr:nth-child(odd)" >${row.id}</td>
-      <td class="right-body-tdTableLine" >${row.paraCode}</td>
-      <td class="right-body-tdTableLine" > ${row.paraValue}</td>
-      <td class="right-body-tdTableLine" >${row.paraType.paraType}</td>
-   	  <td class="right-body-tdTableLine" >${row.isValid=='0'?'否':'是'}</td>
-      <td class="right-body-tdTableLine" >${row.notes}</td>
-      <td class="right-body-tdTableLine" > 
-	      <a href="javascript:remove('${row.id}')"  class="btn btn-link">删除</a>
-	      <c:if test="${row.isValid==1}">
-			<a href="javascript:suspend('${row.id}')"  class="btn btn-link">停用</a> 
-		  </c:if>
-		  <c:if test="${row.isValid==0}">
-		  	<a href="javascript:activate('${row.id}')"  class="btn btn-link">启用</a>
-		  </c:if> 
-	  </td>      		
-     </tr>
- </c:forEach>
-</table>
+		<div class="box-footer text-right">		   
+		    <button type="button" class="btn btn-default" onclick="close_()">
+		        <i class="fa fa-reply">&nbsp;取消</i>
+		    </button>
+		    <button type="button" id="save_btn" class="btn btn-primary" onclick="add()" >
+		        <i class="fa fa-save">&nbsp;保存</i>
+		    </button>
+		</div>
+		
+    </form>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+$(function(){
+	$('#f').validate({
+		errorPlacement: function(error, element) {  //错误显示的位置
+		    error.appendTo(element.parent().parent());  
+		},
+		errorElement: "label",
+		success:function(label){
+			label.html("<i class='fa  fa-check-circle fa iadd'></i>");
+		},
+		rules: {//验证规则
+			paraCode:{required:true},
+			paraValue:{required:true},
+			paraType:{required:true},
+			isValid:{required:true},
+			
+		},
+	 	messages: {//错误提示文字
+	 		paraCode: {required: "不能为空！"},
+	 		paraValue: {required: "不能为空！"},
+	 		paraType: {required: "不能为空！"},
+	 		isValid: {required: "不能为空！"},
+	 	}
+	});
 
+});
+
+//保存
+function add(){
+	var a  =  $("#f").valid();
+	if(a==true){
+		var data = $("#f").serialize(); 
+		var url = "${ctx}/syscode/insert.do";
+		$.ajax({
+			type : "post",
+			data : data,
+			url : url,
+			success:function(data){      
+	    		zeroModal.success({
+					content:data.des,
+				    width: '30%',
+				    height: '30%',
+				    okFn: function() {
+				    	parent.refreshframe();//关闭弹出窗口，并关闭父页面
+			    		parent.window.show_div(data);//成功的回调方法
+				    }
+				});
+			},
+		    error:function(){ 
+		    	zeroModal.success({
+					content:data.des,
+				    width: '30%',
+				    height: '30%',
+				    okFn: function() {
+				    	parent.refreshframe();//关闭弹出窗口，并关闭父页面
+			    		parent.window.show_div(data);//成功的回调方法
+				    }
+				});
+		  	}
+		}); 
+	}if(a==false){
+		alter("11111");
+	}
+	
+}
+
+//分级管理员选择组织结构
+function org_show(value){
+	if(value == 2){
+		$("#org_id_div").show();
+	}else{
+		$("#org_id_div").hide();
+	}
+}
+</script>
 </body>
-
- <script type="text/javascript">
- 
- //根据单双数选择背景颜色
- 
- </script>
+</html>

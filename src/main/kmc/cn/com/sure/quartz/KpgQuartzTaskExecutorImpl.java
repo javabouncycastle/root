@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import cn.com.sure.common.KeyPairGenThread;
 import cn.com.sure.common.Applicationexception;
 import cn.com.sure.common.Constants;
+import cn.com.sure.common.KeyPairGenThread;
 import cn.com.sure.kpgtask.entry.KpgTask;
 import cn.com.sure.kpgtask.service.KpgTaskExecuteService;
 import cn.com.sure.kpgtask.service.KpgTaskService;
@@ -37,7 +37,6 @@ public class KpgQuartzTaskExecutorImpl implements KpgQuartzTaskExecutor{
 	
 	@Autowired
 	private KpgTaskExecuteService kpgTaskExecuteService;
-	
 	
 	@Override
 	public void executeTask() throws NoSuchAlgorithmException,

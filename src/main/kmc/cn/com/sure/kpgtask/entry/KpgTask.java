@@ -21,7 +21,7 @@ public class KpgTask {
 	private String name;
 	
 	/**
-	 * 产生密钥的密钥算法+长度
+	 * 产生密钥的密钥算法
 	 */
 	private KeyPairAlgorithm keyPairAlgorithm;
 	
@@ -80,6 +80,7 @@ public class KpgTask {
 	
 	
 	private Date startTime;
+	
 	private Date endTime;
 
 	public Long getId() {

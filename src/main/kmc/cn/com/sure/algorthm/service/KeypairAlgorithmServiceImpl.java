@@ -29,13 +29,13 @@ public class KeypairAlgorithmServiceImpl implements KeypairAlgorithmService{
 */	public int insert(KeyPairAlgorithm keyPairAlgorithm) throws Applicationexception {
 		LOG.debug("insert - start");
 		
-	/*	KeyPairAlgorithm dbkeyPairAlgorithm = this.keyPairAlgorithmDAO.selectByName(keyPairAlgorithm);
+		KeyPairAlgorithm dbkeyPairAlgorithm = this.keyPairAlgorithmDAO.selectByName(keyPairAlgorithm);
 		int i = 0;
-		if(dbkeyPairAlgorithm==null) {*/
-			int i = keyPairAlgorithmDAO.insert(keyPairAlgorithm);
-		/*}else {
+		if(dbkeyPairAlgorithm==null) {
+			i = keyPairAlgorithmDAO.insert(keyPairAlgorithm);
+		}else {
 			Applicationexception.throwException(ErrorMessageConstants.nameExist, new String[]{keyPairAlgorithm.getName()});
-		}*/
+		}
 		
 		LOG.debug("insert - end");
 		return i;
@@ -79,22 +79,24 @@ public class KeypairAlgorithmServiceImpl implements KeypairAlgorithmService{
 	}
 
 	@Override
-	public void suspend(Long id) {
+	public int suspend(Long id) {
 		LOG.debug("suspend - start");
 		KeyPairAlgorithm keyPairAlgorithm = keyPairAlgorithmDAO.selectById(id);
 		keyPairAlgorithm.setIsValid(Constants.YES_OR_NO_OPTION_NO);
-		keyPairAlgorithmDAO.update(keyPairAlgorithm);
+		int i = keyPairAlgorithmDAO.update(keyPairAlgorithm);
 		LOG.debug("suspend - end");
+		return i;
 		
 	}
 
 	@Override
-	public void activate(Long id) {
+	public int activate(Long id) {
 		LOG.debug("activate - start");
 		KeyPairAlgorithm keyPairAlgorithm = keyPairAlgorithmDAO.selectById(id);
 		keyPairAlgorithm.setIsValid(Constants.YES_OR_NO_OPTION_YES);
-		keyPairAlgorithmDAO.update(keyPairAlgorithm);
+		int i = keyPairAlgorithmDAO.update(keyPairAlgorithm);
 		LOG.debug("activate - end");
+		return i;
 	}
 
 	/* (non-Javadoc)

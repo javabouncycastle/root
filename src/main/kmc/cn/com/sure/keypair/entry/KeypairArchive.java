@@ -69,6 +69,12 @@ public class KeypairArchive {
      * 密钥归档时间
      */
     private Date archTime;
+    
+    /**
+     * 密钥长度
+     * @return
+     */
+    private Integer keysize;
 
 	public String getId() {
 		return id;
@@ -157,6 +163,12 @@ public class KeypairArchive {
 	public void setArchTime(Date archTime) {
 		this.archTime = archTime;
 	}
-    
-    
+
+	public Integer getKeysize() {
+		return keysize;
+	}
+
+	public void setKeysize(Integer keysize) {
+		this.keysize = keysize;
+	}
 }

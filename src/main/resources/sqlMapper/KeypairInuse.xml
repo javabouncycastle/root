@@ -12,6 +12,7 @@
 		<result column="inuseTime" javaType="Date" property="inuseTime" />
 		<result column="certDn" javaType="String" property="certDn" />
 		<result column="certSn" javaType="String" property="certSn" />
+		<result column="keysize" javaType="Integer" property="keysize" />
 		<association property="keyPairAlgorithm" javaType="cn.com.sure.algorthm.entry.KeyPairAlgorithm" >
 			<id column="kpgAlgId" javaType="long" property="id"/>
 			<result column="algName" javaType="String" property="name"/>
@@ -45,6 +46,7 @@
 			t1.end_time as endTime,
 			t1.cert_sn as certSn,
 			t1.cert_dn as certDn,
+			t1.keysize as keysize,
 			t2.name as name,
 			t2.kpg_algorithm as keyPairAlgorithm,
 			t3.alg_name as algorithmName
@@ -70,7 +72,8 @@
 			end_time,
 			cert_sn,
 			cert_dn,
-			inuse_time
+			inuse_time,
+			keysize
 		)values(
 			#{pubKey},
 			#{priKey},
@@ -81,7 +84,8 @@
 			#{endTime},
 			#{certSn},
 			#{certDn},
-			#{inuseTime}
+			#{inuseTime},
+			#{keysize}
 		)
 	</insert>
 	
@@ -97,6 +101,7 @@
 			t1.end_time as endTime,
 			t1.cert_sn as certSn,
 			t1.cert_dn as certDn,
+			t1.keysize as keysize,
 			t2.name as name,
 			t2.kpg_algorithm as keyPairAlgorithm,
 			t3.alg_name as algorithmName
@@ -137,6 +142,7 @@
 			t1.end_time as endTime,
 			t1.cert_sn as certSn,
 			t1.cert_dn as certDn,
+			t1.keysize as keysize,
 			t2.name as name,
 			t2.kpg_algorithm as keyPairAlgorithm,
 			t3.alg_name as algorithmName
@@ -164,6 +170,7 @@
 			t1.end_time as endTime,
 			t1.cert_sn as certSn,
 			t1.cert_dn as certDn,
+			t1.keysize as keysize,
 			t2.name as name,
 			t2.kpg_algorithm as keyPairAlgorithm,
 			t3.alg_name as algorithmName

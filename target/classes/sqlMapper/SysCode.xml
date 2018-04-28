@@ -31,17 +31,24 @@
 		)
 	</insert>
 	
-	<select id="selectAll" parameterType="cn.com.sure.syscode.entry.SysCode" resultMap="SysCodeResultMap">
+	<select id="selectAll" parameterType="cn.com.sure.syscode.entry.PageVo" resultMap="SysCodeResultMap">
 		select 
 			ks.id as id,
 			ks.para_code as paraCode,
 			ks.para_value as paraValue,
 			ks.para_type as paraType,
 			ks.is_valid as isValid,
-			ks.notes as note,
+			ks.notes as notes,
 			ksty.id as TypeId,
 			ksty.para_type as typeParaType,
 			ksty.notes as typeNotes
+		 from sys_code ks,sys_param_type ksty
+		 where ks.para_type=ksty.id
+		 limit #{start},#{length}
+	</select>
+	<select id="getSysCodeCount"  resultType="int">
+		select 
+			count(*)
 		 from sys_code ks,sys_param_type ksty
 		 where ks.para_type=ksty.id
 	</select>
@@ -105,7 +112,7 @@
 		delete from sys_code where id=#{id}
 	</delete>
 	
-	 <select id="serachByContion" parameterType="cn.com.sure.syscode.entry.SysCode" resultMap="SysCodeResultMap">
+	 <select id="searchByCondition" parameterType="cn.com.sure.syscode.entry.SysCode" resultMap="SysCodeResultMap">
 		select 
 			ks.id as id,
 			ks.para_code as paraCode,
@@ -131,11 +138,16 @@
 		 	<if test="paraCode!=null and paraCode!='' ">
 		 		and ks.para_code=#{paraCode}
 		 	</if>
-		 	<if test="paraType!=null and paraType!='' ">
-		 		<if test="paraType.paraType!=null and paraType.paraType!='' ">
-		 			and ksty.para_type=#{paraType.paraType}
+	 	 	<if test="paraType!=null and paraType!='' ">
+		 		<if test="paraType.id!=null and paraType.id!='' ">
+		 			and ks.para_type=#{paraType.id}
 		 		</if>
 		 	</if>
+		 	<if test="paraType!=null and paraType!='' ">
+		 		<if test="paraType.paraType!=null and paraType.paraType!='' ">
+		 			and ks.para_type=#{paraType.paraType}
+		 		</if>
+		 	</if> 
 		 	
 	</select>
 	

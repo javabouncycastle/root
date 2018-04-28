@@ -7,6 +7,7 @@
 		<result column="pubKey" javaType="String" property="pubKey"/>
 		<result column="priKey" javaType="String" property="priKey"/>
 		<result column="genTime" javaType="Date" property="genTime"/>
+		<result column="keysize" javaType="Integer" property="keysize"/>
 		<association property="keyPairAlgorithm" javaType="cn.com.sure.algorthm.entry.KeyPairAlgorithm" >
 			<id column="kpgAlgId" javaType="long" property="id"/>
 			<result column="algName" javaType="String" property="name"/>
@@ -37,6 +38,7 @@
 			t1.kpg_algorithm as keyPairAlgorithm,
 			t1.km_kpg_task as kpgTask,
 			t1.gen_time as genTime,
+			t1.keysize as keysize,
 			t2.name as name,
 			t2.kpg_algorithm as keyPairAlgorithm,
 			t3.alg_name as algorithmName
@@ -57,13 +59,15 @@
 			pri_key,
 			kpg_algorithm,
 			km_kpg_task,
-			gen_time
+			gen_time,
+			keysize
 		)values(
 			#{pubKey},
 			#{priKey},
 			#{keyPairAlgorithm.algorithmName},
 			#{kpgTask.name},
-			#{genTime}
+			#{genTime},
+			#{keysize}
 		)
 	</insert>
 
@@ -84,7 +88,8 @@
 			pri_key as priKey,
 			kpg_algorithm as keyPairAlgorithm,
 			km_kpg_task as kpgTask,
-			gen_time as genTime
+			gen_time as genTime,
+			keysize as keysize
 		from
 			keypair_standby
 		where
@@ -106,6 +111,7 @@
 			t1.kpg_algorithm as keyPairAlgorithm,
 			t1.km_kpg_task as kpgTask,
 			t1.gen_time as genTime,
+			t1.keysize as keysize,
 			t2.name as name,
 			t2.kpg_algorithm as keyPairAlgorithm,
 			t3.alg_name as algorithmName

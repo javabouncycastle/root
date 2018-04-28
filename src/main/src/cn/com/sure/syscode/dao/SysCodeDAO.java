@@ -3,6 +3,7 @@ package cn.com.sure.syscode.dao;
 import java.util.List;
 
 import cn.com.sure.common.Applicationexception;
+import cn.com.sure.syscode.entry.PageVo;
 import cn.com.sure.syscode.entry.SysCode;
 
 public interface SysCodeDAO {
@@ -12,31 +13,13 @@ public interface SysCodeDAO {
 	 * @param sysCode
 	 * @return 
 	 */
-	public List<SysCode> serachByContion(SysCode sysCode);
+	public List<SysCode> searchByCondition(SysCode sysCode);
 
 	/**
 	 * @param algorithmName
 	 * @return
 	 */
 	public int countNum(String algorithmName);
-
-	/**
-	 * @param sysCode
-	 * @return
-	 */
-	public List<SysCode> selectMin(SysCode sysCode);
-
-	/**
-	 * @param sysCode
-	 * @return
-	 */
-	public List<SysCode> selectBuffer(SysCode sysCode);
-
-	/**
-	 * @param sysCode
-	 * @return
-	 */
-	public List<SysCode> selectBufSize(SysCode sysCode);
 
 	/**
 	 * @param sysCode
@@ -75,15 +58,18 @@ public interface SysCodeDAO {
 	public int updateValid(SysCode sysCode);
 
 	/**
+	 * @param pageVo 
 	 * @return
 	 */
-	public List<SysCode> selectAll();
+	public List<SysCode> selectAll(PageVo pageVo);
 
 	/**
 	 * @param sysCode
 	 * @return
 	 */
 	public List<SysCode> findByType(SysCode sysCode);
+
+	public int getSysCodeCount();
 
 
 }

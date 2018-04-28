@@ -18,6 +18,8 @@ import cn.com.sure.common.Constants;
 import cn.com.sure.keypair.dao.KpgTaskDAO;
 import cn.com.sure.kpgtask.entry.KpgTask;
 import cn.com.sure.syscode.entry.SysCode;
+import cn.com.sure.syscode.entry.SysCodeType;
+import cn.com.sure.syscode.service.SysCodeService;
 
 /**
  * @author Limin
@@ -31,6 +33,9 @@ public class KpgTaskServiceImpl implements KpgTaskService{
 	
 	@Autowired
 	private KpgTaskDAO kpgTaskDAO;
+	
+	@Autowired
+	private SysCodeService sysCodeService;
 	
 	/* (non-Javadoc)
 	 * @see cn.com.sure.keypair.service.KpgTaskService#selectAll()
@@ -52,20 +57,20 @@ public class KpgTaskServiceImpl implements KpgTaskService{
 		//KpgTask dbKpgTask = this.kpgTaskDAO.findByName(kpgTask.getName());
 		int i=0;
 		/*if(dbKpgTask==null){*/
-			SysCode taskStatus=new SysCode();
+			SysCode taskStatus=kpgTask.getTaskStatus();
 			if("".equals(kpgTask.getTaskStatus())||kpgTask.getTaskStatus()==null){
-				taskStatus.setParaValue((String.valueOf(Constants.CODE_ID_TASK_STATUS_NOT_STARTED)));
-			}else{
-				taskStatus.setParaValue(kpgTask.getTaskStatus().getParaValue());
+				SysCode syscode = new SysCode();
+				SysCodeType syscodetype = new SysCodeType();
+				syscodetype.setParaType(String.valueOf(Constants.CODE_ID_TASK_STATUS_NOT_STARTED));
+				syscode.setParaType(syscodetype);
+				List<SysCode> syscodes = sysCodeService.searchByCondition(syscode);
+				taskStatus.setId(syscodes.get(0).getId());
 			}
 			
 			kpgTask.setGeneratedKeyAmount(0);
 			kpgTask.setTaskStatus(taskStatus);
 			kpgTask.setTaskStartTime(new Date());
 			i = kpgTaskDAO.insert(kpgTask);
-		/*}if(dbKpgTask!=null){
-			KmApplicationexception.throwException(KmErrorMessageConstants.kpgTaskNameExist, new String[]{kpgTask.getName()});
-		}*/
 		LOG.debug("insert - end");
 		return i;
 	}

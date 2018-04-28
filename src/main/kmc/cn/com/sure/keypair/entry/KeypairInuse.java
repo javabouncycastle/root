@@ -66,6 +66,11 @@ public class KeypairInuse {
      */
     private String certDn;
     
+    /**
+     * 密钥长度
+     */
+    private Integer keysize;
+    
     private Date inuseTime;
     
 
@@ -156,7 +161,13 @@ public class KeypairInuse {
 	public void setCertDn(String certDn) {
 		this.certDn = certDn;
 	}
-    
-    
-    
+
+	public Integer getKeysize() {
+		return keysize;
+	}
+
+	public void setKeysize(Integer keysize) {
+		this.keysize = keysize;
+	}
+
 }

@@ -41,9 +41,9 @@ public class KeypairStandbyControler extends BaseController{
 	 */
 	@RequestMapping(value="selectAll")
 	public ModelAndView selectAll(){
-		LOG.debug("start - start");
+		LOG.debug("selectAll - start");
 		List<KeypairStandby> keyPairStandbys = keyPairStandbyService.selectAll();
-		LOG.debug("start - end");
+		LOG.debug("selectAll - end");
 		return new ModelAndView("keyPair/keyPairStandbyList").addObject("keyPairStandbys", keyPairStandbys);
 		
 	}

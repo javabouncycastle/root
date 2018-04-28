@@ -11,13 +11,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.alibaba.fastjson.JSON;
 
 import cn.com.sure.algorthm.entry.KeyPairAlgorithm;
 import cn.com.sure.algorthm.service.KeypairAlgorithmService;
 import cn.com.sure.common.Applicationexception;
-import cn.com.sure.common.Constants;
+import cn.com.sure.common.ReCode;
 
 @Controller
 @RequestMapping(value="algorithm")
@@ -28,26 +31,32 @@ public class KeypairAlgorithmController {
 	@Autowired
 	private KeypairAlgorithmService keyPairAlgorithmService;
 	
+	ReCode reCode = new ReCode();
 	
 	/**
 	 * UC-ALG02-01 新增密钥算法
 	 */
+	@ResponseBody
 	@RequestMapping(value="insert")
-	public String insert(KeyPairAlgorithm keyPairAlgorithm,Model model, 
+	public ReCode insert(KeyPairAlgorithm keyPairAlgorithm,Model model, 
 			RedirectAttributes attr,HttpServletRequest request){
 		LOG.debug("insert - start");
+		int i=0;
 		try{
 			//执行insert操作
-			int i = keyPairAlgorithmService.insert(keyPairAlgorithm);
+			 i = keyPairAlgorithmService.insert(keyPairAlgorithm);
 		}catch(Applicationexception e){
-			attr.addFlashAttribute("messageInsert",e.getMessage());
-			attr.addFlashAttribute("keyPairAlgorithm",keyPairAlgorithm);
-			return "redirect:/algorithm/selectAll.do";
+			reCode.setDes(e.getMessage());
+			reCode.setRetrunCode(Integer.toString(i));
+			
+			return reCode;
 		}
 		LOG.debug("insert - end");
-		attr.addFlashAttribute("success","true");
-		attr.addFlashAttribute("msg","保存【"+keyPairAlgorithm.getName()+"】成功");
-		return "redirect:/algorithm/selectAll.do";
+		
+		reCode.setRetrunCode(Integer.toString(i));
+		reCode.setDes("保存【"+keyPairAlgorithm.getName()+"】成功");
+		
+		return reCode;
 		
 	}
 	
@@ -57,11 +66,10 @@ public class KeypairAlgorithmController {
 	@RequestMapping(value="selectAll")
 	public ModelAndView selectAll(KeyPairAlgorithm keyPairAlgorithm,Model model, 
 			RedirectAttributes attr,HttpServletRequest request){
-		System.out.println(request.getRemoteAddr());
 		LOG.debug("selectAll - start");
 		List <KeyPairAlgorithm> keyPairAlgorithms = keyPairAlgorithmService.selectAll();
 		LOG.debug("selectAll - end");
-		return new ModelAndView("algorithm/keyPairAlgList").addObject("keyPairAlgorithms", keyPairAlgorithms);
+		return new ModelAndView("algorithm/keyPairAlgList").addObject("keyPairAlgorithms", JSON.toJSON(keyPairAlgorithms));
 		
 	}
 	
@@ -69,46 +77,47 @@ public class KeypairAlgorithmController {
 	 * UC- ALG02-02修改密钥算法
 	 * @throws Applicationexception 
 	 */
+	@ResponseBody
 	@RequestMapping(value="update")
-	public String update(KeyPairAlgorithm keyPairAlgorithm,Model model, 
+	public ReCode update(KeyPairAlgorithm keyPairAlgorithm,Model model, 
 			RedirectAttributes attr,HttpServletRequest request) throws Applicationexception{
 		LOG.debug("update - start");
+		int i = 0 ;
 		try{
 			//执行update操作
-			int i = keyPairAlgorithmService.update(keyPairAlgorithm);
+			i = keyPairAlgorithmService.update(keyPairAlgorithm);
 		}catch(Applicationexception e){
-			attr.addFlashAttribute("messageInsert",e.getMessage());
-			attr.addFlashAttribute("keyPairAlgorithm",keyPairAlgorithm);
-			return "redirect:/algorithm/selectAll.do";
+			reCode.setDes(e.getMessage());
+			reCode.setRetrunCode(Integer.toString(i));
+			return reCode;
 		}
 		LOG.debug("update - end");
-		attr.addFlashAttribute("updateSuccess","true");
-		attr.addFlashAttribute("message","修改主键为【"+keyPairAlgorithm.getId()+"】的信息成功！");
-		return "redirect:/algorithm/selectAll.do";
+		reCode.setRetrunCode(Integer.toString(i));
+		reCode.setDes("修改主键为【"+keyPairAlgorithm.getId()+"】的信息成功！");
+		return reCode;
 	}
 	
 	
 	/**
 	 *  UC- ALG02-03删除密钥算法
 	 */
+	@ResponseBody
 	@RequestMapping(value="remove")
-	public String delete(
+	public ReCode delete(
 			@RequestParam(value = "id", required = false)Long id,Model model, 
 			RedirectAttributes attr,HttpServletRequest request){
 		LOG.debug("delete - start");
 		int i = keyPairAlgorithmService.delete(id);
-		int result;
-		if(i==-1){
-			result = Constants.SUCCESS_OR_FAILD_OPTION_FAILD;
-		}else{
-			result = Constants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
-		}
-		/*auditOpLogService.insert(Constants.OPERATION_TYPE_DELETE, "删除", "数据字典类别", id.toString(), null, null, null, 
-				new Date(),getIp(request),  (String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME), result);*/
 		LOG.debug("delete - end");
-		attr.addFlashAttribute("success","true");
-		attr.addFlashAttribute("msg","删除主键为【"+id+"】成功！");
-		return "redirect:/algorithm/selectAll.do";
+		if(i==1) {
+			reCode.setDes("删除主键为【"+id+"】的密钥算法成功！");
+			reCode.setRetrunCode(Integer.toString(i));
+		}else {
+			reCode.setDes("删除主键为【"+id+"】的密钥算法失败！");
+			reCode.setRetrunCode(Integer.toString(i));
+		}
+		
+		return reCode;
 		
 	}
 	
@@ -118,35 +127,43 @@ public class KeypairAlgorithmController {
 	* @return "redirect:/list"
 	*/
 	@RequestMapping(value = "suspend")
-	public String suspend(
+	public ReCode suspend(
 	@RequestParam(value = "id", required = false)Long id,
-	Model model,RedirectAttributes attr){
+	Model model,RedirectAttributes attr ,HttpServletRequest re){
 		LOG.debug("suspend - start!");
-		this.keyPairAlgorithmService.suspend(id);
-        attr.addFlashAttribute("success","true");
-		attr.addFlashAttribute("msg","停用主键为【"+id+"】成功");
-    	LOG.debug("suspend - end!");
-        return "redirect:/algorithm/selectAll.do";
-		
+		int i = keyPairAlgorithmService.suspend(id);
+		if(i==1) {
+			reCode.setDes("停用主键为【"+id+"】的密钥算法成功！");
+			reCode.setRetrunCode(Integer.toString(i));
+		}else {
+			reCode.setDes("停用主键为【"+id+"】的密钥算法失败！");
+			reCode.setRetrunCode(Integer.toString(i));
+		}
+		LOG.debug("suspend - end!");
+		return reCode;
+    	
 	}
 	
 	/**
 	 *  UC- ALG02-05启用密钥算法
 	 * @return "redirect:/list"
 	 */
-	
-	
 	@RequestMapping(value = "activate")
-	public String activate(
+	@ResponseBody
+	public ReCode activate(
 	@RequestParam(value = "id", required = false)Long id,
 	Model model,RedirectAttributes attr){
 		LOG.debug("activate - start!");
-		this.keyPairAlgorithmService.activate(id);
-		attr.addFlashAttribute("success","true");
-		attr.addFlashAttribute("msg","启用主键为【"+id+"】成功");
-    	LOG.debug("activate - end!");		
-        return "redirect:/algorithm/selectAll.do";
-		
+		int i = keyPairAlgorithmService.activate(id);
+		if(i==1) {
+			reCode.setDes("启用主键为【"+id+"】的密钥算法成功！");
+			reCode.setRetrunCode(Integer.toString(i));
+		}else {
+			reCode.setDes("启用主键为【"+id+"】的密钥算法失败！");
+			reCode.setRetrunCode(Integer.toString(i));
+		}
+    	LOG.debug("activate - end!");
+    	return reCode;
 	}
 	
 
@@ -167,5 +184,19 @@ public class KeypairAlgorithmController {
 		return new ModelAndView("algorithm/keyPairAlgList").addObject("keyPairAlgorithms", keyPairAlgorithms);
 		
 	}
-    
+	
+	@RequestMapping(value = "forWardInsert")
+	public String forWardInsert() {
+		LOG.debug("forWardInsert - start");
+		LOG.debug("forWardInsert - end");
+		return "algorithm/kpAlgInsert";
+	}
+	
+	@RequestMapping(value = "forWardUpdate")
+	public ModelAndView forWardUpdate(@RequestParam(value = "id", required = false)Long id) {
+		LOG.debug("forWardInsert - start");
+		KeyPairAlgorithm keyPairAlgorithm = keyPairAlgorithmService.selectById(id);
+		LOG.debug("forWardInsert - end");
+		return new ModelAndView("algorithm/kpAlgEdit").addObject("keyPairAlgorithm", keyPairAlgorithm);
+	}
 }
