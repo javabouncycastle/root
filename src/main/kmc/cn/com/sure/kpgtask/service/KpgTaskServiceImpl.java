@@ -157,7 +157,7 @@ public class KpgTaskServiceImpl implements KpgTaskService{
 		
 		kpgTask.setGeneratedKeyAmount(kpgTask.getGeneratedKeyAmount()+sliceSize);
 		
-		kpgTaskDAO.update(kpgTask);
+		kpgTaskDAO.updateGeneratedKeyAmount(kpgTask);
 		
 		LOG.debug("updateGeneratedKeyAmount - end");
 	}

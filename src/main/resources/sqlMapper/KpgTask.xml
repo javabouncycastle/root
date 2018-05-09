@@ -380,10 +380,18 @@
 		 	id=#{id}
 	</update>
 	
-		<update id="updateStatus" parameterType="cn.com.sure.kpgtask.entry.KpgTask">
+	<update id="updateStatus" parameterType="cn.com.sure.kpgtask.entry.KpgTask">
 		update kpg_task
 		set
 			task_status=#{taskStatus.id}
+		 where
+		 	id=#{id}
+	</update>
+	
+	<update id="updateGeneratedKeyAmount" parameterType="cn.com.sure.kpgtask.entry.KpgTask">
+		update kpg_task
+		set
+			kpg_key_amount=#{kpgKeyAmount}
 		 where
 		 	id=#{id}
 	</update>

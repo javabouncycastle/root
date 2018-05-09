@@ -82,4 +82,6 @@ public interface KpgTaskDAO {
 
 	int updateStatus(KpgTask kpgTask);
 
+	int updateGeneratedKeyAmount(KpgTask kpgTask);
+
 }
