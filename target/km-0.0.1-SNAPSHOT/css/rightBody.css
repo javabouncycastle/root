@@ -1,0 +1,44 @@
+@CHARSET "UTF-8";
+table{ 
+border-collapse:collapse; 
+border-spacing:0; 
+} 
+th,td{ 
+padding:0; 
+}
+
+.right-body-table1{
+	width:100%;
+	border:0;
+	align:center
+}
+.right-body-table2{
+	width:100%;
+	border:0;
+	align:center
+}
+
+.right-body-td1{
+	height:22;
+	colspan:4;
+	background-image: url(../images/top/bg.gif);
+	bgcolor:#FFFFFF;
+}
+.right-body-tableLine{
+	border:1px solid #DDD;
+	rowspan:1;
+	colspan:1;
+}
+.right-body-tdTableLine{
+	border:1px solid #DDD;
+	rowspan:1;
+	colspan:1;
+	height:30px;
+	text-align: center;
+}
+.my_table tr:nth-child(odd){
+	background: #0000000;
+}
+.my_table tr:nth-child(even){
+	background:	#FDFFFF;
+}

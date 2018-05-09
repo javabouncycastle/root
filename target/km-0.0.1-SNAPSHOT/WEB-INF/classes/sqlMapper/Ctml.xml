@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="cn.com.sure.ctml.dao.CertificateTemplateDAO">
+
+	<resultMap type="cn.com.sure.ctml.entry.CertificateTemplate" id="CertTemplateResultMap">
+		<id column="id" javaType="String" property="id"/>
+		<result column="ctmlName" javaType="String" property="ctmlName"/>
+		<result column="hash" javaType="String" property="hash"/>
+		<result column="keySize" javaType="Integer" property="keySize"/>
+		<result column="isValid" javaType="Integer" property="isValid"/>
+		<result column="signCertKeyUsage" javaType="String" property="signCertKeyUsage"/>
+		<result column="encCertKeyUsage" javaType="String" property="encCertKeyUsage"/>
+		<result column="eku" javaType="String" property="eku"/>
+		<result column="notes" javaType="String" property="notes"/>
+		<result column="baseDn" javaType="String" property="baseDn"/>
+		<result column="reviewedType" javaType="String" property="reviewedType"/>
+		<association property="kpgAlgorithm" javaType="cn.com.sure.syscode.entry.SysCode">
+			<id column="TypeId" javaType="Long" property="id"/>
+			<result column="paraCode" javaType="String" property="paraCode"/>
+			<result column="paraValue" javaType="String" property="paraValue"/>
+			<result column="SysIsValid" javaType="Integer" property="isValid"/>
+			<result column="SysNotes" javaType="String" property="notes"/>
+			<association property="paraType" javaType="cn.com.sure.syscode.entry.SysCodeType" >
+				<id column="paraTypeId" javaType="Long" property="id"/>
+				<result column="typeParaType" javaType="String" property="paraType"/>
+				<result column="typeNotes" javaType="String" property="notes"/>
+				</association>
+		</association>
+		<association property="validity" javaType="cn.com.sure.syscode.entry.SysCode">
+			<id column="SysCodeIdDb" javaType="Long" property="id"/>
+			<result column="paraCodeDb" javaType="String" property="paraCode"/>
+			<result column="paraValueDb" javaType="String" property="paraValue"/>
+			<result column="SysIsValidDb" javaType="Integer" property="isValid"/>
+			<result column="SysNotesDb" javaType="String" property="notes"/>
+			<association property="paraType" javaType="cn.com.sure.syscode.entry.SysCodeType">
+				<id column="TypeIdDb" javaType="Long" property="id"/>
+				<result column="typeParaTypeDb" javaType="String" property="paraType"/>
+				<result column="typeNotesDb" javaType="String" property="notes"/>
+			</association>
+		</association>
+	</resultMap>
+
+	<select id="selectAll" parameterType="cn.com.sure.ctml.entry.CertificateTemplate" resultMap="CertTemplateResultMap">
+		select 
+			t1.id as id,
+			t1.ctml_name as ctmlName,
+			t1.kpg_algorithm as kpgAlgorithm,
+			t1.key_size as keySize,
+			t1.hash as hash,
+			t1.is_valid as isValid,
+			t1.sign_cert_key_usage as signCertKeyUsage,
+			t1.enc_cert_key_usage as encCertKeyUsage,
+			t1.validity as validity,
+			t1.eku as eku,
+			t1.notes as notes,
+			t2.id as TypeId,
+			t2.para_code as paraCode,
+			t2.para_value as paraValue,
+			t2.is_valid as SysIsValid,
+			t2.notes as SysNotes,
+			t3.id as paraTypeId,
+			t3.para_type as typeParaType,
+			t3.notes as typeNotes,
+			t4.id as SysCodeIdDb,
+			t4.para_code as paraCodeDb,
+			t4.para_value as paraValueDb,
+			t4.is_valid as SysIsValidDb,
+			t4.notes as SysNotesDb,
+			t5.id as TypeIdDb,
+			t5.para_type as typeParaTypeDb,
+			t5.notes as typeNotesDb
+		 from 
+		 	ctml t1, sys_code t2,sys_param_type t3,sys_code t4,sys_param_type t5
+		WHERE
+			t1.kpg_algorithm=t2.id
+		and t2.para_type=t3.id
+		and t4.para_type=t5.id
+		and t1.validity=t4.id
+	</select>
+	
+	<select id="selectStandby" parameterType="cn.com.sure.ctml.entry.CertificateTemplate" resultMap="CertTemplateResultMap">
+		select 
+			ctml.id as id,
+			ctml.ctml_name as ctmlName,
+			ctml.kpg_algorithm as kpgAlgorithm,
+			ctml.key_size as keySize,
+			ctml.hash as hash,
+			ctml.is_valid as isValid,
+			ctml.sign_cert_key_usage as signCertKeyUsage,
+			ctml.enc_cert_key_usage as encCertKeyUsage,
+			ctml.reviewed_type as reviewedType,
+			ctml.eku as eku,
+			ctml.notes as notes,
+			ctml.validity as validity,
+			ctml.base_dn as baseDn,
+			ctml.reviewed_type as reviewedType,
+			csc.id as TypeId,
+			csc.para_type as typeParaType,
+			csc.para_value as paraValue,
+			csc2.id as SysCodeIdDb,
+			csc2.para_type as typeParaTypeDb,
+			csc2.para_value as paraValueDb
+		 from 
+		 	ctml ctml, sys_code csc ,sys_code csc2
+		 where 
+		 	ctml.kpg_algorithm=csc.id
+		  and 
+		 	ctml.validity=csc2.id 
+		 and 
+		 	ctml.is_valid=#{isValid}
+	</select>
+	
+	<select id="findById" parameterType="cn.com.sure.ctml.entry.CertificateTemplate" resultMap="CertTemplateResultMap">
+		select 
+			ctml.id as id,
+			ctml.ctml_name as ctmlName,
+			ctml.kpg_algorithm as kpgAlgorithm,
+			ctml.key_size as keySize,
+			ctml.hash as hash,
+			ctml.is_valid as isValid,
+			ctml.sign_cert_key_usage as signCertKeyUsage,
+			ctml.enc_cert_key_usage as encCertKeyUsage,
+			ctml.validity as validity,
+			ctml.eku as eku,
+			ctml.notes as notes,
+			csc.id as TypeId,
+			csc.para_type as typeParaType
+		 from 
+		 	ctml ctml, sys_code csc
+		 where 
+		 	ctml.kpg_algorithm=csc.id
+		 	and ctml.id=#{id}
+	</select>
+	
+	
+	<select id="findByName" parameterType="cn.com.sure.ctml.entry.CertificateTemplate" resultMap="CertTemplateResultMap">
+	select 
+			t1.id as id,
+			t1.ctml_name as ctmlName,
+			t1.kpg_algorithm as kpgAlgorithm,
+			t1.key_size as keySize,
+			t1.hash as hash,
+			t1.is_valid as isValid,
+			t1.sign_cert_key_usage as signCertKeyUsage,
+			t1.enc_cert_key_usage as encCertKeyUsage,
+			t1.validity as validity,
+			t1.eku as eku,
+			t1.notes as notes,
+			t2.id as TypeId,
+			t2.para_code as paraCode,
+			t2.para_value as paraValue,
+			t2.is_valid as SysIsValid,
+			t2.notes as SysNotes,
+			t3.id as paraTypeId,
+			t3.para_type as typeParaType,
+			t3.notes as typeNotes,
+			t4.id as SysCodeIdDb,
+			t4.para_code as paraCodeDb,
+			t4.para_value as paraValueDb,
+			t4.is_valid as SysIsValidDb,
+			t4.notes as SysNotesDb,
+			t5.id as TypeIdDb,
+			t5.para_type as typeParaTypeDb,
+			t5.notes as typeNotesDb
+		 from 
+		 	ctml t1, sys_code t2,sys_param_type t3,sys_code t4,sys_param_type t5
+		WHERE
+				t1.kpg_algorithm=t2.id
+			and t2.para_type=t3.id
+			and t4.para_type=t5.id
+			and t1.validity=t4.id
+			
+			and t1.ctml_name=#{ctmlName}
+	
+	</select>
+	
+	<insert id="insert" parameterType="cn.com.sure.ctml.entry.CertificateTemplate">
+		insert into ctml(
+			ctml_name,
+			kpg_algorithm,
+			key_size,
+			hash,
+			is_valid,
+			sign_cert_key_usage,
+			enc_cert_key_usage,
+			validity,
+			eku,
+			notes
+		)values(
+			#{ctmlName},
+			#{kpgAlgorithm.id},
+			#{keySize},
+			#{hash},
+			#{isValid},
+			#{signCertKeyUsage},
+			#{encCertKeyUsage},
+			#{validity.id},
+			#{eku},
+			#{notes}
+		)
+	</insert>
+	
+	<delete id="remove" parameterType="String" >
+		delete from ctml where id=#{id}
+	</delete>
+	
+	
+	<update id="updateValid" parameterType="cn.com.sure.ctml.entry.CertificateTemplate">
+		update ctml set is_valid=#{isValid} where id=#{id}
+	</update>
+	
+	<update id="update" parameterType="cn.com.sure.ctml.entry.CertificateTemplate">
+	 update ctml 
+		set 
+			ctml_name=#{ctmlName},           
+			kpg_algorithm=#{kpgAlgorithm.id},    
+			key_size=#{keySize},            
+			hash=#{hash},               
+			is_valid=#{isValid},            
+			sign_cert_key_usage=#{signCertKeyUsage},   
+			enc_cert_key_usage=#{encCertKeyUsage},    
+			validity=#{validity.id},        
+			eku=#{eku},                
+			notes=#{notes}               
+	 	where id=#{id}
+	</update>
+	
+</mapper>

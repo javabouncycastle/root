@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="cn.com.sure.ctml.dao.CertificateTemplateDAO">
+
+	<resultMap type="cn.com.sure.ctml.entry.CertificateTemplate" id="CertTemplateResultMap">
+		<id column="id" javaType="String" property="id"/>
+		<result column="ctmlName" javaType="String" property="ctmlName"/>
+		<result column="hash" javaType="String" property="hash"/>
+		<result column="keySize" javaType="Integer" property="keySize"/>
+		<result column="isValid" javaType="Integer" property="isValid"/>
+		<result column="signCertKeyUsage" javaType="String" property="signCertKeyUsage"/>
+		<result column="encCertKeyUsage" javaType="String" property="encCertKeyUsage"/>
+		<result column="eku" javaType="String" property="eku"/>
+		<result column="notes" javaType="String" property="notes"/>
+		<result column="baseDn" javaType="String" property="baseDn"/>
+		<result column="reviewedType" javaType="Integer" property="reviewedType"/>
+		<result column="validity" javaType="String" property="validity"/>
+		<result column="certExtend" javaType="String" property="certExtend"/>
+		<association property="kpgAlgorithm" javaType="cn.com.sure.algorthm.entry.KeyPairAlgorithm">
+			<id column="algId" javaType="Long" property="id"/>
+			<result column="name" javaType="String" property="name"/>
+			<result column="algorithmOid" javaType="String" property="algorithmOid"/>
+			<result column="algorithmName" javaType="String" property="algorithmName"/>
+			<result column="keysize" javaType="Integer" property="keysize"/>
+			<result column="notes" javaType="String" property="notes"/>
+			<result column="isValid" javaType="Integer" property="isValid"/>
+		</association>
+	</resultMap>
+
+	<select id="selectAll" parameterType="cn.com.sure.common.PagedQuery" resultMap="CertTemplateResultMap">
+	SELECT
+		t1.id AS id,
+		t1.ctml_name AS ctmlName,
+		t1.kpg_algorithm AS kpgAlgorithm,
+		t1.key_size AS keySize,
+		t1. HASH AS HASH,
+		t1.is_valid AS isValid,
+		t1.sign_cert_key_usage AS signCertKeyUsage,
+		t1.enc_cert_key_usage AS encCertKeyUsage,
+		t1.validity AS validity,
+		t1.eku AS eku,
+		t1.notes AS notes,
+		t1.base_dn AS baseDn,
+		t1.reviewed_type AS reviewedType,
+		t2.id AS algId,
+		t2. NAME AS NAME,
+		t2.alg_oid AS algorithmOid,
+		t2.keysize AS keysize,
+		t2.notes AS notes,
+		t2.is_valid AS isValid
+	FROM
+		ctml t1,keypair_algorithm t2
+	WHERE
+		t1.kpg_algorithm = t2.id
+		 limit #{start},#{length}
+	</select>
+	
+		<select id="count" resultType="int">
+		select count(*)
+		 from 
+		 	ctml t1,keypair_algorithm t2
+		WHERE
+			t1.kpg_algorithm = t2.id
+	</select>
+	
+	<select id="selectStandby" parameterType="cn.com.sure.ctml.entry.CertificateTemplate" resultMap="CertTemplateResultMap">
+		SELECT
+		t1.id AS id,
+		t1.ctml_name AS ctmlName,
+		t1.kpg_algorithm AS kpgAlgorithm,
+		t1.key_size AS keySize,
+		t1. HASH AS HASH,
+		t1.is_valid AS isValid,
+		t1.sign_cert_key_usage AS signCertKeyUsage,
+		t1.enc_cert_key_usage AS encCertKeyUsage,
+		t1.validity AS validity,
+		t1.eku AS eku,
+		t1.notes AS notes,
+		t1.base_dn AS baseDn,
+		t1.reviewed_type AS reviewedType,
+		t2.id AS algId,
+		t2. NAME AS NAME,
+		t2.alg_oid AS algorithmOid,
+		t2.keysize AS keysize,
+		t2.notes AS notes,
+		t2.is_valid AS isValid
+	FROM
+		ctml t1,keypair_algorithm t2
+	WHERE
+		t1.kpg_algorithm = t2.id
+		 and 
+		 	ctml.is_valid=#{isValid}
+	</select>
+	
+	<select id="findById" parameterType="cn.com.sure.ctml.entry.CertificateTemplate" resultMap="CertTemplateResultMap">
+		SELECT
+		t1.id AS id,
+		t1.ctml_name AS ctmlName,
+		t1.kpg_algorithm AS kpgAlgorithm,
+		t1.key_size AS keySize,
+		t1. HASH AS HASH,
+		t1.is_valid AS isValid,
+		t1.sign_cert_key_usage AS signCertKeyUsage,
+		t1.enc_cert_key_usage AS encCertKeyUsage,
+		t1.validity AS validity,
+		t1.eku AS eku,
+		t1.notes AS notes,
+		t1.base_dn AS baseDn,
+		t1.reviewed_type AS reviewedType,
+		t2.id AS algId,
+		t2. NAME AS NAME,
+		t2.alg_oid AS algorithmOid,
+		t2.keysize AS keysize,
+		t2.notes AS notes,
+		t2.is_valid AS isValid
+	FROM
+		ctml t1,keypair_algorithm t2
+	WHERE
+		t1.kpg_algorithm = t2.id
+			and t1.id=#{id}
+	</select>
+	
+	
+	<select id="findByName" parameterType="cn.com.sure.ctml.entry.CertificateTemplate" resultMap="CertTemplateResultMap">
+	SELECT
+		t1.id AS id,
+		t1.ctml_name AS ctmlName,
+		t1.kpg_algorithm AS kpgAlgorithm,
+		t1.key_size AS keySize,
+		t1. HASH AS HASH,
+		t1.is_valid AS isValid,
+		t1.sign_cert_key_usage AS signCertKeyUsage,
+		t1.enc_cert_key_usage AS encCertKeyUsage,
+		t1.validity AS validity,
+		t1.eku AS eku,
+		t1.notes AS notes,
+		t1.base_dn AS baseDn,
+		t1.reviewed_type AS reviewedType,
+		t2.id AS algId,
+		t2. NAME AS NAME,
+		t2.alg_oid AS algorithmOid,
+		t2.keysize AS keysize,
+		t2.notes AS notes,
+		t2.is_valid AS isValid
+	FROM
+		ctml t1,keypair_algorithm t2
+	WHERE
+		t1.kpg_algorithm = t2.id
+			and t1.ctml_name=#{ctmlName}
+	
+	</select>
+	
+	<insert id="insert" parameterType="cn.com.sure.ctml.entry.CertificateTemplate">
+		insert into ctml(
+			ctml_name,
+			kpg_algorithm,
+			key_size,
+			hash,
+			is_valid,
+			sign_cert_key_usage,
+			enc_cert_key_usage,
+			validity,
+			eku,
+			base_dn,
+			cert_extend,
+			reviewed_type,
+			notes
+		)values(
+			#{ctmlName},
+			#{kpgAlgorithm.id},
+			#{keySize},
+			#{hash},
+			#{isValid},
+			#{signCertKeyUsage},
+			#{encCertKeyUsage},
+			#{validity},
+			#{eku},
+			#{baseDn},
+			#{certExtend},
+			#{reviewedType},
+			#{notes}
+		)
+	</insert>
+	
+	<delete id="remove" parameterType="String" >
+		delete from ctml where id=#{id}
+	</delete>
+	
+	<select id="searchByCondition" parameterType="cn.com.sure.ctml.entry.CertificateTemplate" resultMap="CertTemplateResultMap">
+	SELECT
+		t1.id AS id,
+		t1.ctml_name AS ctmlName,
+		t1.kpg_algorithm AS kpgAlgorithm,
+		t1.key_size AS keySize,
+		t1. HASH AS HASH,
+		t1.is_valid AS isValid,
+		t1.sign_cert_key_usage AS signCertKeyUsage,
+		t1.enc_cert_key_usage AS encCertKeyUsage,
+		t1.validity AS validity,
+		t1.eku AS eku,
+		t1.notes AS notes,
+		t1.base_dn AS baseDn,
+		t1.reviewed_type AS reviewedType,
+		t2.id AS algId,
+		t2. NAME AS NAME,
+		t2.alg_oid AS algorithmOid,
+		t2.keysize AS keysize,
+		t2.notes AS notes,
+		t2.is_valid AS isValid
+	FROM
+		ctml t1,keypair_algorithm t2
+	WHERE
+		t1.kpg_algorithm = t2.id
+		<if test="id!=null and id!='' ">
+			and t1.id=#{id}
+		</if>
+		<if test="ctmlName!=null and ctmlName!='' ">
+			and t1.ctml_name=#{ctmlName}
+		</if>
+		<if test="kpgAlgorithm!=null and kpgAlgorithm!='' ">
+			and t1.kpg_algorithm=#{kpgAlgorithm.id}
+		</if>
+		
+		
+	</select>
+	
+	
+	<update id="updateValid" parameterType="cn.com.sure.ctml.entry.CertificateTemplate">
+		update ctml set is_valid=#{isValid} where id=#{id}
+	</update>
+	
+	<update id="update" parameterType="cn.com.sure.ctml.entry.CertificateTemplate">
+	 update ctml 
+		set 
+			ctml_name=#{ctmlName},           
+			kpg_algorithm=#{kpgAlgorithm.id},    
+			key_size=#{keySize},            
+			hash=#{hash},               
+			is_valid=#{isValid},            
+			sign_cert_key_usage=#{signCertKeyUsage},   
+			enc_cert_key_usage=#{encCertKeyUsage},    
+			validity=#{validity},   
+			cert_extend=#{certExtend},     
+			eku=#{eku},
+			base_dn=#{baseDn},   
+			reviewed_type=#{reviewedType},         
+			notes=#{notes}   
+			            
+	 	where id=#{id}
+	</update>
+	
+</mapper>

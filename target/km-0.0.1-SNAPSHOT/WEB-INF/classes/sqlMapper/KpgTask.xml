@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="cn.com.sure.keypair.dao.KpgTaskDAO">  
+
+
+	<resultMap type="cn.com.sure.kpgtask.entry.KpgTask" id="KpgTaskResultMap">
+		<id column="id" javaType="long" property="id"/>
+		<result column="name" javaType="String" property="name"/>
+		<result column="kpgKeyAmount" javaType="Integer" property="kpgKeyAmount"/>
+		<result column="taskStartTime" javaType="Date" property="taskStartTime"/>
+		<result column="taskNotes" javaType="String" property="taskNotes"/>
+		<result column="exeTaskStartTime" javaType="Date" property="exeTaskStartTime"/>
+		<result column="exeTaskEndTime" javaType="Date" property="exeTaskEndTime"/>
+		<result column="generatedKeyAmount" javaType="Integer" property="generatedKeyAmount"/>
+		<result column="task_exe_result" javaType="String" property="task_exe_result"/>
+		<association property="keyPairAlgorithm" javaType="cn.com.sure.algorthm.entry.KeyPairAlgorithm" >
+			<id column="kpgAlgId" javaType="long" property="id"/>
+			<result column="algName" javaType="String" property="name"/>
+			<result column="algorithmOid" javaType="String" property="algorithmOid"/>
+			<result column="algorithmName" javaType="String" property="algorithmName"/>
+			<result column="keysize" javaType="Integer" property="keysize"/>
+			<result column="notes" javaType="String" property="notes"/>
+			<result column="isValid" javaType="Integer" property="isValid"/>
+		</association>
+		<association property="dbCommitBufsize" javaType="cn.com.sure.syscode.entry.SysCode" >
+			<id column="SysCodeIdDb" javaType="long" property="id"/>
+			<result column="paraCodeDb" javaType="String" property="paraCode"/>
+			<result column="paraValueDb" javaType="String" property="paraValue"/>
+			<result column="SysIsValidDb" javaType="Integer" property="isValid"/>
+			<result column="SysNotesDb" javaType="String" property="notes"/>
+			<association property="paraType" javaType="cn.com.sure.syscode.entry.SysCodeType" >
+				<id column="TypeIdDb" javaType="long" property="id"/>
+				<result column="typeParaTypeDb" javaType="String" property="paraType"/>
+				<result column="typeNotesDb" javaType="String" property="notes"/>
+			</association>
+		</association>
+		<association property="taskStatus" javaType="cn.com.sure.syscode.entry.SysCode" >
+			<id column="SysCodeId" javaType="long" property="id"/>
+			<result column="paraCode" javaType="String" property="paraCode"/>
+			<result column="paraValue" javaType="String" property="paraValue"/>
+			<result column="SysIsValid" javaType="Integer" property="isValid"/>
+			<result column="SysNotes" javaType="String" property="notes"/>
+			<association property="paraType" javaType="cn.com.sure.syscode.entry.SysCodeType" >
+				<id column="TypeId" javaType="long" property="id"/>
+				<result column="typeParaType" javaType="String" property="paraType"/>
+				<result column="typeNotes" javaType="String" property="notes"/>
+			</association>
+		</association>
+	</resultMap>
+
+	<insert id="insert" parameterType="cn.com.sure.kpgtask.entry.KpgTask" useGeneratedKeys="true" keyProperty="id">
+		insert into kpg_task(
+			name,
+			kpg_algorithm,
+			kpg_key_amount,
+			task_status,
+			task_start_time,
+			task_notes,
+			exe_task_start_time,
+			exe_task_end_time,
+			dbcommit_bufsize,
+			generated_key_amount,
+			task_exe_result
+		)values(
+			#{name},
+			#{keyPairAlgorithm.id},
+			#{kpgKeyAmount},
+			#{taskStatus.paraValue},
+			#{taskStartTime},
+			#{taskNotes},
+			#{exeTaskStartTime},
+			#{exeTaskEndTime},
+			#{dbCommitBufsize.paraValue},
+			#{generatedKeyAmount},
+			#{taskExeResult}
+		)
+	</insert>
+	
+	<select id="selectAll" parameterType="cn.com.sure.kpgtask.entry.KpgTask" resultMap="KpgTaskResultMap">
+		select 
+			t1.id as id,
+			t1.name as name,
+			t1.kpg_algorithm as keyPairAlgorithm,
+			t1.kpg_key_amount as kpgKeyAmount,
+			t1.task_status as taskStatus,
+			t1.task_start_time as taskStartTime,
+			t1.task_notes as taskNotes,
+			t1.exe_task_start_time as exeTaskStartTime,
+			t1.exe_task_end_time as exeTaskEndTime,
+			t1.dbcommit_bufsize as dbCommitBufsize,
+			t1.generated_key_amount generatedKeyAmount,
+			t1.task_exe_result as taskExeResult,
+			t2.id as kpgAlgId,
+			t2.name as algName ,
+			t2.alg_oid as algorithmOid,
+			t2.alg_name as algorithmName,
+			t2.keysize as keysize,
+			t2.notes as notes,
+			t2.is_valid as isValid,
+			t3.id as SysCodeId,
+			t3.para_code as paraCode,
+			t3.para_value as paraValue,
+			t3.para_type as paraType,
+			t3.is_valid as SysIsValid,
+			t3.notes as SysNotes,
+			t5.id as SysCodeIdDb,
+			t5.para_code as paraCodeDb,
+			t5.para_value as paraValueDb,
+			t5.para_type as paraTypeDb,
+			t5.is_valid as SysIsValidDb,
+			t5.notes as SysNotesDb,
+			t4.id as TypeId,
+			t4.para_type as typeParaType,
+			t4.notes as typeNotes,
+			t6.id as TypeIdDb,
+			t6.para_type as typeParaTypeDb,
+			t6.notes as typeNotesDb
+		 from kpg_task t1,keypair_algorithm t2,sys_code t3,sys_param_type t4,sys_code t5,sys_param_type t6
+		 where t1.kpg_algorithm=t2.id
+			 and t3.para_type=t4.id
+			 and t5.para_type=t6.id
+			 and t1.task_status=t3.para_value
+			 and t1.dbcommit_bufsize = t5.para_value
+	</select>
+	
+	<select id="findById" parameterType="long" resultMap="KpgTaskResultMap">
+				select 
+			t1.id as id,
+			t1.name as name,
+			t1.kpg_algorithm as keyPairAlgorithm,
+			t1.kpg_key_amount as kpgKeyAmount,
+			t1.task_status as taskStatus,
+			t1.task_start_time as taskStartTime,
+			t1.task_notes as taskNotes,
+			t1.exe_task_start_time as exeTaskStartTime,
+			t1.exe_task_end_time as exeTaskEndTime,
+			t1.dbcommit_bufsize as dbCommitBufsize,
+			t1.generated_key_amount generatedKeyAmount,
+			t1.task_exe_result as taskExeResult,
+			t2.id as kpgAlgId,
+			t2.name as algName ,
+			t2.alg_oid as algorithmOid,
+			t2.alg_name as algorithmName,
+			t2.keysize as keysize,
+			t2.notes as notes,
+			t2.is_valid as isValid,
+			t3.id as SysCodeId,
+			t3.para_code as paraCode,
+			t3.para_value as paraValue,
+			t3.para_type as paraType,
+			t3.is_valid as SysIsValid,
+			t3.notes as SysNotes,
+			t5.id as SysCodeIdDb
+			t5.para_code as paraCodeDb,
+			t5.para_value as paraValueDb,
+			t5.para_type as paraTypeDb,
+			t5.is_valid as SysIsValidDb,
+			t5.notes as SysNotesDb,
+			t4.id as TypeId,
+			t4.para_type as typeParaType,
+			t4.notes as typeNotes,
+			t6.id as TypeIdDb,
+			t6.para_type as typeParaTypeDb,
+			t6.notes as typeNotesDb
+		 from kpg_task t1,keypair_algorithm t2,sys_code t3,sys_param_type t4,sys_code t5,sys_param_type t6
+		 where t1.kpg_algorithm=t2.id
+			 and t3.para_type=t4.id
+			 and t5.para_type=t6.id
+			 and t1.task_status=t3.para_value
+			 and t1.dbcommit_bufsize = t5.para_value
+			 and t1.id=#{id}
+	</select>
+	
+	<select id="findByName" parameterType="String" resultType="cn.com.sure.kpgtask.entry.KpgTask">
+		select 
+			id,
+			name,
+			kpg_algorithm as keyPairAlgorithm,
+			kpg_key_amount as kpgKeyAmount,
+			task_status as taskStatus,
+			task_start_time as taskStartTime,
+			task_notes as taskNotes,
+			exe_task_start_time as exeTaskStartTime,
+			exe_task_end_time as exeTaskEndTime,
+			dbcommit_bufsize as dbCommitBufsize,
+			generated_key_amount generatedKeyAmount,
+			task_exe_result as taskExeResult
+		 from kpg_task
+		 where name=#{name}
+	</select>
+	
+	<select id="findAllUnExecutedTask" parameterType="cn.com.sure.kpgtask.entry.KpgTask" resultMap="KpgTaskResultMap">
+	 select
+			t1.id as id,
+			t1.name as name,
+			t1.kpg_algorithm as keyPairAlgorithm,
+			t1.kpg_key_amount as kpgKeyAmount,
+			t1.task_status as taskStatus,
+			t1.task_start_time as taskStartTime,
+			t1.task_notes as taskNotes,
+			t1.exe_task_start_time as exeTaskStartTime,
+			t1.exe_task_end_time as exeTaskEndTime,
+			t1.dbcommit_bufsize as dbCommitBufsize,
+			t1.generated_key_amount as generatedKeyAmount,
+			t1.task_exe_result as taskExeResult,
+			t2.id as kpgAlgId,
+			t2.name as algName ,
+			t2.alg_oid as algorithmOid,
+			t2.alg_name as algorithmName,
+			t2.keysize as keysize,
+			t2.notes as notes,
+			t2.is_valid as isValid,
+			t3.id as SysCodeIdDb,
+			t3.para_code as paraCodeDb,
+			t3.para_value as paraValueDb,
+			t3.para_type as TypeIdDb,
+			t3.is_valid as SysIsValid,
+			t3.notes as SysNotes,
+		
+			t4.para_type as typeParaTypeDb,
+			t4.notes as typeNotesDb
+		from kpg_task t1,keypair_algorithm t2,sys_code t3,sys_param_type t4
+		 where 
+		 	t1.task_status=#{taskStatus.paraValue}
+		 and t1.kpg_algorithm=t2.id
+		 and t1.dbcommit_bufsize = t3.para_value
+		 and t3.para_type = t4.id
+		<![CDATA[ and task_start_time <=#{taskStartTime}]]>
+	</select>
+	
+	<select id="findByTaskStatus" parameterType="Long" resultType="cn.com.sure.kpgtask.entry.KpgTask">
+		select 
+			id,
+			name,
+			kpg_algorithm as keyPairAlgorithm,
+			kpg_key_amount as kpgKeyAmount,
+			task_status as taskStatus,
+			task_start_time as taskStartTime,
+			task_notes as taskNotes,
+			exe_task_start_time as exeTaskStartTime,
+			exe_task_end_time as exeTaskEndTime,
+			dbcommit_bufsize as dbCommitBufsize,
+			generated_key_amount generatedKeyAmount,
+			task_exe_result as taskExeResult
+		 from kpg_task
+		 where task_status=#{codeId}
+	</select>
+	
+	<update id="update" parameterType="cn.com.sure.kpgtask.entry.KpgTask">
+		update kpg_task
+		set
+		 	name = #{name},
+			kpg_algorithm = #{keyPairAlgorithm.id},
+			kpg_key_amount=#{kpgKeyAmount},
+			task_status=#{taskStatus.paraValue},
+			task_start_time=#{taskStartTime},
+			task_notes=#{taskNotes},
+			exe_task_start_time=#{exeTaskStartTime},
+			exe_task_end_time=#{exeTaskEndTime},
+			dbcommit_bufsize=#{dbCommitBufsize.paraValue},
+			generated_key_amount=#{generatedKeyAmount},
+			task_exe_result=#{taskExeResult}
+		 where
+		 	id=#{id}
+	</update>
+	
+	<update id="start" parameterType="cn.com.sure.kpgtask.entry.KpgTask">
+		update kpg_task
+		set
+		 	name = #{name},
+			kpg_algorithm = #{keyPairAlgorithm.id},
+			kpg_key_amount=#{kpgKeyAmount},
+			task_status=#{taskStatus.paraValue},
+			task_start_time=#{taskStartTime},
+			task_notes=#{taskNotes},
+			exe_task_start_time=#{exeTaskStartTime},
+			exe_task_end_time=#{exeTaskEndTime},
+			dbcommit_bufsize=#{dbCommitBufsize.paraValue},
+			generated_key_amount=#{generatedKeyAmount},
+			task_exe_result=#{taskExeResult}
+		 where
+		 	id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="long">
+		delete from kpg_task where id=#{id}
+	</delete>
+	
+	<select id="searchByCondition" parameterType="cn.com.sure.kpgtask.entry.KpgTask" resultMap="KpgTaskResultMap">
+		select 
+			t1.id as id,
+			t1.name as name,
+			t1.kpg_algorithm as keyPairAlgorithm,
+			t1.kpg_key_amount as kpgKeyAmount,
+			t1.task_status as taskStatus,
+			t1.task_start_time as taskStartTime,
+			t1.task_notes as taskNotes,
+			t1.exe_task_start_time as exeTaskStartTime,
+			t1.exe_task_end_time as exeTaskEndTime,
+			t1.dbcommit_bufsize as dbCommitBufsize,
+			t1.generated_key_amount generatedKeyAmount,
+			t1.task_exe_result as taskExeResult,
+			t2.id as kpgAlgId,
+			t2.name as algName ,
+			t2.alg_oid as algorithmOid,
+			t2.alg_name as algorithmName,
+			t2.keysize as keysize,
+			t2.notes as notes,
+			t2.is_valid as isValid,
+			t3.id as SysCodeId,
+			t3.para_code as paraCode,
+			t3.para_value as paraValue,
+			t3.para_type as paraType,
+			t3.is_valid as SysIsValid,
+			t3.notes as SysNotes,
+			t4.id as TypeId,
+			t4.para_type as typeParaType,
+			t4.notes as typeNotes
+		 from kpg_task t1,keypair_algorithm t2,sys_code t3,sys_param_type t4
+		 where 
+		 	t1.kpg_algorithm=t2.id
+		 	and t3.para_type=t4.id
+		 	and t1.task_status=t3.para_value
+		 	<if test="id!=null and id!='' ">
+		 		id=#{id}
+		 	</if>
+		 	<if test="name!=null and name!='' ">
+		 	 	name=#{name}
+		 	</if>
+		 	<if test="keyPairAlgorithm!=null and keyPairAlgorithm!='' ">
+		 		keyPairAlgorithm=#{keyPairAlgorithm}
+		 	</if>
+		 	<if test="taskStartTime!=null and taskStartTime!='' ">
+		 		taskStartTime=#{taskStartTime}
+		 	</if>
+	</select>
+    
+</mapper>

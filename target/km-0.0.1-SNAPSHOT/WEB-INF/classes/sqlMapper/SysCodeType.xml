@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="cn.com.sure.syscode.dao.SysCodeTypeDAO">  
+
+	<insert id="insert" parameterType="cn.com.sure.syscode.entry.SysCodeType">
+		insert into sys_param_type(
+			para_type,
+			notes
+		)values(
+			#{paraType},
+			#{notes}
+		)
+	</insert>
+	
+	<select id="selectById" parameterType="cn.com.sure.syscode.entry.SysCodeType" resultType="cn.com.sure.syscode.entry.SysCodeType">
+		select 
+			id,
+			para_type as paraType,
+			notes
+		 from sys_param_type
+		 where
+		  id=#{id}
+	</select>
+	
+	<select id="selectAll" parameterType="cn.com.sure.syscode.entry.SysCodeType" resultType="cn.com.sure.syscode.entry.SysCodeType">
+		select 
+			id,
+			para_type as paraType,
+			notes
+		 from sys_param_type
+	</select>
+	
+	<select id="findByType" parameterType="cn.com.sure.syscode.entry.SysCodeType" resultType="cn.com.sure.syscode.entry.SysCodeType">
+		select 
+			id,
+			para_type as paraType,
+			notes
+		from sys_param_type
+			where para_type=#{paraType}
+	</select>
+	
+	<select id="searchByCondition" parameterType="cn.com.sure.syscode.entry.SysCodeType" resultType="cn.com.sure.syscode.entry.SysCodeType">
+		select 
+			id,
+			para_type as paraType,
+			notes
+		 from sys_param_type
+		 where 1=1
+		 	<if test="id!=null and id!='' ">
+		 		and id=#{id}
+		 	</if>
+		 	<if test="paraType!=null and paraType!='' ">
+		 		and para_type = #{paraType}
+		 	</if>
+	</select>
+	
+	<update id="update" parameterType="cn.com.sure.syscode.entry.SysCodeType">
+	 update sys_param_type 
+		set 
+		 	para_type = #{paraType},
+			notes=#{notes}
+	 where id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="long">
+		delete from sys_param_type where id=#{id}
+	</delete>
+	
+</mapper>

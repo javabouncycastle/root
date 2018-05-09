@@ -1,0 +1,14 @@
+/*datatable表格布局 */
+.floatleft{float:left;padding-right:30px;}
+.floatright{float:right;}
+.dataTables_length{padding-top:4px;}
+
+.content_minwidth{min-width:1101px;overflow:auto;}
+.dataTables_filter > button{float:left; margin-right: 5px;}
+
+.iadd{color:#00A65A;}	/*i字体图标颜色 绿色*/
+.idelete{color:red;} /*i字体图标颜色  红色*/
+.iupdate{color:#e08e0b;} /*i字体图标颜色 橙色 */
+.iinfo{color:#367fa9;} /*i字体图标颜色  蓝色*/
+label.error{color:red;padding-top:7px} /*表单错误提示*/
+input.error,select.error { border: 1px solid red; } /*表单错误提示*/

@@ -1,0 +1,47 @@
+@CHARSET "UTF-8";
+
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	overflow:hidden;
+	table-layout:fixed;
+}
+table{ 
+border-collapse:collapse; 
+border-spacing:0; 
+} 
+th,td{ 
+padding:0; 
+}
+
+
+.head-table-image{
+	width:100%;
+	border:0;
+}
+
+.head-td-style1{
+	height:26;
+}
+
+.head-td-style2{
+	width:60;
+}
+
+.head-td-style3{
+	width:227;
+}
+
+.head-td-style4{
+	width:7;
+}
+
+.head-td-style5{
+	height:64;
+}
+
+.head-td-style6{
+	height:6;
+}

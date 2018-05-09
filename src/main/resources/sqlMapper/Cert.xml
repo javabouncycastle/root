@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="cn.com.sure.cert.dao.CertificateDAO">
+
+	<resultMap type="cn.com.sure.cert.entry.Certificate" id="CertificateResultMap">
+		<id column="id" javaType="String" property="id"/>
+		<result column="dn" javaType="String" property="dn"/>
+		<result column="cn" javaType="String" property="cn"/>
+		<result column="sn" javaType="String" property="sn"/>
+		<result column="ref" javaType="String" property="ref"/>
+		<result column="cert" javaType="String" property="cert"/>
+		<result column="startTime" javaType="Date" property="startTime"/>
+		<result column="endTime" javaType="Date" property="endTime"/>
+		<result column="validity" javaType="String" property="validity"/>
+		<result column="status" javaType="String" property="status"/>
+		<association property="kpAlg" javaType="cn.com.sure.ctml.entry.CertificateTemplate">
+			<id column="ids" javaType="String" property="id"/>
+			<result column="ctmlNames" javaType="String" property="ctmlName"/>
+			<result column="hashs" javaType="String" property="hash"/>
+			<result column="keySizes" javaType="Integer" property="keySize"/>
+			<result column="isValids" javaType="Integer" property="isValid"/>
+			<result column="signCertKeyUsages" javaType="String" property="signCertKeyUsage"/>
+			<result column="encCertKeyUsages" javaType="String" property="encCertKeyUsage"/>
+			<result column="ekus" javaType="String" property="eku"/>
+			<result column="notess" javaType="String" property="notes"/>
+			<result column="baseDns" javaType="String" property="baseDn"/>
+			<result column="reviewedTypes" javaType="String" property="reviewedType"/>
+			<association property="kpgAlgorithm" javaType="cn.com.sure.syscode.entry.SysCode">
+				<id column="TypeIds" javaType="Long" property="id"/>
+				<result column="paraCodes" javaType="String" property="paraCode"/>
+				<result column="paraValues" javaType="String" property="paraValue"/>
+				<result column="SysIsValids" javaType="Integer" property="isValid"/>
+				<result column="SysNotess" javaType="String" property="notes"/>
+				<association property="paraTypes" javaType="cn.com.sure.syscode.entry.SysCodeType" >
+					<id column="paraTypeIds" javaType="Long" property="id"/>
+					<result column="typeParaTypes" javaType="String" property="paraType"/>
+					<result column="typeNotess" javaType="String" property="notes"/>
+					</association>
+			</association>
+			<association property="validity" javaType="cn.com.sure.syscode.entry.SysCode">
+				<id column="SysCodeIdDbs" javaType="Long" property="id"/>
+				<result column="paraCodeDbs" javaType="String" property="paraCode"/>
+				<result column="paraValueDbs" javaType="String" property="paraValue"/>
+				<result column="SysIsValidDbs" javaType="Integer" property="isValid"/>
+				<result column="SysNotesDbs" javaType="String" property="notes"/>
+				<association property="paraType" javaType="cn.com.sure.syscode.entry.SysCodeType">
+					<id column="TypeIdDbs" javaType="Long" property="id"/>
+					<result column="typeParaTypeDbs" javaType="String" property="paraType"/>
+					<result column="typeNotesDbs" javaType="String" property="notes"/>
+				</association>
+			</association>
+		</association>
+		<association property="ctmlId" javaType="cn.com.sure.ctml.entry.CertificateTemplate">
+			<id column="ctmlId" javaType="String" property="id"/>
+			<result column="ctmlName" javaType="String" property="ctmlName"/>
+			<result column="hash" javaType="String" property="hash"/>
+			<result column="keySize" javaType="Integer" property="keySize"/>
+			<result column="isValid" javaType="Integer" property="isValid"/>
+			<result column="signCertKeyUsage" javaType="String" property="signCertKeyUsage"/>
+			<result column="encCertKeyUsage" javaType="String" property="encCertKeyUsage"/>
+			<result column="eku" javaType="String" property="eku"/>
+			<result column="notes" javaType="String" property="notes"/>
+			<result column="baseDn" javaType="String" property="baseDn"/>
+			<result column="reviewedType" javaType="String" property="reviewedType"/>
+			<association property="kpgAlgorithm" javaType="cn.com.sure.syscode.entry.SysCode">
+				<id column="TypeId" javaType="Long" property="id"/>
+				<result column="paraCode" javaType="String" property="paraCode"/>
+				<result column="paraValue" javaType="String" property="paraValue"/>
+				<result column="SysIsValid" javaType="Integer" property="isValid"/>
+				<result column="SysNotes" javaType="String" property="notes"/>
+				<association property="paraType" javaType="cn.com.sure.syscode.entry.SysCodeType" >
+					<id column="paraTypeId" javaType="Long" property="id"/>
+					<result column="typeParaType" javaType="String" property="paraType"/>
+					<result column="typeNotes" javaType="String" property="notes"/>
+					</association>
+			</association>
+			<association property="validity" javaType="cn.com.sure.syscode.entry.SysCode">
+				<id column="SysCodeIdDb" javaType="Long" property="id"/>
+				<result column="paraCodeDb" javaType="String" property="paraCode"/>
+				<result column="paraValueDb" javaType="String" property="paraValue"/>
+				<result column="SysIsValidDb" javaType="Integer" property="isValid"/>
+				<result column="SysNotesDb" javaType="String" property="notes"/>
+				<association property="paraType" javaType="cn.com.sure.syscode.entry.SysCodeType">
+					<id column="TypeIdDb" javaType="Long" property="id"/>
+					<result column="typeParaTypeDb" javaType="String" property="paraType"/>
+					<result column="typeNotesDb" javaType="String" property="notes"/>
+				</association>
+			</association>
+		</association>
+	</resultMap>
+
+
+
+	
+</mapper>

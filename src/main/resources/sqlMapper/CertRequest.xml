@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="cn.com.sure.cert.dao.CertificateRequestDAO">  
+
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="cn.com.sure.cert.entry.CertificateRequest"><!-- 获取插入信息的id -->
+		insert into cert_req(
+			cert_cn,
+			cert_dn,
+			request_time,
+			start_time,
+			end_time,
+			ctml_id,
+			admin,
+			validity,
+			start_time_type,
+			req_type
+		)values(
+			#{certCn},
+			#{certDn},
+			#{requestTime},
+			#{startTime},
+			#{endTime},
+			#{ctmlId.id},
+			#{admin},
+			#{validity},
+			#{startTimeType},
+			#{reqType}
+		)
+	</insert>
+	
+	<select id="findById" parameterType="String" resultType="cn.com.sure.cert.entry.CertificateRequest">
+		select
+			id,
+			cert_cn as certCn,
+			cert_dn as certDn,
+			request_time as requestTime,
+			start_time as startTime,
+			end_time as endTime,
+			ctml_id ctmlId,
+			admin,
+			validity,
+			start_time_type as startTimeType,
+			req_type as reqType
+		from
+			cert_req
+		where
+			id=#{id}
+	</select>
+	
+		<select id="selectAll" parameterType="String" resultType="cn.com.sure.cert.entry.CertificateRequest">
+		select
+			id,
+			cert_cn as certCn,
+			cert_dn as certDn,
+			request_time as requestTime,
+			start_time as startTime,
+			end_time as endTime,
+			ctml_id ctmlId,
+			admin,
+			validity,
+			start_time_type as startTimeType,
+			req_type as reqType
+		from
+			cert_req
+	</select>
+	
+</mapper>
