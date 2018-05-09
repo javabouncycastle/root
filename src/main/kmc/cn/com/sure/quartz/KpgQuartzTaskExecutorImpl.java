@@ -21,6 +21,7 @@ import cn.com.sure.kpgtask.entry.KpgTask;
 import cn.com.sure.kpgtask.service.KpgTaskExecuteService;
 import cn.com.sure.kpgtask.service.KpgTaskService;
 import cn.com.sure.syscode.entry.SysCode;
+import cn.com.sure.syscode.service.SysCodeService;
 
 /**
  * @author Limin
@@ -37,6 +38,9 @@ public class KpgQuartzTaskExecutorImpl implements KpgQuartzTaskExecutor{
 	
 	@Autowired
 	private KpgTaskExecuteService kpgTaskExecuteService;
+	
+	@Autowired
+	private SysCodeService sysCodeService;
 	
 	@Override
 	public void executeTask() throws NoSuchAlgorithmException,
@@ -57,7 +61,7 @@ public class KpgQuartzTaskExecutorImpl implements KpgQuartzTaskExecutor{
 			
 			kpgTaskService.update(task);
 			
-			new Thread(new KeyPairGenThread(kpgTaskService,task,kpgTaskExecuteService)).start();
+			new Thread(new KeyPairGenThread(kpgTaskService,task,kpgTaskExecuteService,sysCodeService)).start();
 			
 			LOG.info("Quartz:executeTask NotStartedTask - end at "+ new Date());
 			
@@ -81,7 +85,7 @@ public class KpgQuartzTaskExecutorImpl implements KpgQuartzTaskExecutor{
 			
 			LOG.info("将要继续执行任务TASK"+task.getId()+","+task.getName());
 			
-			new Thread(new KeyPairGenThread(kpgTaskService,task,kpgTaskExecuteService)).start();
+			new Thread(new KeyPairGenThread(kpgTaskService,task,kpgTaskExecuteService,sysCodeService)).start();
 			
 		}
 		

@@ -5,12 +5,11 @@ package cn.com.sure.kpgtask.web;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,21 +17,27 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.alibaba.fastjson.JSON;
+
 import cn.com.sure.algorthm.entry.KeyPairAlgorithm;
 import cn.com.sure.algorthm.service.KeypairAlgorithmService;
-import cn.com.sure.common.BaseController;
 import cn.com.sure.common.Applicationexception;
+import cn.com.sure.common.BaseController;
 import cn.com.sure.common.Constants;
+import cn.com.sure.common.KeyPairGenThread;
+import cn.com.sure.common.PagedQuery;
+import cn.com.sure.common.ReCode;
 import cn.com.sure.kpgtask.entry.KpgTask;
 import cn.com.sure.kpgtask.service.KpgTaskExecuteService;
 import cn.com.sure.kpgtask.service.KpgTaskService;
-import cn.com.sure.log.test.service.AuditOpLogService;
 import cn.com.sure.syscode.entry.SysCode;
 import cn.com.sure.syscode.entry.SysCodeType;
 import cn.com.sure.syscode.service.SysCodeService;
+import cn.com.sure.syscode.service.SysCodeTypeService;
 
 /**
  * @author Limin
@@ -54,9 +59,12 @@ public class KpgTaskController extends BaseController{
 	private SysCodeService sysCodeService;
 	
 	@Autowired
-	private AuditOpLogService auditOpLogService;
+	private SysCodeTypeService sysCodeTypeService;
 	
-	@Autowired KpgTaskExecuteService kpgTaskExecuteService;
+	@Autowired
+	private KpgTaskExecuteService kpgTaskExecuteService;
+	
+	ReCode reCode = new ReCode();
 	
 	
 	/**
@@ -67,24 +75,32 @@ public class KpgTaskController extends BaseController{
 	 * @param request
 	 * @return
 	 */
+	@ResponseBody
 	@RequestMapping(value="selectAll")
-	public ModelAndView selectAll(KpgTask kpgTask,Model model, 
+	public String selectAll(KpgTask kpgTask,Model model, 
 			RedirectAttributes attr,HttpServletRequest request){
 		LOG.debug("selectAll - start");
-		KeyPairAlgorithm keyPairAlgorithm = new KeyPairAlgorithm();
-		SysCode sysCode = new SysCode();
-		SysCodeType sysCodeType = new SysCodeType();
 		
-		sysCodeType.setParaType(Constants.DB_COMMIT_BUFFER);
-		sysCode.setIsValid(Constants.YES_OR_NO_OPTION_YES);
-		sysCode.setParaType(sysCodeType);
-		
-		List<KpgTask> kpgTasks = this.kpgTaskService.selectAll();
-		List<KeyPairAlgorithm> keyPairAlgorithms = this.keyPairAlgorithmService.selectOpYes(keyPairAlgorithm);
-		List<SysCode> codeBuf = this.sysCodeService.searchByCondition(sysCode);
-		List<SysCode> sysCodes = this.sysCodeService.selectByType(sysCode);
+		PagedQuery pagedQuery=new PagedQuery();
+
+		pagedQuery.setStart(request.getParameter("start")==null?0:Integer.parseInt(request.getParameter("start").toString()));
+		pagedQuery.setLength(request.getParameter("length")==null?10:Integer.parseInt(request.getParameter("length").toString()));
+	    int count = this.kpgTaskService.getSysCodeCount();
+		List<KpgTask> kpgTasks = this.kpgTaskService.selectAll(pagedQuery);
+		pagedQuery.setRecordsTotal(String.valueOf(count));
+		pagedQuery.setRecordsFiltered(pagedQuery.getRecordsTotal());
+		pagedQuery.setData(kpgTasks);
+
 		LOG.debug("selectAll - end");
-		return new ModelAndView("algorithm/keyPairTaskList").addObject("kpgTasks", kpgTasks).addObject("keyPairAlgorithms",keyPairAlgorithms).addObject("sysCodes",sysCodes).addObject("codeBuf",codeBuf);
+		return JSON.toJSONString(pagedQuery);
+		
+	}
+	
+	@RequestMapping(value="toSelectAll")
+	public ModelAndView toSelectAll(){
+		LOG.debug("toSelectAll - start");
+		LOG.debug("toSelectAll - end");
+		return new ModelAndView("algorithm/keyPairTaskList");
 		
 	}
 	
@@ -97,31 +113,49 @@ public class KpgTaskController extends BaseController{
 	 * @return
 	 */
 	@RequestMapping(value="insert")
-	public String insert(KpgTask kpgTask,Model model, 
+	public ReCode insert(KpgTask kpgTask,Model model, 
 			RedirectAttributes attr,HttpServletRequest request){
 		LOG.debug("insert - start");
+		int i = 0;
 		try {
-			int i = kpgTaskService.insert(kpgTask);
-			//添加是否成功
-			int result;
-			if(i==-1){
-				result = Constants.SUCCESS_OR_FAILD_OPTION_FAILD;
-			}else{
-				result = Constants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
-			}
-			// 添加审计日志
-			/*auditOpLogService.insert(Constants.OPERATION_TYPE_INSERT, "增加", "数据字典类别", null,
-					kpgTask.getName(), null, null, new Date(), getIp(request), (String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME), 
-					result);*/
+			i = kpgTaskService.insert(kpgTask);
+			
 		} catch (Applicationexception e) {
-			attr.addFlashAttribute("messageInsert",e.getMessage());
-			attr.addFlashAttribute("kpgTask",kpgTask);
-			return "redirect:/kpgTask/selectAll.do";
+			reCode.setDes(e.getMessage());
+			reCode.setRetrunCode(Integer.toString(i));
+			return reCode;
 		}
 		LOG.debug("insert - end");
-		attr.addFlashAttribute("success","true");
-		attr.addFlashAttribute("msg","保存【"+kpgTask.getName()+"】成功");
-		return "redirect:/kpgTask/selectAll.do";
+		reCode.setDes("保存【"+kpgTask.getName()+"】成功");
+		reCode.setRetrunCode(Integer.toString(i));
+		return reCode;
+	}
+	
+	/**
+	 * 转向新增
+	 * @return
+	 */
+	@RequestMapping(value="forWardInsert")
+	public ModelAndView forWardInsert() {
+		LOG.debug("forWardInsert - start");
+		KeyPairAlgorithm keyPairAlgorithm = new KeyPairAlgorithm();
+
+		SysCode code = new SysCode();
+		SysCodeType sysCodeTypebuf = new SysCodeType();
+		sysCodeTypebuf.setParaType(Constants.DB_COMMIT_BUFFER);
+		
+		List<SysCodeType>codetypesbuf = sysCodeTypeService.searchByCondition(sysCodeTypebuf);
+		SysCodeType sysCodeTypesbuf = new SysCodeType();
+		sysCodeTypesbuf.setId(codetypesbuf.get(0).getId());
+		
+		code.setIsValid(Constants.YES_OR_NO_OPTION_YES);
+		code.setParaType(sysCodeTypesbuf);
+		
+		List<KeyPairAlgorithm> keyPairAlgorithms = this.keyPairAlgorithmService.selectOpYes(keyPairAlgorithm);
+		List<SysCode> codeBuf = this.sysCodeService.searchByCondition(code);
+		LOG.debug("forWardInsert - end");
+		return new ModelAndView("algorithm/keypairTaskInsert").addObject("keyPairAlgorithms",keyPairAlgorithms).addObject("codeBuf",codeBuf);
+		
 	}
 	
 	/**
@@ -133,26 +167,17 @@ public class KpgTaskController extends BaseController{
 	 * @return
 	 */
 	@RequestMapping(value="update")
-	public String update(KpgTask kpgTask,Model model, 
+	public ReCode update(KpgTask kpgTask,Model model, 
 			RedirectAttributes attr,HttpServletRequest request){
 		LOG.debug("update - start");
-		//比较更新前后字段的变化
-		String str = compare(kpgTask);
+		
 		int i = kpgTaskService.update(kpgTask);
-		int result;
-		if(i==-1){
-			result = Constants.SUCCESS_OR_FAILD_OPTION_FAILD;
-		}else{
-			result = Constants.SUCCESS_OR_FAILD_OPTION_SUCCESS;
-		}
-		//添加审计日志
-		/*auditOpLogService.insert(Constants.OPERATION_TYPE_UPDATE, "更新", "数据字典类别", kpgTask.getId().toString(), null, null, 
-				str, new Date(), getIp(request), (String)request.getSession().getAttribute(Constants.SESSION_ADMIN_NAME), 
-				result);*/
+
 		LOG.debug("update - end");
+		reCode.setDes("修改主键为【"+kpgTask.getId()+"】的信息成功！");
+		reCode.setRetrunCode(Integer.toString(i));
 		attr.addFlashAttribute("updateSuccess","true");
-		attr.addFlashAttribute("message","修改主键为【"+kpgTask.getId()+"】的信息成功！");
-		return "redirect:/kpgTask/selectAll.do";
+		return reCode;
 	}
 	
 	/**
@@ -164,15 +189,15 @@ public class KpgTaskController extends BaseController{
 	 * @return
 	 */
 	@RequestMapping(value="remove")
-	public String remove(@RequestParam(value = "id", required = false)Long id,Model model, 
+	public ReCode remove(@RequestParam(value = "id", required = false)Long id,Model model, 
 			RedirectAttributes attr,HttpServletRequest request){
 		LOG.debug("remove - start");
-		this.kpgTaskService.delete(id);
+		int i = kpgTaskService.delete(id);
 		LOG.debug("remove - end");
-		attr.addFlashAttribute("success","true");
-		attr.addFlashAttribute("msg","删除主键为【"+id+"】成功！");
-		return "redirect:/kpgTask/selectAll.do";
+		reCode.setDes("删除主键为【"+id+"】成功！");
+		reCode.setRetrunCode(Integer.toString(i));
 		
+		return reCode;
 	}
 	
 	/**
@@ -189,14 +214,28 @@ public class KpgTaskController extends BaseController{
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 */
-	@RequestMapping(value="start")
-	public String genKeypair(Long id,Model model, 
+	@RequestMapping(value="startTask")
+	public ReCode start(@RequestParam(value = "id", required = false)Long id,Model model, 
 			RedirectAttributes attr,HttpServletRequest request) throws NoSuchAlgorithmException, Applicationexception, NoSuchProviderException, ClassNotFoundException, InstantiationException, IllegalAccessException{
 		LOG.debug("genKeypair - start");
-		kpgTaskService.start(id);
+		Map<String,Object> result = kpgTaskService.startTask(id);
+		int i=(int)result.get("i");
+		KpgTask kpgTask=(KpgTask)result.get("kpgTask");
 		LOG.debug("genKeypair - end");
-		return "redirect:/kpgTask/selectAll.do";
+		
+		if(i==1){
+			//更新完状态之后去执行生成密钥
+			//启动线程，自动生成密钥
+			reCode.setDes("启动密钥任务"+id+"成功");
+			reCode.setRetrunCode(Integer.toString(i));
+			new Thread(new KeyPairGenThread(kpgTaskService,kpgTask,kpgTaskExecuteService,sysCodeService)).start();
+		}else {
+			reCode.setDes("启动密钥任务"+id+"失败");
+			reCode.setRetrunCode(Integer.toString(i));
+		}
+		return reCode;
 	}
+	
 	
 	/**
 	 * 按条件查询
@@ -206,6 +245,7 @@ public class KpgTaskController extends BaseController{
 	 * @param request
 	 * @return
 	 */
+	
 	@RequestMapping(value = "searchByCondition")
 	public ModelAndView searchByCondition(KpgTask kpgTask,Model model, 
 			RedirectAttributes attr,HttpServletRequest request){
@@ -217,31 +257,23 @@ public class KpgTaskController extends BaseController{
 	}
 	
 	/**
-	 * 暂停
-	 * @param id
-	 * @param model
-	 * @param attr
-	 * @param request
-	 * @return
-	 */
-	public String suspend(Long id,Model model, 
-			RedirectAttributes attr,HttpServletRequest request){
-		LOG.debug("suspend - start");
-		kpgTaskService.suspend(id);
-		LOG.debug("suspend - end");
-		return "redirect:/kpgTask/selectAll.do";
-		
-	}
-	
-	/**
 	 * 停止任务
 	 */
-	public String stop(Long id,Model model, 
+	@RequestMapping(value="stop")
+	public ReCode stop(@RequestParam(value = "id", required = false)Long id,Model model, 
 			RedirectAttributes attr,HttpServletRequest request){
 		LOG.debug("stop - start");
-		kpgTaskService.stop(id);
+		int i = kpgTaskService.stop(id);
 		LOG.debug("stop - end");
-		return "redirect:/kpgTask/selectAll.do";
+		if(i==1) {
+			reCode.setRetrunCode(Integer.toString(i));
+			reCode.setDes("暂停密钥任务"+id+"成功");
+		}else {
+			reCode.setRetrunCode(Integer.toString(i));
+			reCode.setDes("暂停密钥任务"+id+"失败");
+		}
+		
+		return reCode;
 	}
 	
 	/**
@@ -252,61 +284,26 @@ public class KpgTaskController extends BaseController{
 	 * @param request
 	 * @return
 	 */
-	public String continuation(Long id,Model model, 
+	@RequestMapping(value="continuation")
+	public ReCode continuation(@RequestParam(value = "id", required = false)Long id,Model model, 
 			RedirectAttributes attr,HttpServletRequest request){
 		LOG.debug("continuation - start");
-		kpgTaskService.continuation(id);
+		Map<String,Object> result = kpgTaskService.continuation(id);
+		int i=(int)result.get("i");
+		KpgTask kpgTask=(KpgTask)result.get("kpgTask");
+		
 		LOG.debug("continuation - end");
-				return "redirect:/kpgTask/selectAll.do";
+		
+		if(i==1){
+			//启动线程，自动生成密钥
+			new Thread(new KeyPairGenThread(kpgTaskService,kpgTask,kpgTaskExecuteService,sysCodeService)).start();
+			 reCode.setDes("继续执行任务"+id+"成功");
+			 reCode.setRetrunCode(Integer.toString(i));
+		}
+		return reCode;
 		
 	}
 	
 	
-
-	/**
-	 * 获取ip地址
-	 * @param request
-	 * @return
-	 */
-    public  String getIp(HttpServletRequest request) {
-           String ip = request.getHeader("X-Forwarded-For");
-           if(StringUtils.isNotEmpty(ip) && !"unKnown".equalsIgnoreCase(ip)){
-               //多次反向代理后会有多个ip值，第一个ip才是真实ip
-               int index = ip.indexOf(",");
-               if(index != -1){
-                   return ip.substring(0,index);
-               }else{
-                   return ip;
-                }
-            }
-            ip = request.getHeader("X-Real-IP");
-            if(StringUtils.isNotEmpty(ip) && !"unKnown".equalsIgnoreCase(ip)){
-                return ip;
-            }
-            return request.getRemoteAddr();
-       }
-    
-    
-    //比较更新了那些字段
-    public String compare(KpgTask kpgTaskNew){
-    	String resultString="";
-		
-    	if(kpgTaskNew!=null&&!"".equals(kpgTaskNew)&&kpgTaskNew.getId()!=null){
-    		//查询数据库中未更新前的数据
-    		KpgTask kpgTaskDB = kpgTaskService.selectById(kpgTaskNew.getId());
-    		if(StringUtils.isNotBlank(kpgTaskNew.getName())&&StringUtils.isNotBlank(kpgTaskDB.getName())){
-    			if(!kpgTaskNew.getName().equals(kpgTaskDB.getName())){
-    				resultString+="别名由"+kpgTaskDB.getName()+"变更为"+kpgTaskNew.getName();
-    			}
-    		}if(kpgTaskDB.getKeyPairAlgorithm()!=null&&kpgTaskNew.getKeyPairAlgorithm()!=null){
-    			if(!kpgTaskDB.getKeyPairAlgorithm().equals(kpgTaskNew.getKeyPairAlgorithm())){
-    				resultString+="密钥算法由"+kpgTaskDB.getKeyPairAlgorithm()+"变更为"+kpgTaskNew.getKeyPairAlgorithm();
-    			}
-    		}
-    	}
-    	
-		return resultString;
-    	
-    }
 
 }

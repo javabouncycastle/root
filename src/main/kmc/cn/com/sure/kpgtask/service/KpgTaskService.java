@@ -4,9 +4,11 @@
 package cn.com.sure.kpgtask.service;
 
 import java.util.List;
+import java.util.Map;
 
 import cn.com.sure.common.Applicationexception;
 import cn.com.sure.kpgtask.entry.KpgTask;
+import cn.com.sure.common.PagedQuery;
 
 /**
  * @author Limin
@@ -18,7 +20,7 @@ public interface KpgTaskService {
 	 * @return 
 	 * 
 	 */
-	List<KpgTask> selectAll();
+	List<KpgTask> selectAll(PagedQuery pagedQuery);
 
 	/**
 	 * @param kpgTask
@@ -35,7 +37,7 @@ public interface KpgTaskService {
 	/**
 	 * @param id
 	 */
-	void delete(Long id);
+	int delete(Long id);
 
 	/**
 	 * @param id 
@@ -73,21 +75,18 @@ public interface KpgTaskService {
 	/**
 	 * @param id
 	 */
-	void start(Long id);
+	Map<String,Object> startTask(Long id);
 
 	/**
 	 * @param id
 	 */
-	void suspend(Long id);
+	int stop(Long id);
 
 	/**
 	 * @param id
 	 */
-	void stop(Long id);
+	Map<String,Object> continuation(Long id);
 
-	/**
-	 * @param id
-	 */
-	void continuation(Long id);
+	int getSysCodeCount();
 
 }

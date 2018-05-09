@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,8 +20,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.alibaba.fastjson.JSON;
 
 import cn.com.sure.common.Applicationexception;
+import cn.com.sure.common.PagedQuery;
 import cn.com.sure.common.ReCode;
-import cn.com.sure.syscode.entry.PageVo;
 import cn.com.sure.syscode.entry.SysCode;
 import cn.com.sure.syscode.entry.SysCodeType;
 import cn.com.sure.syscode.service.SysCodeService;
@@ -82,7 +83,7 @@ public class SysCodeController {
 	public String selectAll(SysCode sysCode,
 			Model model, RedirectAttributes attr,HttpServletRequest request){
 		LOG.debug("selectAll - start");
-		PageVo pageVo=new PageVo();
+		PagedQuery pageVo=new PagedQuery();
 
 	    pageVo.setStart(request.getParameter("start")==null?0:Integer.parseInt(request.getParameter("start").toString()));
 	    pageVo.setLength(request.getParameter("length")==null?10:Integer.parseInt(request.getParameter("length").toString()));
@@ -118,7 +119,7 @@ public class SysCodeController {
 	 * @throws Applicationexception 
 	*/
 	@ResponseBody
-	@RequestMapping(value = "update")
+	@RequestMapping(value = "/update",method=RequestMethod.POST)
 	public ReCode update(
 	SysCode sysCode, Model model,RedirectAttributes attr,HttpServletRequest request) throws Applicationexception{
 		LOG.debug("update - start!");
@@ -126,7 +127,6 @@ public class SysCodeController {
 		try{
 			//执行update操作
 			i = sysCodeService.update(sysCode);
-			//添加审计日志
 		}catch(Applicationexception e){
 			reCode.setDes(e.getMessage());
 			reCode.setRetrunCode(Integer.toString(i));
@@ -240,6 +240,21 @@ public class SysCodeController {
 		List<SysCodeType> sysCodeTypes = sysCodeTypeService.selectAll();
 		LOG.debug("forWardInsert - end");
 		return new ModelAndView("syscode/syscodeInsert").addObject("sysCodeTypes",sysCodeTypes);
+	}
+	
+	/**
+	 * 转向更新
+	 * @param id
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "forWardUpdate")
+	public ModelAndView forWardUpdate(@RequestParam(value = "id", required = false)Long id) {
+		LOG.debug("forWardInsert - start");
+		SysCode syscode = sysCodeService.selectById(id);
+		List<SysCodeType> sysCodeTypes = sysCodeTypeService.selectAll();
+		LOG.debug("forWardInsert - end");
+		return new ModelAndView("syscode/syscodeEdit").addObject("syscode", syscode).addObject("sysCodeTypes",sysCodeTypes);
 	}
 	
 

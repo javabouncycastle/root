@@ -12,14 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 import cn.com.sure.common.Applicationexception;
 import cn.com.sure.common.Constants;
 import cn.com.sure.common.ErrorMessageConstants;
-import cn.com.sure.ctml.entry.CertificateTemplate;
-import cn.com.sure.ctml.service.CertificateTemplateService;
+import cn.com.sure.common.PagedQuery;
 import cn.com.sure.kpgtask.entry.KpgTask;
 import cn.com.sure.kpgtask.service.KpgTaskService;
 import cn.com.sure.syscode.dao.SysCodeDAO;
-import cn.com.sure.syscode.entry.PageVo;
 import cn.com.sure.syscode.entry.SysCode;
-import cn.com.sure.syscode.entry.SysCodeType;
 
 @Transactional(propagation = Propagation.REQUIRED)
 @Service("SysCodeService")
@@ -29,9 +26,6 @@ public class SysCodeServiceImpl implements SysCodeService{
 	
 	@Autowired
 	private SysCodeDAO sysCodeDAO;
-	
-	@Autowired 
-	private CertificateTemplateService certificateTemplateService;
 	
 	@Autowired
 	private KpgTaskService kpgTaskService;
@@ -58,17 +52,14 @@ public class SysCodeServiceImpl implements SysCodeService{
 		//判断表里边原来是否有一个这样名字的数据
 		SysCode sysCodes = new SysCode();
 		sysCodes.setParaCode(sysCode.getParaCode());
-		sysCodes.setId(sysCode.getId());
-		
-		List<SysCode> dbSysCode= sysCodeDAO.searchByCondition(sysCodes);
-		
 		int i = 0;
-		if(!(dbSysCode.size()==0)) {
+		List<SysCode> dbSysCode= sysCodeDAO.searchByCondition(sysCodes);
+		if(sysCode.getId()==dbSysCode.get(0).getId()) {
 			i =sysCodeDAO.update(sysCode);
 		}else {
 			Applicationexception.throwException(ErrorMessageConstants.paraValueExist, new String[]{sysCode.getParaValue()});
 		}
-			
+		
 		LOG.debug("update - end");
 		return i;
 	}
@@ -77,16 +68,6 @@ public class SysCodeServiceImpl implements SysCodeService{
 	public int remove(Long id)  throws Applicationexception{
 		LOG.debug("remove - start");
 		//1判断这个数据字典是都在用，如果没有在用可以删除，如果有，则不允许删除
-		
-		//1.1判断证书模板中这个数据字典是否在用
-		SysCode syscode = new SysCode();
-		syscode.setId(id);
-		CertificateTemplate ctml = new CertificateTemplate();
-		ctml.setKpgAlgorithm(syscode);
-		List<CertificateTemplate> ctmls = certificateTemplateService.searchByCondition(ctml);
-		if(ctmls.size()!=0) {
-			Applicationexception.throwException(ErrorMessageConstants.sysCodeInuseInCtml, new String[]{id.toString()});
-		}
 		//1.2判断密钥任务中任务状态这个字段是否在用
 		//这里有bug
 		KpgTask kpgTask = new KpgTask();
@@ -131,7 +112,7 @@ public class SysCodeServiceImpl implements SysCodeService{
 	}
 
 	@Override
-	public List<SysCode> selectAll(PageVo pageVo) {
+	public List<SysCode> selectAll(PagedQuery pageVo) {
 		LOG.debug("selectAll - start");
 		List<SysCode> sysCodes = sysCodeDAO.selectAll(pageVo);
 		LOG.debug("selectAll - end");
@@ -141,7 +122,7 @@ public class SysCodeServiceImpl implements SysCodeService{
 	@Override
 	public List<SysCode> selectByType(SysCode sysCode) {
 		LOG.debug("selectByType - start");
-		List<SysCode> sysCodes = this.sysCodeDAO.findByType(sysCode);
+		List<SysCode> sysCodes = this.sysCodeDAO.searchByCondition(sysCode);
 		LOG.debug("selectByType - end");
 		return sysCodes;
 	}
@@ -171,7 +152,7 @@ public class SysCodeServiceImpl implements SysCodeService{
 	/* (non-Javadoc)
 	 * @see cn.com.sure.syscode.service.SysCodeService#getServicePort()
 	 */
-	@Override
+/*	@Override
 	public List<SysCode> selectServicePort() {
 		LOG.debug("getServicePort - start");
 		SysCodeType sysCodeType = new SysCodeType();
@@ -182,7 +163,7 @@ public class SysCodeServiceImpl implements SysCodeService{
 		List<SysCode> sysCodes = this.sysCodeDAO.findByType(sysCode);
 		LOG.debug("getServicePort - start");
 		return sysCodes;
-	}
+	}*/
 
 	@Override
 	public int getSysCodeCount() {

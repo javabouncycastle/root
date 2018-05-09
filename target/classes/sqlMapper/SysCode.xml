@@ -31,7 +31,7 @@
 		)
 	</insert>
 	
-	<select id="selectAll" parameterType="cn.com.sure.syscode.entry.PageVo" resultMap="SysCodeResultMap">
+	<select id="selectAll" parameterType="cn.com.sure.common.PagedQuery" resultMap="SysCodeResultMap">
 		select 
 			ks.id as id,
 			ks.para_code as paraCode,
@@ -53,45 +53,59 @@
 		 where ks.para_type=ksty.id
 	</select>
 	
-	<select id="findById" parameterType="cn.com.sure.syscode.entry.SysCode" resultType="cn.com.sure.syscode.entry.SysCode">
-		select
-			id,
-			para_code as paraCode,
-			para_value as paraValue,
-			para_type as paraType,
-			is_valid as isValid,
-			notes
-		from
-			sys_code
-		where
-			id=#{id}
+	<select id="findById" parameterType="cn.com.sure.syscode.entry.SysCode" resultMap="SysCodeResultMap">
+		select 
+			ks.id as id,
+			ks.para_code as paraCode,
+			ks.para_value as paraValue,
+			ks.para_type as paraType,
+			ks.is_valid as isValid,
+			ks.notes as notes,
+			ksty.id as TypeId,
+			ksty.para_type as typeParaType,
+			ksty.notes as typeNotes
+		 from 
+		 	sys_code ks,sys_param_type ksty
+		 where 
+		 	ks.para_type=ksty.id
+		   and ks.id=#{id}
 	</select>
 	
-	<select id="findByName" parameterType="cn.com.sure.syscode.entry.SysCode" resultType="cn.com.sure.syscode.entry.SysCode">
+	<select id="findByName" parameterType="cn.com.sure.syscode.entry.SysCode" resultMap="SysCodeResultMap">
 		select 
-			id,
-			para_code as paraCode,
-			para_value as paraValue,
-			para_type as paraType,
-			is_valid as isValid,
-			notes
-		from sys_code
-			where para_code=#{paraCode}
+			ks.id as id,
+			ks.para_code as paraCode,
+			ks.para_value as paraValue,
+			ks.para_type as paraType,
+			ks.is_valid as isValid,
+			ks.notes as notes,
+			ksty.id as TypeId,
+			ksty.para_type as typeParaType,
+			ksty.notes as typeNotes
+		 from 
+		 	sys_code ks,sys_param_type ksty
+		 where 
+		 	ks.para_type=ksty.id
+		 	and ks.para_code=#{paraCode}
 	</select>
 	
- 	<select id="findByType"  parameterType="cn.com.sure.syscode.entry.SysCode" resultType="cn.com.sure.syscode.entry.SysCode">
+<!--  	<select id="findByType"  parameterType="cn.com.sure.syscode.entry.SysCode" resultMap="SysCodeResultMap">
 		select 
-			ksc.id,
-			ksc.para_code as paraCode,
-			ksc.para_value as paraValue,
-			ksc.para_type as paraType,
-			ksc.is_valid as isValid,
-			ksc.notes
-		from sys_code ksc,sys_param_type kspt
-			where ksc.para_type=kspt.id
-			and kspt.para_type=#{paraType.paraType}
-			and ksc.is_valid=#{isValid}
-	</select>
+			ks.id as id,
+			ks.para_code as paraCode,
+			ks.para_value as paraValue,
+			ks.para_type as paraType,
+			ks.is_valid as isValid,
+			ks.notes as notes,
+			ksty.id as TypeId,
+			ksty.para_type as typeParaType,
+			ksty.notes as typeNotes
+		 from 
+		 	sys_code ks,sys_param_type ksty
+		where ks.para_type=ksty.id
+			and ksty.para_type=#{paraType.paraType}
+			and ks.is_valid=#{isValid}
+	</select> -->
 	
 	<update id="updateValid" parameterType="cn.com.sure.syscode.entry.SysCode">
 		update sys_code set is_valid=#{isValid} where id=#{id}
@@ -159,39 +173,4 @@
 		whwere
 			sys_code=#{algorithmName}
 	</select>
-	
-	<!-- <select id="selectMin" parameterType="cn.com.sure.syscode.entry.SysCode" resultMap="SysCodeResultMap">
-	
-		select 
-			ks.para_value as paraValue
-		 from 
-		 	sys_code ks,sys_param_type ksty
-		 where 
-		 	ks.para_type=ksty.id
-		 	and ksty.para_type=#{paraType.paraType}
-	</select>
-	
-	<select id="selectBuffer" parameterType="cn.com.sure.syscode.entry.SysCode" resultMap="SysCodeResultMap">
-	
-		select 
-			ks.para_value as paraValue
-		 from 
-		 	sys_code ks,sys_param_type ksty
-		 where 
-		 	ks.para_type=ksty.id
-		 	and ksty.para_type=#{paraType.paraType}
-		 	and ks.is_valid=#{isValid}
-	</select>
-	
-	<select id="selectGenKeyNum" parameterType="cn.com.sure.syscode.entry.SysCode" resultType="java.lang.String">
-	
-		select 
-			ks.para_value as paraValue
-		 from 
-		 	sys_code ks,sys_param_type ksty
-		 where 
-		 	ks.para_type=ksty.id
-		 	and ksty.para_type=#{paraType.paraType}
-		 	and ks.is_valid=#{isValid}
-	</select> -->
 </mapper>

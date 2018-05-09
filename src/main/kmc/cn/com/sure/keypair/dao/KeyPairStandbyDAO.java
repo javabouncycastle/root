@@ -31,7 +31,7 @@ public interface KeyPairStandbyDAO {
 	/**
 	 * @return
 	 */
-	int countNum(String algorithmName);
+	int countNum(KeyPairAlgorithm kpa);
 
 
 	/**

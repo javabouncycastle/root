@@ -56,6 +56,8 @@ public class Constants {
 	//
 	public static final String SYNCHRONOUS_KPG="synchronousKpg";
 	
+	public static final String KPG_TASK_STATUS="kpgTaskStatus";
+	
 	public static final long CODE_ID_TASK_STATUS_NOT_STARTED = 20;        //执行状态 - 尚未开始
 	public static final long CODE_ID_TASK_STATUS_WAITING_FOR_EXECUTING = 21;   //执行状态 - 任务已启动
 	
@@ -95,20 +97,16 @@ public class Constants {
 	public static final long CODE_ID_CERT_STATUS_REVOKE_REQ_APPROVED     = 4102L; //证书状态  - 更新注销通过
 	public static final long CODE_ID_CERT_STATUS_REVOKE_REQ_DENIED       = 4103L; //证书状态  - 更新注销拒绝
 	
-	//密钥恢复
-	public static final int TYPE_ID_CERT_RECOVER_STATUS = 42; 
 	
-	//证书有效天数
-	public static final String VALIDITY="validity";
-	//密钥类型
-	public static final String KPG_ALGORITHM="kpgAlgorithm";
-	//签名证书用法
-	public static final String SIGN_CERT_KEY_USAGE="signCertKeyUsage";
-	//加密证书用法
-	public static final String ENC_CERT_KEY_USAGE="encCertKeyUsage";
-
+	public static final int TYPE_ID_CERT_RECOVER_STATUS = 42; //密钥恢复
+	
+	
+	public static final String VALIDITY="validity";//证书有效天数
+	/*public static final String KPG_ALGORITHM="kpgAlgorithm";//密钥类型
+*/	public static final String SIGN_CERT_KEY_USAGE="signCertKeyUsage";//签名证书用法
+	public static final String ENC_CERT_KEY_USAGE="encCertKeyUsage";//加密证书用法
 	public static final String EXTEND_KEY_USAGE="extendKeyUsage";//密钥用法拓展
-	
+	public static final String CERT_EXTEND="certExtend";//证书拓展
 	
 	//socket传递同步密钥算法参数
 	public static final String SYNCHRONOUS_CTML="synchronousCtml";

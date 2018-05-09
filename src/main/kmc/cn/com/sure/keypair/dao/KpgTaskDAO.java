@@ -5,6 +5,7 @@ package cn.com.sure.keypair.dao;
 
 import java.util.List;
 
+import cn.com.sure.common.PagedQuery;
 import cn.com.sure.kpgtask.entry.KpgTask;
 
 /**
@@ -16,7 +17,7 @@ public interface KpgTaskDAO {
 	/**
 	 * @return
 	 */
-	List<KpgTask> selectAll();
+	List<KpgTask> selectAll(PagedQuery pagedQuery);
 
 	/**
 	 * @param name
@@ -33,7 +34,7 @@ public interface KpgTaskDAO {
 	/**
 	 * @param id
 	 */
-	void delete(Long id);
+	int delete(Long id);
 
 	/**
 	 * @param kpgTask
@@ -71,16 +72,14 @@ public interface KpgTaskDAO {
 	/**
 	 * @param id
 	 */
-	void suspend(Long id);
-
-	/**
-	 * @param id
-	 */
-	void stop(Long id);
-
-	/**
-	 * @param id
-	 */
 	void continuation(Long id);
+
+	/**
+	 * 
+	 * @return
+	 */
+	int getSysCodeCount();
+
+	int updateStatus(KpgTask kpgTask);
 
 }

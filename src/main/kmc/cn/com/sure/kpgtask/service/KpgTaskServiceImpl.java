@@ -4,7 +4,9 @@
 package cn.com.sure.kpgtask.service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,10 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cn.com.sure.common.Applicationexception;
 import cn.com.sure.common.Constants;
+import cn.com.sure.common.ErrorMessageConstants;
+import cn.com.sure.common.PagedQuery;
 import cn.com.sure.keypair.dao.KpgTaskDAO;
 import cn.com.sure.kpgtask.entry.KpgTask;
 import cn.com.sure.syscode.entry.SysCode;
-import cn.com.sure.syscode.entry.SysCodeType;
 import cn.com.sure.syscode.service.SysCodeService;
 
 /**
@@ -37,13 +40,14 @@ public class KpgTaskServiceImpl implements KpgTaskService{
 	@Autowired
 	private SysCodeService sysCodeService;
 	
+	
 	/* (non-Javadoc)
 	 * @see cn.com.sure.keypair.service.KpgTaskService#selectAll()
 	 */
 	@Override
-	public List<KpgTask> selectAll() {
+	public List<KpgTask> selectAll(PagedQuery pagedQuery) {
 		LOG.debug("selectAll - start");
-		List<KpgTask> kpgTasks=this.kpgTaskDAO.selectAll();
+		List<KpgTask> kpgTasks=this.kpgTaskDAO.selectAll(pagedQuery);
 		LOG.debug("selectAll - end");
 		return kpgTasks;
 	}
@@ -54,25 +58,26 @@ public class KpgTaskServiceImpl implements KpgTaskService{
 	@Override
 	public int insert(KpgTask kpgTask) throws Applicationexception {
 		LOG.debug("insert - start");
-		//KpgTask dbKpgTask = this.kpgTaskDAO.findByName(kpgTask.getName());
+		KpgTask dbKpgTask = this.kpgTaskDAO.findByName(kpgTask.getName());
 		int i=0;
-		/*if(dbKpgTask==null){*/
-			SysCode taskStatus=kpgTask.getTaskStatus();
-			if("".equals(kpgTask.getTaskStatus())||kpgTask.getTaskStatus()==null){
-				SysCode syscode = new SysCode();
-				SysCodeType syscodetype = new SysCodeType();
-				syscodetype.setParaType(String.valueOf(Constants.CODE_ID_TASK_STATUS_NOT_STARTED));
-				syscode.setParaType(syscodetype);
-				List<SysCode> syscodes = sysCodeService.searchByCondition(syscode);
-				taskStatus.setId(syscodes.get(0).getId());
-			}
+		if(dbKpgTask==null){
+			SysCode syscode = new SysCode();
+			syscode.setParaValue(String.valueOf(Constants.CODE_ID_TASK_STATUS_NOT_STARTED));
+			List<SysCode> code = sysCodeService.searchByCondition(syscode);
+			SysCode codes = new SysCode();
+			
+			codes.setId(code.get(0).getId());
+			kpgTask.setTaskStatus(codes);
 			
 			kpgTask.setGeneratedKeyAmount(0);
-			kpgTask.setTaskStatus(taskStatus);
 			kpgTask.setTaskStartTime(new Date());
 			i = kpgTaskDAO.insert(kpgTask);
+		}else {
+			Applicationexception.throwException(ErrorMessageConstants.kpgTaskNameExist, new String[]{kpgTask.getName()});
+		}
 		LOG.debug("insert - end");
 		return i;
+		
 	}
 
 	/* (non-Javadoc)
@@ -95,10 +100,11 @@ public class KpgTaskServiceImpl implements KpgTaskService{
 	 * @see cn.com.sure.keypair.service.KpgTaskService#delete(java.lang.Long)
 	 */
 	@Override
-	public void delete(Long id) {
+	public int delete(Long id) {
 		LOG.debug("delete - start");
-		this.kpgTaskDAO.delete(id);
+		int i = kpgTaskDAO.delete(id);
 		LOG.debug("delete - end");
+		return i;
 	}
 
 	/* (non-Javadoc)
@@ -171,51 +177,57 @@ public class KpgTaskServiceImpl implements KpgTaskService{
 	 * @see cn.com.sure.keypair.service.KpgTaskService#start(java.lang.Long)
 	 */
 	@Override
-	public void start(Long id) {
+	public Map<String,Object> startTask(Long id) {
 		LOG.debug("start - start");
+		Map<String,Object> resultMap=new HashMap<String,Object>();
+		int i = 0;
 		KpgTask kpgTask = this.kpgTaskDAO.findById(id);
-		if(kpgTask!=null&&(String.valueOf(Constants.CODE_ID_TASK_STATUS_NOT_STARTED)).equals(kpgTask.getTaskStatus().getParaValue())) {
+		if(kpgTask!=null) {
 			SysCode sysCode = new  SysCode();
-			sysCode.setParaValue(String.valueOf(Constants.CODE_ID_TASK_STATUS_WAITING_FOR_EXECUTING));
-			kpgTask.setTaskStatus(sysCode);
-			kpgTaskDAO.start(kpgTask);
-		} 
+			if(String.valueOf(Constants.CODE_ID_TASK_STATUS_NOT_STARTED).equals(kpgTask.getTaskStatus().getParaValue())) {
+				
+				sysCode.setParaValue(String.valueOf(Constants.CODE_ID_TASK_STATUS_EXECUTING));
+				
+				List<SysCode>sysCodes=sysCodeService.searchByCondition(sysCode);
+				kpgTask.setTaskStatus(sysCodes.get(0));
+				
+				i = kpgTaskDAO.update(kpgTask);
+				
+			}
+			
+			LOG.debug("start - end");
+		}
+		resultMap.put("i", i);
+		resultMap.put("kpgTask", kpgTask);
+		return resultMap;
+	} 
 		
-		LOG.debug("start - end");
-	}
-
-	/* (non-Javadoc)
-	 * @see cn.com.sure.keypair.service.KpgTaskService#suspend(java.lang.Long)
-	 */
-	@Override
-	public void suspend(Long id) {
-		LOG.debug("suspend - start");
-		KpgTask kpgTask = this.kpgTaskDAO.findById(id);
-		if(kpgTask!=null&&(String.valueOf(Constants.CODE_ID_TASK_STATUS_EXECUTING)).equals(kpgTask.getTaskStatus().getParaValue())) {
-			SysCode sysCode = new  SysCode();
-			sysCode.setParaValue(String.valueOf(Constants.CODE_ID_TASK_STATUS_MANUAL_PAUSED));
-			kpgTask.setTaskStatus(sysCode);
-			kpgTaskDAO.suspend(id);
-		} 
-		
-		LOG.debug("suspend - end");
-	}
+	
 
 	/* (non-Javadoc)
 	 * @see cn.com.sure.keypair.service.KpgTaskService#stop(java.lang.Long)
 	 */
 	@Override
-	public void stop(Long id) {
+	public int stop(Long id) {
 		LOG.debug("stop - start");
 		KpgTask kpgTask = this.kpgTaskDAO.findById(id);
-		if(kpgTask!=null&&(String.valueOf(Constants.CODE_ID_TASK_STATUS_EXECUTING)).equals(kpgTask.getTaskStatus().getParaValue())) {
+		int i = 0;
+		if((String.valueOf(Constants.CODE_ID_TASK_STATUS_EXECUTING)).equals(kpgTask.getTaskStatus().getParaValue())) {
 			SysCode sysCode = new  SysCode();
-			sysCode.setParaValue(String.valueOf(Constants.CODE_ID_TASK_STATUS_MANUAL_INTERRUPTED));
-			kpgTask.setTaskStatus(sysCode);
-			kpgTaskDAO.stop(id);
-		} 
+			sysCode.setParaValue(String.valueOf(Constants.CODE_ID_TASK_STATUS_MANUAL_PAUSED));
+			List<SysCode>sysCodes=sysCodeService.searchByCondition(sysCode);
+			kpgTask.setTaskStatus(sysCodes.get(0));
+			i=kpgTaskDAO.updateStatus(kpgTask);
+		}if((String.valueOf(Constants.CODE_ID_TASK_STATUS_MANUAL_RESUMED)).equals(kpgTask.getTaskStatus().getParaValue())) {
+			SysCode sysCode = new  SysCode();
+			sysCode.setParaValue(String.valueOf(Constants.CODE_ID_TASK_STATUS_MANUAL_PAUSED));
+			List<SysCode>sysCodes=sysCodeService.searchByCondition(sysCode);
+			kpgTask.setTaskStatus(sysCodes.get(0));
+			i=kpgTaskDAO.updateStatus(kpgTask);
+		}  
 		
 		LOG.debug("stop - end");
+		return i;
 		
 	}
 
@@ -223,19 +235,36 @@ public class KpgTaskServiceImpl implements KpgTaskService{
 	 * @see cn.com.sure.keypair.service.KpgTaskService#continute(java.lang.Long)
 	 */
 	@Override
-	public void continuation(Long id) {
+	public Map<String,Object> continuation(Long id) {
 		LOG.debug("continute - start");
 		KpgTask kpgTask = this.kpgTaskDAO.findById(id);
-		if(kpgTask!=null&&(String.valueOf(Constants.CODE_ID_TASK_STATUS_MANUAL_PAUSED)).equals(kpgTask.getTaskStatus().getParaValue())) {
+		Map<String,Object> resultMap=new HashMap<String,Object>();
+		int i = 0;
+		
+		if(String.valueOf(Constants.CODE_ID_TASK_STATUS_MANUAL_PAUSED).equals(kpgTask.getTaskStatus().getParaValue())) {
 			SysCode sysCode = new  SysCode();
-			sysCode.setParaValue(String.valueOf(Constants.CODE_ID_TASK_STATUS_MANUAL_RESUMED));
-			kpgTask.setTaskStatus(sysCode);
-			kpgTaskDAO.stop(id);
-		} 
+			sysCode.setParaValue(String.valueOf(Constants.CODE_ID_TASK_STATUS_EXECUTING));
+			
+			List<SysCode>sysCodes=sysCodeService.searchByCondition(sysCode);
+			kpgTask.setTaskStatus(sysCodes.get(0));
+			
+			i = kpgTaskDAO.update(kpgTask);
+		}
+		
 		LOG.debug("continute - end");
+		
+		resultMap.put("i", i);
+		resultMap.put("kpgTask", kpgTask);
+		return resultMap;
 		
 	}
 
-
+	@Override
+	public int getSysCodeCount() {
+		LOG.debug("getSysCodeCount - start");
+		int count = kpgTaskDAO.getSysCodeCount();
+		LOG.debug("getSysCodeCount - end");
+		return count;
+	}
 
 }

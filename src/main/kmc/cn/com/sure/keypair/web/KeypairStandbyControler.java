@@ -20,7 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cn.com.sure.common.BaseController;
 import cn.com.sure.keypair.entry.KeypairStandby;
-import cn.com.sure.keypair.service.KeypairStandbyService;
+import cn.com.sure.keypair.standby.service.KeypairStandbyService;
 
 /**
  * @author Limin

@@ -22,7 +22,7 @@ import sun.misc.BASE64Encoder;
 import cn.com.sure.common.Applicationexception;
 import cn.com.sure.common.Constants;
 import cn.com.sure.keypair.entry.KeypairStandby;
-import cn.com.sure.keypair.service.KeypairStandbyService;
+import cn.com.sure.keypair.standby.service.KeypairStandbyService;
 import cn.com.sure.kpgtask.entry.KpgTask;
 
 	/**
@@ -56,6 +56,9 @@ import cn.com.sure.kpgtask.entry.KpgTask;
 			
 			//2.判断状态
 			if(!kpgTask.getTaskStatus().getParaValue().equals(String.valueOf(Constants.CODE_ID_TASK_STATUS_EXECUTING))){
+				if(!kpgTask.getTaskStatus().getParaValue().equals(String.valueOf(Constants.CODE_ID_TASK_STATUS_MANUAL_RESUMED))) {
+					
+				}
 				LOG.info("无法继续执行任务块-["+taskId+"]任务状态："+kpgTask.getTaskStatus().getParaValue());
 				return;
 			}
@@ -103,7 +106,6 @@ import cn.com.sure.kpgtask.entry.KpgTask;
 				keyPairStandby.setPriKey(prikey);
 				keyPairStandby.setPubKey(pubkey);
 				keyPairStandby.setKeysize(kpgTask.getKeyPairAlgorithm().getKeysize());
-				
 				
 				keyPairStandbyService.insert(keyPairStandby);
 				

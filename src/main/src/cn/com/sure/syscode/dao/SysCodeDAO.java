@@ -3,7 +3,7 @@ package cn.com.sure.syscode.dao;
 import java.util.List;
 
 import cn.com.sure.common.Applicationexception;
-import cn.com.sure.syscode.entry.PageVo;
+import cn.com.sure.common.PagedQuery;
 import cn.com.sure.syscode.entry.SysCode;
 
 public interface SysCodeDAO {
@@ -61,13 +61,7 @@ public interface SysCodeDAO {
 	 * @param pageVo 
 	 * @return
 	 */
-	public List<SysCode> selectAll(PageVo pageVo);
-
-	/**
-	 * @param sysCode
-	 * @return
-	 */
-	public List<SysCode> findByType(SysCode sysCode);
+	public List<SysCode> selectAll(PagedQuery pageVo);
 
 	public int getSysCodeCount();
 

@@ -1,8 +1,8 @@
 <%@ page contentType="text/html;charset=utf8" pageEncoding="utf8" %>
 <%@ taglib prefix="c" uri="/WEB-INF/c-1_0-rt.tld"%>
 <!DOCTYPE html>
-<%@ include file="../left.jsp" %>
-<%@ include file="../footer.jsp" %>
+<%-- <%@ include file="../left.jsp" %>
+<%@ include file="../footer.jsp" %> --%>
 <script type="text/javascript" src="<%=request.getContextPath()%>/js/jquery.uniform.js"></script>
 <body>
 

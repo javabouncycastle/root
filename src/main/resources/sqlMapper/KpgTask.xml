@@ -65,56 +65,75 @@
 			#{name},
 			#{keyPairAlgorithm.id},
 			#{kpgKeyAmount},
-			#{taskStatus.paraValue},
+			#{taskStatus.id},
 			#{taskStartTime},
 			#{taskNotes},
 			#{exeTaskStartTime},
 			#{exeTaskEndTime},
-			#{dbCommitBufsize.paraValue},
+			#{dbCommitBufsize.id},
 			#{generatedKeyAmount},
 			#{taskExeResult}
 		)
 	</insert>
 	
-	<select id="selectAll" parameterType="cn.com.sure.kpgtask.entry.KpgTask" resultMap="KpgTaskResultMap">
+	<select id="selectAll" parameterType="cn.com.sure.common.PagedQuery" resultMap="KpgTaskResultMap">
+			SELECT
+				t1.id AS id,
+				t1. NAME AS NAME,
+				t1.kpg_algorithm AS keyPairAlgorithm,
+				t1.kpg_key_amount AS kpgKeyAmount,
+				t1.task_status AS taskStatus,
+				t1.task_start_time AS taskStartTime,
+				t1.task_notes AS taskNotes,
+				t1.exe_task_start_time AS exeTaskStartTime,
+				t1.exe_task_end_time AS exeTaskEndTime,
+				t1.dbcommit_bufsize AS dbCommitBufsize,
+				t1.generated_key_amount generatedKeyAmount,
+				t1.task_exe_result AS taskExeResult,
+				t2.id AS kpgAlgId,
+				t2. NAME AS algName,
+				t2.alg_oid AS algorithmOid,
+				t2.alg_name AS algorithmName,
+				t2.keysize AS keysize,
+				t2.notes AS notes,
+				t2.is_valid AS isValid,
+				t3.id AS SysCodeId,
+				t3.para_code AS paraCode,
+				t3.para_value AS paraValue,
+				t3.para_type AS paraType,
+				t3.is_valid AS SysIsValid,
+				t3.notes AS SysNotes,
+				t5.id AS SysCodeIdDb,
+				t5.para_code AS paraCodeDb,
+				t5.para_value AS paraValueDb,
+				t5.para_type AS paraTypeDb,
+				t5.is_valid AS SysIsValidDb,
+				t5.notes AS SysNotesDb,
+				t4.id AS TypeId,
+				t4.para_type AS typeParaType,
+				t4.notes AS typeNotes,
+				t6.id AS TypeIdDb,
+				t6.para_type AS typeParaTypeDb,
+				t6.notes AS typeNotesDb
+			FROM
+				kpg_task t1,
+				keypair_algorithm t2,
+				sys_code t3,
+				sys_param_type t4,
+				sys_code t5,
+				sys_param_type t6
+			WHERE
+				t1.kpg_algorithm = t2.id
+			AND t3.para_type = t4.id
+			AND t5.para_type = t6.id
+			AND t1.task_status = t3.id
+			AND t1.dbcommit_bufsize = t5.id
+			 limit #{start},#{length}
+	</select>
+	
+	<select id="getSysCodeCount"  resultType="int">
 		select 
-			t1.id as id,
-			t1.name as name,
-			t1.kpg_algorithm as keyPairAlgorithm,
-			t1.kpg_key_amount as kpgKeyAmount,
-			t1.task_status as taskStatus,
-			t1.task_start_time as taskStartTime,
-			t1.task_notes as taskNotes,
-			t1.exe_task_start_time as exeTaskStartTime,
-			t1.exe_task_end_time as exeTaskEndTime,
-			t1.dbcommit_bufsize as dbCommitBufsize,
-			t1.generated_key_amount generatedKeyAmount,
-			t1.task_exe_result as taskExeResult,
-			t2.id as kpgAlgId,
-			t2.name as algName ,
-			t2.alg_oid as algorithmOid,
-			t2.alg_name as algorithmName,
-			t2.keysize as keysize,
-			t2.notes as notes,
-			t2.is_valid as isValid,
-			t3.id as SysCodeId,
-			t3.para_code as paraCode,
-			t3.para_value as paraValue,
-			t3.para_type as paraType,
-			t3.is_valid as SysIsValid,
-			t3.notes as SysNotes,
-			t5.id as SysCodeIdDb,
-			t5.para_code as paraCodeDb,
-			t5.para_value as paraValueDb,
-			t5.para_type as paraTypeDb,
-			t5.is_valid as SysIsValidDb,
-			t5.notes as SysNotesDb,
-			t4.id as TypeId,
-			t4.para_type as typeParaType,
-			t4.notes as typeNotes,
-			t6.id as TypeIdDb,
-			t6.para_type as typeParaTypeDb,
-			t6.notes as typeNotesDb
+			count(*)
 		 from kpg_task t1,keypair_algorithm t2,sys_code t3,sys_param_type t4,sys_code t5,sys_param_type t6
 		 where t1.kpg_algorithm=t2.id
 			 and t3.para_type=t4.id
@@ -124,126 +143,223 @@
 	</select>
 	
 	<select id="findById" parameterType="long" resultMap="KpgTaskResultMap">
-		select 
-			t1.id as id,
-			t1.name as name,
-			t1.kpg_algorithm as keyPairAlgorithm,
-			t1.kpg_key_amount as kpgKeyAmount,
-			t1.task_status as taskStatus,
-			t1.task_start_time as taskStartTime,
-			t1.task_notes as taskNotes,
-			t1.exe_task_start_time as exeTaskStartTime,
-			t1.exe_task_end_time as exeTaskEndTime,
-			t1.dbcommit_bufsize as dbCommitBufsize,
-			t1.generated_key_amount generatedKeyAmount,
-			t1.task_exe_result as taskExeResult,
-			t2.id as kpgAlgId,
-			t2.name as algName ,
-			t2.alg_oid as algorithmOid,
-			t2.alg_name as algorithmName,
-			t2.keysize as keysize,
-			t2.notes as notes,
-			t2.is_valid as isValid,
-			t3.id as SysCodeId,
-			t3.para_code as paraCode,
-			t3.para_value as paraValue,
-			t3.para_type as paraType,
-			t3.is_valid as SysIsValid,
-			t3.notes as SysNotes,
-			t5.id as SysCodeIdDb,
-			t5.para_code as paraCodeDb,
-			t5.para_value as paraValueDb,
-			t5.para_type as paraTypeDb,
-			t5.is_valid as SysIsValidDb,
-			t5.notes as SysNotesDb,
-			t4.id as TypeId,
-			t4.para_type as typeParaType,
-			t4.notes as typeNotes,
-			t6.id as TypeIdDb,
-			t6.para_type as typeParaTypeDb,
-			t6.notes as typeNotesDb
-		 from kpg_task t1,keypair_algorithm t2,sys_code t3,sys_param_type t4,sys_code t5,sys_param_type t6
-		 where t1.kpg_algorithm=t2.id
-			 and t3.para_type=t4.id
-			 and t5.para_type=t6.id
-			 and t1.task_status=t3.para_value
-			 and t1.dbcommit_bufsize = t5.para_value
-			 and t1.id=#{id}
+				SELECT
+					t1.id AS id,
+					t1. NAME AS NAME,
+					t1.kpg_algorithm AS keyPairAlgorithm,
+					t1.kpg_key_amount AS kpgKeyAmount,
+					t1.task_status AS taskStatus,
+					t1.task_start_time AS taskStartTime,
+					t1.task_notes AS taskNotes,
+					t1.exe_task_start_time AS exeTaskStartTime,
+					t1.exe_task_end_time AS exeTaskEndTime,
+					t1.dbcommit_bufsize AS dbCommitBufsize,
+					t1.generated_key_amount generatedKeyAmount,
+					t1.task_exe_result AS taskExeResult,
+					t2.id AS kpgAlgId,
+					t2. NAME AS algName,
+					t2.alg_oid AS algorithmOid,
+					t2.alg_name AS algorithmName,
+					t2.keysize AS keysize,
+					t2.notes AS notes,
+					t2.is_valid AS isValid,
+					t3.id AS SysCodeId,
+					t3.para_code AS paraCode,
+					t3.para_value AS paraValue,
+					t3.para_type AS paraType,
+					t3.is_valid AS SysIsValid,
+					t3.notes AS SysNotes,
+					t5.id AS SysCodeIdDb,
+					t5.para_code AS paraCodeDb,
+					t5.para_value AS paraValueDb,
+					t5.para_type AS paraTypeDb,
+					t5.is_valid AS SysIsValidDb,
+					t5.notes AS SysNotesDb,
+					t4.id AS TypeId,
+					t4.para_type AS typeParaType,
+					t4.notes AS typeNotes,
+					t6.id AS TypeIdDb,
+					t6.para_type AS typeParaTypeDb,
+					t6.notes AS typeNotesDb
+				FROM
+					kpg_task t1,
+					keypair_algorithm t2,
+					sys_code t3,
+					sys_param_type t4,
+					sys_code t5,
+					sys_param_type t6
+				WHERE
+					t1.kpg_algorithm = t2.id
+				AND t3.para_type = t4.id
+				AND t5.para_type = t6.id
+				AND t1.task_status = t3.id
+				AND t1.dbcommit_bufsize = t5.id
+			 	AND t1.id=#{id}
 	</select>
 	
 	<select id="findByName" parameterType="String" resultType="cn.com.sure.kpgtask.entry.KpgTask">
-		select 
-			id,
-			name,
-			kpg_algorithm as keyPairAlgorithm,
-			kpg_key_amount as kpgKeyAmount,
-			task_status as taskStatus,
-			task_start_time as taskStartTime,
-			task_notes as taskNotes,
-			exe_task_start_time as exeTaskStartTime,
-			exe_task_end_time as exeTaskEndTime,
-			dbcommit_bufsize as dbCommitBufsize,
-			generated_key_amount generatedKeyAmount,
-			task_exe_result as taskExeResult
-		 from kpg_task
-		 where name=#{name}
+			SELECT
+				t1.id AS id,
+				t1. NAME AS NAME,
+				t1.kpg_algorithm AS keyPairAlgorithm,
+				t1.kpg_key_amount AS kpgKeyAmount,
+				t1.task_status AS taskStatus,
+				t1.task_start_time AS taskStartTime,
+				t1.task_notes AS taskNotes,
+				t1.exe_task_start_time AS exeTaskStartTime,
+				t1.exe_task_end_time AS exeTaskEndTime,
+				t1.dbcommit_bufsize AS dbCommitBufsize,
+				t1.generated_key_amount generatedKeyAmount,
+				t1.task_exe_result AS taskExeResult,
+				t2.id AS kpgAlgId,
+				t2. NAME AS algName,
+				t2.alg_oid AS algorithmOid,
+				t2.alg_name AS algorithmName,
+				t2.keysize AS keysize,
+				t2.notes AS notes,
+				t2.is_valid AS isValid,
+				t3.id AS SysCodeId,
+				t3.para_code AS paraCode,
+				t3.para_value AS paraValue,
+				t3.para_type AS paraType,
+				t3.is_valid AS SysIsValid,
+				t3.notes AS SysNotes,
+				t5.id AS SysCodeIdDb,
+				t5.para_code AS paraCodeDb,
+				t5.para_value AS paraValueDb,
+				t5.para_type AS paraTypeDb,
+				t5.is_valid AS SysIsValidDb,
+				t5.notes AS SysNotesDb,
+				t4.id AS TypeId,
+				t4.para_type AS typeParaType,
+				t4.notes AS typeNotes,
+				t6.id AS TypeIdDb,
+				t6.para_type AS typeParaTypeDb,
+				t6.notes AS typeNotesDb
+			FROM
+				kpg_task t1,
+				keypair_algorithm t2,
+				sys_code t3,
+				sys_param_type t4,
+				sys_code t5,
+				sys_param_type t6
+			WHERE
+				t1.kpg_algorithm = t2.id
+			AND t3.para_type = t4.id
+			AND t5.para_type = t6.id
+			AND t1.task_status = t3.id
+			AND t1.dbcommit_bufsize = t5.id
+		    AND t1.name=#{name}
 	</select>
 	
 	<select id="findAllUnExecutedTask" parameterType="cn.com.sure.kpgtask.entry.KpgTask" resultMap="KpgTaskResultMap">
-	 select
-			t1.id as id,
-			t1.name as name,
-			t1.kpg_algorithm as keyPairAlgorithm,
-			t1.kpg_key_amount as kpgKeyAmount,
-			t1.task_status as taskStatus,
-			t1.task_start_time as taskStartTime,
-			t1.task_notes as taskNotes,
-			t1.exe_task_start_time as exeTaskStartTime,
-			t1.exe_task_end_time as exeTaskEndTime,
-			t1.dbcommit_bufsize as dbCommitBufsize,
-			t1.generated_key_amount as generatedKeyAmount,
-			t1.task_exe_result as taskExeResult,
-			t2.id as kpgAlgId,
-			t2.name as algName ,
-			t2.alg_oid as algorithmOid,
-			t2.alg_name as algorithmName,
-			t2.keysize as keysize,
-			t2.notes as notes,
-			t2.is_valid as isValid,
-			t3.id as SysCodeIdDb,
-			t3.para_code as paraCodeDb,
-			t3.para_value as paraValueDb,
-			t3.para_type as TypeIdDb,
-			t3.is_valid as SysIsValid,
-			t3.notes as SysNotes,
-		
-			t4.para_type as typeParaTypeDb,
-			t4.notes as typeNotesDb
-		from kpg_task t1,keypair_algorithm t2,sys_code t3,sys_param_type t4
-		 where 
-		 	t1.task_status=#{taskStatus.paraValue}
-		 and t1.kpg_algorithm=t2.id
-		 and t1.dbcommit_bufsize = t3.para_value
-		 and t3.para_type = t4.id
+			SELECT
+				t1.id AS id,
+				t1. NAME AS NAME,
+				t1.kpg_algorithm AS keyPairAlgorithm,
+				t1.kpg_key_amount AS kpgKeyAmount,
+				t1.task_status AS taskStatus,
+				t1.task_start_time AS taskStartTime,
+				t1.task_notes AS taskNotes,
+				t1.exe_task_start_time AS exeTaskStartTime,
+				t1.exe_task_end_time AS exeTaskEndTime,
+				t1.dbcommit_bufsize AS dbCommitBufsize,
+				t1.generated_key_amount generatedKeyAmount,
+				t1.task_exe_result AS taskExeResult,
+				t2.id AS kpgAlgId,
+				t2. NAME AS algName,
+				t2.alg_oid AS algorithmOid,
+				t2.alg_name AS algorithmName,
+				t2.keysize AS keysize,
+				t2.notes AS notes,
+				t2.is_valid AS isValid,
+				t3.id AS SysCodeId,
+				t3.para_code AS paraCode,
+				t3.para_value AS paraValue,
+				t3.para_type AS paraType,
+				t3.is_valid AS SysIsValid,
+				t3.notes AS SysNotes,
+				t5.id AS SysCodeIdDb,
+				t5.para_code AS paraCodeDb,
+				t5.para_value AS paraValueDb,
+				t5.para_type AS paraTypeDb,
+				t5.is_valid AS SysIsValidDb,
+				t5.notes AS SysNotesDb,
+				t4.id AS TypeId,
+				t4.para_type AS typeParaType,
+				t4.notes AS typeNotes,
+				t6.id AS TypeIdDb,
+				t6.para_type AS typeParaTypeDb,
+				t6.notes AS typeNotesDb
+			FROM
+				kpg_task t1,
+				keypair_algorithm t2,
+				sys_code t3,
+				sys_param_type t4,
+				sys_code t5,
+				sys_param_type t6
+			WHERE
+				t1.kpg_algorithm = t2.id
+			AND t3.para_type = t4.id
+			AND t5.para_type = t6.id
+			AND t1.task_status = t3.id
+			AND t1.dbcommit_bufsize = t5.id
 		<![CDATA[ and task_start_time <=#{taskStartTime}]]>
 	</select>
 	
 	<select id="findByTaskStatus" parameterType="Long" resultType="cn.com.sure.kpgtask.entry.KpgTask">
-		select 
-			id,
-			name,
-			kpg_algorithm as keyPairAlgorithm,
-			kpg_key_amount as kpgKeyAmount,
-			task_status as taskStatus,
-			task_start_time as taskStartTime,
-			task_notes as taskNotes,
-			exe_task_start_time as exeTaskStartTime,
-			exe_task_end_time as exeTaskEndTime,
-			dbcommit_bufsize as dbCommitBufsize,
-			generated_key_amount generatedKeyAmount,
-			task_exe_result as taskExeResult
-		 from kpg_task
-		 where task_status=#{codeId}
+			SELECT
+				t1.id AS id,
+				t1. NAME AS NAME,
+				t1.kpg_algorithm AS keyPairAlgorithm,
+				t1.kpg_key_amount AS kpgKeyAmount,
+				t1.task_status AS taskStatus,
+				t1.task_start_time AS taskStartTime,
+				t1.task_notes AS taskNotes,
+				t1.exe_task_start_time AS exeTaskStartTime,
+				t1.exe_task_end_time AS exeTaskEndTime,
+				t1.dbcommit_bufsize AS dbCommitBufsize,
+				t1.generated_key_amount generatedKeyAmount,
+				t1.task_exe_result AS taskExeResult,
+				t2.id AS kpgAlgId,
+				t2. NAME AS algName,
+				t2.alg_oid AS algorithmOid,
+				t2.alg_name AS algorithmName,
+				t2.keysize AS keysize,
+				t2.notes AS notes,
+				t2.is_valid AS isValid,
+				t3.id AS SysCodeId,
+				t3.para_code AS paraCode,
+				t3.para_value AS paraValue,
+				t3.para_type AS paraType,
+				t3.is_valid AS SysIsValid,
+				t3.notes AS SysNotes,
+				t5.id AS SysCodeIdDb,
+				t5.para_code AS paraCodeDb,
+				t5.para_value AS paraValueDb,
+				t5.para_type AS paraTypeDb,
+				t5.is_valid AS SysIsValidDb,
+				t5.notes AS SysNotesDb,
+				t4.id AS TypeId,
+				t4.para_type AS typeParaType,
+				t4.notes AS typeNotes,
+				t6.id AS TypeIdDb,
+				t6.para_type AS typeParaTypeDb,
+				t6.notes AS typeNotesDb
+			FROM
+				kpg_task t1,
+				keypair_algorithm t2,
+				sys_code t3,
+				sys_param_type t4,
+				sys_code t5,
+				sys_param_type t6
+			WHERE
+				t1.kpg_algorithm = t2.id
+			AND t3.para_type = t4.id
+			AND t5.para_type = t6.id
+			AND t1.task_status = t3.id
+			AND t1.dbcommit_bufsize = t5.id
+		 and task_status=#{codeId}
 	</select>
 	
 	<update id="update" parameterType="cn.com.sure.kpgtask.entry.KpgTask">
@@ -252,75 +368,82 @@
 		 	name = #{name},
 			kpg_algorithm = #{keyPairAlgorithm.id},
 			kpg_key_amount=#{kpgKeyAmount},
-			task_status=#{taskStatus.paraValue},
+			task_status=#{taskStatus.id},
 			task_start_time=#{taskStartTime},
 			task_notes=#{taskNotes},
 			exe_task_start_time=#{exeTaskStartTime},
 			exe_task_end_time=#{exeTaskEndTime},
-			dbcommit_bufsize=#{dbCommitBufsize.paraValue},
+			dbcommit_bufsize=#{dbCommitBufsize.id},
 			generated_key_amount=#{generatedKeyAmount},
 			task_exe_result=#{taskExeResult}
 		 where
 		 	id=#{id}
 	</update>
 	
-	<update id="start" parameterType="cn.com.sure.kpgtask.entry.KpgTask">
+		<update id="updateStatus" parameterType="cn.com.sure.kpgtask.entry.KpgTask">
 		update kpg_task
 		set
-		 	name = #{name},
-			kpg_algorithm = #{keyPairAlgorithm.id},
-			kpg_key_amount=#{kpgKeyAmount},
-			task_status=#{taskStatus.paraValue},
-			task_start_time=#{taskStartTime},
-			task_notes=#{taskNotes},
-			exe_task_start_time=#{exeTaskStartTime},
-			exe_task_end_time=#{exeTaskEndTime},
-			dbcommit_bufsize=#{dbCommitBufsize.paraValue},
-			generated_key_amount=#{generatedKeyAmount},
-			task_exe_result=#{taskExeResult}
+			task_status=#{taskStatus.id}
 		 where
 		 	id=#{id}
 	</update>
 	
-	<delete id="delete" parameterType="long">
+	<delete id="delete" parameterType="long" >
 		delete from kpg_task where id=#{id}
 	</delete>
 	
 	<select id="searchByCondition" parameterType="cn.com.sure.kpgtask.entry.KpgTask" resultMap="KpgTaskResultMap">
-		select 
-			t1.id as id,
-			t1.name as name,
-			t1.kpg_algorithm as keyPairAlgorithm,
-			t1.kpg_key_amount as kpgKeyAmount,
-			t1.task_status as taskStatus,
-			t1.task_start_time as taskStartTime,
-			t1.task_notes as taskNotes,
-			t1.exe_task_start_time as exeTaskStartTime,
-			t1.exe_task_end_time as exeTaskEndTime,
-			t1.dbcommit_bufsize as dbCommitBufsize,
-			t1.generated_key_amount generatedKeyAmount,
-			t1.task_exe_result as taskExeResult,
-			t2.id as kpgAlgId,
-			t2.name as algName ,
-			t2.alg_oid as algorithmOid,
-			t2.alg_name as algorithmName,
-			t2.keysize as keysize,
-			t2.notes as notes,
-			t2.is_valid as isValid,
-			t3.id as SysCodeId,
-			t3.para_code as paraCode,
-			t3.para_value as paraValue,
-			t3.para_type as paraType,
-			t3.is_valid as SysIsValid,
-			t3.notes as SysNotes,
-			t4.id as TypeId,
-			t4.para_type as typeParaType,
-			t4.notes as typeNotes
-		 from kpg_task t1,keypair_algorithm t2,sys_code t3,sys_param_type t4
-		 where 
-		 	t1.kpg_algorithm=t2.id
-		 	and t3.para_type=t4.id
-		 	and t1.task_status=t3.para_value
+			SELECT
+				t1.id AS id,
+				t1. NAME AS NAME,
+				t1.kpg_algorithm AS keyPairAlgorithm,
+				t1.kpg_key_amount AS kpgKeyAmount,
+				t1.task_status AS taskStatus,
+				t1.task_start_time AS taskStartTime,
+				t1.task_notes AS taskNotes,
+				t1.exe_task_start_time AS exeTaskStartTime,
+				t1.exe_task_end_time AS exeTaskEndTime,
+				t1.dbcommit_bufsize AS dbCommitBufsize,
+				t1.generated_key_amount generatedKeyAmount,
+				t1.task_exe_result AS taskExeResult,
+				t2.id AS kpgAlgId,
+				t2. NAME AS algName,
+				t2.alg_oid AS algorithmOid,
+				t2.alg_name AS algorithmName,
+				t2.keysize AS keysize,
+				t2.notes AS notes,
+				t2.is_valid AS isValid,
+				t3.id AS SysCodeId,
+				t3.para_code AS paraCode,
+				t3.para_value AS paraValue,
+				t3.para_type AS paraType,
+				t3.is_valid AS SysIsValid,
+				t3.notes AS SysNotes,
+				t5.id AS SysCodeIdDb,
+				t5.para_code AS paraCodeDb,
+				t5.para_value AS paraValueDb,
+				t5.para_type AS paraTypeDb,
+				t5.is_valid AS SysIsValidDb,
+				t5.notes AS SysNotesDb,
+				t4.id AS TypeId,
+				t4.para_type AS typeParaType,
+				t4.notes AS typeNotes,
+				t6.id AS TypeIdDb,
+				t6.para_type AS typeParaTypeDb,
+				t6.notes AS typeNotesDb
+			FROM
+				kpg_task t1,
+				keypair_algorithm t2,
+				sys_code t3,
+				sys_param_type t4,
+				sys_code t5,
+				sys_param_type t6
+			WHERE
+				t1.kpg_algorithm = t2.id
+			AND t3.para_type = t4.id
+			AND t5.para_type = t6.id
+			AND t1.task_status = t3.id
+			AND t1.dbcommit_bufsize = t5.id
 		 	<if test="id!=null and id!='' ">
 		 		id=#{id}
 		 	</if>

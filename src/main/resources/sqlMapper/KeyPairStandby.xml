@@ -72,13 +72,14 @@
 	</insert>
 
 		
-	<select id="countNum" resultType="int" parameterType="String">
+	<select id="countNum"  parameterType="cn.com.sure.keypair.entry.KeypairStandby" resultType="int">
 		select 
 			count(0)
 		from 
 			keypair_standby
 		where
 			kpg_algorithm=#{algorithmName}
+		and keysize=#{keysize}
 	</select>
 	
 	<select id="obtKpStandby" parameterType="cn.com.sure.keypair.entry.KeypairStandby" resultType="cn.com.sure.keypair.entry.KeypairStandby">
@@ -94,6 +95,7 @@
 			keypair_standby
 		where
 			kpg_algorithm=#{algorithmName}
+		and keysize=#{keysize}
 		limit 
 			0,1
 	</select>

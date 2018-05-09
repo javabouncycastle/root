@@ -65,9 +65,9 @@ public class SysCodeTypeServiceImpl implements SysCodeTypeService {
 		List<SysCodeType> sysCodeTypes = sysCodeTypeDAO.searchByCondition(codeType);
 		int i = 0;
 		if((sysCodeTypes.size()==0)) {
-			i = sysCodeTypeDAO.update(sysCodeType);
-		}else {
 			Applicationexception.throwException(ErrorMessageConstants.paraTypeValueExist, new String[]{sysCodeType.getParaType()});
+		}else {
+			i = sysCodeTypeDAO.update(sysCodeType);
 		}
 		
 		

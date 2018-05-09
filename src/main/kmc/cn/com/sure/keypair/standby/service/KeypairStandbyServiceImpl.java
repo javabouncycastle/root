@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cn.com.sure.keypair.service;
+package cn.com.sure.keypair.standby.service;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class KeypairStandbyServiceImpl implements KeypairStandbyService{
 	@Override
 	public void insert(KeypairStandby keyPairStandby) {
 		LOG.debug("insert - start");
-		this.keyPairStandbyDAO.insert(keyPairStandby);
+		keyPairStandbyDAO.insert(keyPairStandby);
 		LOG.debug("insert - end");
 	}
 
@@ -63,9 +63,9 @@ public class KeypairStandbyServiceImpl implements KeypairStandbyService{
 	 * @see cn.com.sure.kpg.service.KeypairStandbyService#countNum(java.lang.String)
 	 */
 	@Override
-	public int countNum(String algorithmName) {
+	public int countNum(KeyPairAlgorithm kpa) {
 		LOG.debug("countNum - start");
-		int keyNum = keyPairStandbyDAO.countNum(algorithmName);
+		int keyNum = keyPairStandbyDAO.countNum(kpa);
 		LOG.debug("countNum - end");
 		return keyNum;
 	}

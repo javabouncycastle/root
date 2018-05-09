@@ -3,7 +3,7 @@ package cn.com.sure.syscode.service;
 import java.util.List;
 
 import cn.com.sure.common.Applicationexception;
-import cn.com.sure.syscode.entry.PageVo;
+import cn.com.sure.common.PagedQuery;
 import cn.com.sure.syscode.entry.SysCode;
 
 public interface SysCodeService {
@@ -22,11 +22,11 @@ public interface SysCodeService {
 	 */
 	SysCode selectById(Long id);
 
-	/**
+/*	*//**
 	 * @return 
 	 * 
-	 */
-	List<SysCode> selectServicePort();
+	 *//*
+	List<SysCode> selectServicePort();*/
 
 	/**
 	 * @param sysCode
@@ -37,7 +37,7 @@ public interface SysCodeService {
 	/**
 	 * @return
 	 */
-	List<SysCode> selectAll(PageVo pagevo);
+	List<SysCode> selectAll(PagedQuery pagevo);
 
 	/**
 	 * @param sysCode

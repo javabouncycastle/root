@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cn.com.sure.keypair.service;
+package cn.com.sure.keypair.standby.service;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public interface KeypairStandbyService {
 	 * @param algorithmName
 	 * @return
 	 */
-	int countNum(String algorithmName);
+	int countNum(KeyPairAlgorithm kpa);
 
 
 	/**

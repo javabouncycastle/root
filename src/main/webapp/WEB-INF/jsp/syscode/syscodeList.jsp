@@ -231,7 +231,7 @@ function edit() {
 	}
 	var id=checked_row[0].value;
     zeroModal.show({
-        title: '修改密钥算法',
+        title: '修改数据字典',
         url: '${ctx}/syscode/forWardUpdate.do?id='+id,
         width: '70%',
         height: '60%',

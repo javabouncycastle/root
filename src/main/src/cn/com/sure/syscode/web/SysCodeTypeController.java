@@ -82,6 +82,7 @@ public class SysCodeTypeController {
 	 * @return
 	 * @throws Applicationexception 
 	 */
+	@ResponseBody
 	@RequestMapping(value = "update")
 	public ReCode update(SysCodeType sysCodeType,
 			Model model, RedirectAttributes attr,HttpServletRequest request) throws Applicationexception{
@@ -89,14 +90,14 @@ public class SysCodeTypeController {
 		int i = 0;
 		try {
 			i = sysCodeTypeService.update(sysCodeType);
-			// 添加审计日志
+			
 		} catch (Applicationexception e) {
 			reCode.setDes(e.getMessage());
 			reCode.setRetrunCode(Integer.toString(i));
 			return reCode;
 		}
 		
-		LOG.debug("update - start");
+		LOG.debug("update - end");
 		reCode.setDes("修改数据字典类别=【"+sysCodeType.getParaType()+"】信息成功");
 		reCode.setRetrunCode(Integer.toString(i));
 		return reCode;
