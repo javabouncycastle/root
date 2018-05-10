@@ -2,6 +2,7 @@ package cn.com.sure.cert.entry;
 
 import java.util.Date;
 
+import cn.com.sure.algorthm.entry.KeyPairAlgorithm;
 import cn.com.sure.ctml.entry.CertificateTemplate;
 
 public class Certificate {
@@ -14,8 +15,6 @@ public class Certificate {
 	
 	private String sn;//证书sn
 	
-	private String ref;//证书参考码
-	
 	private String cert;//base64格式的证书
 	
 	private Date startTime;//证书开始时间
@@ -24,13 +23,21 @@ public class Certificate {
 	
 	private String validity;//证书有效期
 	
-	private CertificateTemplate kpAlg;//密钥类型
+	private KeyPairAlgorithm kpAlg;//密钥类型
 	
 	private String status;//证书状态
 	
 	private CertificateTemplate ctmlId;//证书模板
 	
-
+	private Date requestTime;//申请时间
+	
+	private int adminId;//那个管理员颁发
+	
+	private int caId;//那个ca办法的
+	
+	private String certType;//证书类型 签名证书或者加密证书
+	
+	
 	public String getId() {
 		return id;
 	}
@@ -61,14 +68,6 @@ public class Certificate {
 
 	public void setSn(String sn) {
 		this.sn = sn;
-	}
-
-	public String getRef() {
-		return ref;
-	}
-
-	public void setRef(String ref) {
-		this.ref = ref;
 	}
 
 	public String getCert() {
@@ -103,14 +102,6 @@ public class Certificate {
 		this.validity = validity;
 	}
 
-	public CertificateTemplate getKpAlg() {
-		return kpAlg;
-	}
-
-	public void setKpAlg(CertificateTemplate kpAlg) {
-		this.kpAlg = kpAlg;
-	}
-
 	public String getStatus() {
 		return status;
 	}
@@ -125,6 +116,46 @@ public class Certificate {
 
 	public void setCtmlId(CertificateTemplate ctmlId) {
 		this.ctmlId = ctmlId;
+	}
+
+	public KeyPairAlgorithm getKpAlg() {
+		return kpAlg;
+	}
+
+	public void setKpAlg(KeyPairAlgorithm kpAlg) {
+		this.kpAlg = kpAlg;
+	}
+
+	public Date getRequestTime() {
+		return requestTime;
+	}
+
+	public void setRequestTime(Date requestTime) {
+		this.requestTime = requestTime;
+	}
+
+	public int getAdminId() {
+		return adminId;
+	}
+
+	public void setAdminId(int adminId) {
+		this.adminId = adminId;
+	}
+
+	public int getCaId() {
+		return caId;
+	}
+
+	public void setCaId(int caId) {
+		this.caId = caId;
+	}
+
+	public String getCertType() {
+		return certType;
+	}
+
+	public void setCertType(String certType) {
+		this.certType = certType;
 	}
 	
 }

@@ -61,15 +61,15 @@ public class KpgTaskServiceImpl implements KpgTaskService{
 		KpgTask dbKpgTask = this.kpgTaskDAO.findByName(kpgTask.getName());
 		int i=0;
 		if(dbKpgTask==null){
-			SysCode syscode = new SysCode();
-			syscode.setParaValue(String.valueOf(Constants.CODE_ID_TASK_STATUS_NOT_STARTED));
+/*			SysCode syscode = new SysCode();
+			syscode.setParaValue(String.valueOf(Constants.CODE_ID_TASK_STATUS_EXECUTING));
 			List<SysCode> code = sysCodeService.searchByCondition(syscode);
 			SysCode codes = new SysCode();
 			
 			codes.setId(code.get(0).getId());
 			kpgTask.setTaskStatus(codes);
 			
-			kpgTask.setGeneratedKeyAmount(0);
+			kpgTask.setGeneratedKeyAmount(0);*/
 			kpgTask.setTaskStartTime(new Date());
 			i = kpgTaskDAO.insert(kpgTask);
 		}else {

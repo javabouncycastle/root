@@ -80,8 +80,6 @@ public class CertificateTemplateController {
 	    
 	    return JSON.toJSONString(pageQuery);
 		
-		//return new ModelAndView("ctml/ctmlList").addObject("certTemplates", certificateTemplates).addObject("sysCodeKpg",sysCodeKpg);
-		
 	}
 	/**
 	 * 跳转到前台页面之后再去执行selectAll的查询 目的是为了实现分页查询

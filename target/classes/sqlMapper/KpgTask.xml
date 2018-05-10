@@ -391,7 +391,7 @@
 	<update id="updateGeneratedKeyAmount" parameterType="cn.com.sure.kpgtask.entry.KpgTask">
 		update kpg_task
 		set
-			kpg_key_amount=#{kpgKeyAmount}
+			generated_key_amount=#{generatedKeyAmount}
 		 where
 		 	id=#{id}
 	</update>

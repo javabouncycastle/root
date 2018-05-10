@@ -24,7 +24,7 @@ public class CertificateTemplate {
 	private String ctmlName;
 	
 	/**
-	 * 密钥对类型，引用数据字典表
+	 * 密钥对类型
 	 */
 	private KeyPairAlgorithm kpgAlgorithm;
 	

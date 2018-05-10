@@ -62,16 +62,19 @@ public class AutoKpg implements ApplicationListener<ContextRefreshedEvent>{
 		
 		
 	   if (event.getSource() instanceof XmlWebApplicationContext) {
+		   
            if (((XmlWebApplicationContext) event.getSource()).getDisplayName().equals("Root WebApplicationContext")) {
-        	   //自动生成密钥
-        	   autoKpg();
+        	   if(event.getApplicationContext().getParent() == null) {
+        		   autoKpg();
+        		   //自动生成密钥
+    		   }
            }
        }
 	}
 	 public void autoKpg(){
 	 	//1查询
     	//1.1查询密钥算法
-		 LOG.debug("autoKpg - start");
+		 LOG.info("autoKpg - start");
 		 KeyPairAlgorithm keypaieAlgorithm = new KeyPairAlgorithm();
 		 keypaieAlgorithm.setIsValid(Constants.YES_OR_NO_OPTION_YES);
 		 
@@ -155,12 +158,14 @@ public class AutoKpg implements ApplicationListener<ContextRefreshedEvent>{
     				List<SysCode> syscodeStatus = sysCodeService.searchByCondition(codeStatus);
     				task.setTaskStatus(syscodeStatus.get(0));
     				//用当前时间来命名任务名称
-    				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+    				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
     				task.setName("系统自动生成密钥"+sdf.format(new Date()));
     				task.setStartTime(new Date());
+    				task.setGeneratedKeyAmount(0);
     				try {
     					//插入一条任务
     					kpgTaskService.insert(task);
+    					LOG.info("插入密钥任务---end");
     				} catch (Applicationexception e) {
     					e.printStackTrace();
     				}
